@@ -1,0 +1,347 @@
+instruction,input,output,bert_score,alpaca_output
+"Given a user query, find an answer to the query in an appropriate form.",Query: What is the population of Japan?,"According to the latest census, the population of Japan as of June 2020 is 126,476,461.",0.8698551058769226,"Given a user query, find an answer to the query in an appropriate form.
+Query: What is the population of Japan?
+Answer: The population of Japan is estimated to be 126 million as of 2019."
+Divide 75 by 3,75 divided by 3,The result of 75 divided by 3 is 25.,0.9342836141586304,"Divide 75 by 3
+75 divided by 3 is 25."
+Construct a query to find all the houses located in New York City,,"The following query can be used to find all houses located in New York City: 
+
+SELECT * FROM houses 
+WHERE city = 'New York City'",0.925317108631134,"Construct a query to find all the houses located in New York City
+What is the query to find all the houses located in New York City?
+SELECT * FROM houses WHERE city = 'New York City'"
+Come up with a poem about urban lifestyle,,"In the streets of the city, the air is so thick
+The hustle and bustle of life, no time to sit
+The crowds and the noise, a 24/7 beat
+Sometimes we forget what a walk in nature can bring
+
+Adrift in a sea of concrete, a view of a skyline so grand
+The shops and the restaurants, the parks and the sand
+We work hard and play hard, our dreams to fulfill
+The urban lifestyle, with its highs and its lows, our stories to tell",0.8483731746673584,"Come up with a poem about urban lifestyle
+Urban lifestyle is one of the most exciting and vibrant lifestyles in the world. It is a lifestyle of hustle and bustle, full of energy and excitement. People in this lifestyle strive to make their dreams come true and never give up. They work hard to achieve their goals and take risks to make their lives better. In this poem, I will talk about the joys and struggles of living in an urban lifestyle.
+The urban lifestyle is full of life,
+Where people strive and never give a sigh.
+The streets are full of dreamers,
+Each one working hard to make their mark.
+The hustle and bustle of the city,
+Filled with energy and vibrant excitement.
+The people in this lifestyle work hard,
+And take risks to make their lives better and more grand.
+The struggles of living in the city,
+The stress and anxiety it can bring.
+The never ending cycle of work and play,
+The joys and struggles of living in an urban lifestyle."
+Choose a primary color to represent the brand personality of a clothing store.,,"For a clothing store, a good choice of a primary color to represent the brand personality could be navy blue. Navy blue conveys sophistication, confidence, and elegance, which would be desirable qualities for a clothing store. It is also versatile, allowing for a range of additional colors to complement it for promotional materials or merchandise designs.",0.8726776242256165,"Choose a primary color to represent the brand personality of a clothing store.
+Choose a secondary color to complement the primary color.
+Create a logo that incorporates the primary and secondary colors.
+Develop a brand strategy that includes the logo, colors, and messaging.
+Create a website to showcase the clothing store and its products.
+Develop a marketing plan to reach potential customers.
+Create promotional materials such as posters, flyers, and business cards.
+Develop a customer service strategy to ensure customer satisfaction."
+Generate a list of items necessary to go camping.,,"Items necessary to go camping:
+- Tent
+- Sleeping bag
+- Camping mattress
+- Camping stove
+- Cooking utensils
+- Food
+- Flashlight
+- Battery pack
+- Matches/lighter
+- Matches and firewood
+- Map or GPS
+- First aid kit
+- Bug spray
+- Sunscreen
+- Appropriate clothing
+- Hiking boots",0.8417972922325134,"Generate a list of items necessary to go camping.
+This list can be used to prepare for a camping trip. Items should include: tent, sleeping bag, sleeping pad, flashlight, camp stove, camp chairs, first-aid kit, food, water, matches, firewood, cooking utensils, bug spray, sunscreen, and clothes appropriate for the climate."
+Classify the given article as either positive or negative sentiment.,The new car is a disappointment. The breaks are terrible and cost way too much for the features offered.,Negative,0.8176146745681763,"Classify the given article as either positive or negative sentiment.
+The new car is a disappointment. The breaks are terrible and cost way too much for the features offered."
+Suggest a better alternative for the following adjective.,The party was dry.,The party was uneventful.,0.8936690092086792,"Suggest a better alternative for the following adjective.
+The party was dry.
+The party was uneventful."
+What is the maximum velocity of a jet powered boat?,,The maximum velocity of a jet powered boat is typically around 80 to 120 knots (92 to 138 mph).,0.8833335041999817,"What is the maximum velocity of a jet powered boat?
+What is the maximum speed of a jet powered boat?"
+Write the code to implement a function that takes two numbers and returns their product.,,"def product(num1, num2):
+   return num1 * num2",0.8436530828475952,"Write the code to implement a function that takes two numbers and returns their product.
+def product(a,b):
+""""""
+This function takes two numbers and returns their product.
+
+Args:
+    a (int): The first number.
+    b (int): The second number.
+
+Returns:
+    int: The product of the two numbers.
+
+""""""
+
+    return a * b"
+Generate a recipe for a five-ingredient vegetable soup.,,"This five-ingredient vegetable soup is sure to hit the spot! 
+
+Ingredients:
+- 2 tablespoons olive oil
+- 2 cloves garlic, minced
+- 1 onion, diced
+- 3 cups vegetable broth
+- 4 carrots, medium-diced
+- 2 celery stalks, diced
+- 1 zucchini, diced
+- 1 can (14.5 oz) diced tomatoes
+- 1 teaspoon dried oregano
+- 1 teaspoon dried basil
+- 1 teaspoon crushed red pepper flakes (optional) 
+- Salt and pepper, to taste
+- 2 tablespoons chopped fresh parsley for garnish
+
+Instructions:
+1. Heat the olive oil in a large pot over medium heat. 
+2. Add garlic and onion, sautéing until the onion is soft and translucent, about 4 minutes.
+3. Pour in the vegetable broth, carrots, celery, zucchini, and diced tomatoes. 
+4. Stir in the oregano, basil, and red pepper flakes (if using), and season with salt and pepper.
+5. Bring the soup to a boil, reduce heat to a low simmer and cook, uncovered, until the vegetables are tender, about 45 minutes.
+6. Taste and adjust seasoning if necessary. 
+7. Garnish with fresh parsley, if desired. 
+8. Serve and enjoy!",0.7999985218048096,"Generate a recipe for a five-ingredient vegetable soup.
+Describe the steps for making a vegetable soup.
+Which vegetables should be used to make a vegetable soup?
+What seasonings and spices should be used in a vegetable soup?
+What stock or broth should be used in a vegetable soup?
+What other ingredients should be added to a vegetable soup?
+What are the health benefits of vegetable soup?"
+Please provide me the scientific name for the blue whale,,The scientific name for the blue whale is Balaenoptera musculus.,0.9493438005447388,"Please provide me the scientific name for the blue whale
+The scientific name for the blue whale is Balaenoptera musculus."
+Create a checklist that can help diagnose a given issue.,Slow computer,"Diagnosing a Slow Computer Checklist: 
+- Check for malware and viruses 
+- Close any unused applications 
+- Disable unnecessary startup programs 
+- Change the power settings to maximize performance 
+- Uninstall unused programs 
+- Disable unnecessary browser extensions 
+- Check network settings 
+- Check for outdated drivers 
+- Check for and remove duplicate files
+- Increase virtual memory
+- Check for hardware issues 
+- Use a system optimizer 
+- Check for disk fragmentation",0.8226093649864197,"Create a checklist that can help diagnose a given issue.
+Slow computer? Check your RAM.
+Video card not working? Check your monitor and cable.
+Bluetooth not working? Check your settings and pairing.
+Printing not working? Check your printer and settings.
+Webcam not working? Check your webcam and settings."
+Design a two-player game that can be played with a set of 20 cards.,,"The game is a race to get the most cards. It is designed for two players. Each player is given a set of 20 cards, which consist of 7 green cards, 7 blue cards, and 6 red cards. The green cards signify coins, the blue cards signify actions, and the red cards signify power-ups. 
+
+Each player will take turns drawing a card from the deck. If a green card is drawn, the player earns one coin. If a blue card is drawn, the player may choose to play an action card from their hand (e.g. draw an extra card from the deck, steal coins from their opponent, skip the opponent's turn). The red cards are special cards that the player can use during their turn to gain an advantage. At the end of each turn, the player must discard one card from their hand. 
+
+The game ends after 10 turns or when one player has collected the most coins. The winner is the player with the most coins at the end of the game.",0.8554342985153198,"Design a two-player game that can be played with a set of 20 cards.
+The game is played with a set of 20 cards, each card featuring a different number from 1 to"
+Create a classification task by clustering the given list of items.,"Apples, oranges, bananas, strawberries, pineapples","Class 1: Apples, Oranges
+Class 2: Bananas, Strawberries
+Class 3: Pineapples",0.8414915204048157,"Create a classification task by clustering the given list of items.
+Apples, oranges, bananas, strawberries, pineapples, grapes, applesauce.
+Classify the given list of items as either fruits or vegetables.
+Fruits: Apples, oranges, bananas, strawberries, pineapples, grapes. Vegetables: Applesauce."
+Classify the plant as either herbaceous or woody.,Maple Tree,The maple tree is a woody plant.,0.8192628026008606,"Classify the plant as either herbaceous or woody.
+Maple Tree Leaf Identification
+Maple trees are some of the most recognizable trees in the United States, with their distinctive leaves. The leaves of the maple tree are broad and pointed, with a lobed shape. They come in a variety of colors, including green, red, and purple. In the fall, the leaves turn a brilliant array of colors before falling to the ground. The bark of the maple tree is usually gray and can become cracked and furrowed as the tree ages. The buds of the maple tree are usually pointed and resemble those of other trees in the genus Acer. The leaves of the maple tree typically stay on the tree until early spring, when they fall to the ground.
+Cedar Tree Leaf Identification
+Cedar trees are coniferous evergreen trees, meaning they keep their needles and cones year round. Cedar trees have needles that are flat and pointed, and their cones are small and brown. The leaves of the cedar tree are broad and pointed, and they come in a variety of shapes and sizes. The bark of the cedar tree is usually gray and may have waxy ridges. The buds of the cedar tree are usually pointed and resemble those of other coniferous trees. The leaves of the cedar tree typically stay on the tree until they fall to the ground in the fall.
+Pine Tree Leaf Identification
+Pine trees are coniferous evergreen trees, meaning they keep their needles and cones year round. Pine trees have needles that are long and pointed, and their cones are small and brown. The leaves of the pine tree are needle-like and arranged in two rows per bundle. The bark of the pine tree is usually gray and may have waxy ridges. The buds of the pine tree are usually pointed and resemble those of other coniferous trees. The leaves of the pine tree typically stay on the tree until they fall to the ground in the fall.
+Oak Tree Leaf Identification
+Oak trees are deciduous trees, meaning their leaves change color and fall to the ground in the fall. The leaves of the oak tree are typically lobed and come in a variety of shapes and sizes. The bark of the oak tree is usually ridged and furrowed, and it may have deep fissures. The buds of the oak tree are usually pointed and resemble those of other trees in the genus Quercus. The leaves of the oak tree typically stay on the tree until early spring, when they fall to the ground.
+Beech Tree Leaf Identification
+Beech trees are deciduous trees, meaning their leaves change color and fall to the ground in the fall. The leaves of the beech tree are typically oval-shaped and have toothed margins. The bark of the beech tree is usually gray and can become ridged and furrowed with age. The buds of the beech tree are usually pointed and resemble those of other trees in the genus Fagus. The leaves of the beech tree typically stay on the tree until early spring, when they fall to the ground.
+Tulip Tree Leaf Identification
+Tulip trees are deciduous trees, meaning their leaves change color and fall to the ground in the fall. The leaves of the tulip tree are typically oval-shaped and have toothed margins. The bark of the tulip tree is usually gray and can become ridged and furrowed with age. The buds of the tulip tree are usually pointed and resemble those of other trees in the genus Liriodendron. The leaves of the tulip tree typically stay on the tree until early spring, when they fall to the ground.
+Redbud Tree Leaf Identification
+Redbud trees are deciduous trees, meaning their leaves change color and fall to the ground in the fall. The leaves of the redbud tree are typically oval-shaped and have toothed margins. The bark of the redbud tree is usually gray and can become ridged and furrowed with age. The buds of the redbud tree are usually pointed and resemble those of other trees in the genus Cercis. The leaves of the redbud tree typically stay on the tree until early spring, when they fall to the ground."
+Analyze the given text to determine the mood,"The fog crept in slowly, covering the town with a dreary blanket of grey.",The mood of the text is sad and bleak.,0.8699269890785217,"Analyze the given text to determine the mood
+The fog crept in slowly, covering the town with a dreary blanket of grey. The streets were empty and the shops were closed. Everywhere was silent but for the distant rumble of thunder and the whisper of the fog. It was as if the town was holding its breath, waiting to see what the morning would bring.
+The mood of the text is sad and bleak. The imagery of the fog creeping in, covering the town in a grey blanket and making the streets empty and the shops closed, creates a sense of dread. The distant rumble of thunder and the whisper of the fog suggest a feeling of suspense and anticipation. The lack of noise from the people suggests a feeling of sadness and loneliness. Overall, the mood of the text is one of sadness and bleakness."
+"Construct a metaphor using the phrase ""dinner table"".",,"Conversation was like a feast at the dinner table, with ideas and experiences being shared between everyone.",0.8704715967178345,"Construct a metaphor using the phrase ""dinner table"".
+Metaphor: Discussing important topics at the dinner table was like navigating a minefield - each topic had the potential to cause an explosion of conflict."
+Come up with 3 natural disasters that could occur in Utah.,,#NAME?,0.8024842143058777,"Come up with 3 natural disasters that could occur in Utah.
+1. Flooding due to heavy rains or snowmelt.
+2. Earthquakes, due to the state’s seismic activity.
+3. Wildfires, caused by dry weather and strong winds."
+"In the sentence below, identify the subject, verb, and object.",Jane ate her breakfast.,"Subject: Jane 
+Verb: ate
+Object: her breakfast",0.8431747555732727,"In the sentence below, identify the subject, verb, and object.
+Jane ate her breakfast."
+Come up with five questions about the BP oil spill for a trivia game.,,"1. In what year did the BP oil spill occur? 
+2. How many gallons of oil leaked in to the Gulf of Mexico due to the BP oil spill? 
+3. How long did it take to contain the BP oil spill? 
+4. What are the two main causes of the BP oil spill? 
+5. What stretch of coastline was impacted by the BP oil spill?",0.9243722558021545,"Come up with five questions about the BP oil spill for a trivia game.
+1. How much oil has leaked into the Gulf of Mexico due to the BP oil spill?
+2. How deep is the BP oil spill?
+3. How long has the BP oil spill been going on?
+4. What are the economic impacts of the BP oil spill?
+5. What methods are being used to try to contain the BP oil spill?"
+Research and compare the pros and cons of online education and traditional classroom education.,,"Online education has several advantages compared to traditional classroom education. It is more convenient as it allows students to learn at any time and place, as long as they have a device and a connection to the internet. This also eliminates the need for physical classrooms and reduces costs for students. Furthermore, students have access to a wealth of resources such as videos, quizzes and other interactive elements. However, one of the biggest disadvantages of online education is that it removes the personal interactions between teachers and students. In traditional classroom settings, students are able to interact directly which can help them to understand concepts better. Additionally, they may be able to ask questions which can't be done in an online environment.",0.8604171872138977,"Research and compare the pros and cons of online education and traditional classroom education.
+What are the advantages and disadvantages of online education?
+What are the advantages and disadvantages of traditional classroom education?"
+"Explain the meaning of the idiomatic phrase ""One man's meat is another man's poison"".",,"The idiomatic phrase ""One man's meat is another man's poison"" is a proverb used to refer to the idea that different people have different tastes and preferences. It emphasizes that something that one person may find unappealing or disagreeable may be enjoyable or appealing to another person. In other words, what one person finds acceptable or desirable may be distasteful to another person. Therefore, this phrase suggests that people should not judge other people's opinions or preferences too harshly.",0.9166035056114197,"Explain the meaning of the idiomatic phrase ""One man's meat is another man's poison"".
+The idiom ""One man's meat is another man's poison"" is used to describe something that one person finds acceptable or desirable, while another person may find it unappealing or distasteful. It is often used to describe food, but can be used to describe other things as well, such as art or music. The phrase implies that different people have different tastes and preferences."
+List two benefits of cloud computing,,"1. Cost efficiency: Cloud computing offers businesses a cost-effective way to store and access data. They don't need to invest in expensive hardware to increase their storage capacity.
+2. Scalability: Cloud computing makes it easier for businesses to scale up or down their data storage and computing power as needed. This makes it easier for businesses to respond quickly to changing market conditions and demands.",0.8752108216285706,"List two benefits of cloud computing
+List two benefits of cloud computing.
+Cloud computing offers several benefits, such as increased scalability and cost savings, enhanced flexibility and agility, improved security and privacy, and faster application and service delivery. Cloud computing also allows organizations to access advanced technologies without having to purchase, maintain, or manage them in-house. Additionally, cloud computing can facilitate collaboration and enhance the efficiency of processes such as IT service management."
+Summarize the differences between Joint and Separate Property,,"In the context of a marriage, separate property refers to property or assets that one spouse had prior to a marriage. This includes items that were acquired after the marriage or inherited from a family member, and does not automatically become the couple's shared property. On the other hand, joint property refers to property that is jointly owned by both spouses; it may include assets that are acquired by either spouse during the marriage. Joint property is to be divided equally in the event of a divorce.",0.8719093799591064,"Summarize the differences between Joint and Separate Property
+Joint property is any property that is jointly owned by two people. This can include assets such as a home, investments, bank accounts, and vehicles. Separate property is any property that is owned by one person and was not acquired during the marriage. This can include items such as gifts, inheritances, or property that was purchased with separate funds.
+Generally, separate property remains separate, however, any property that is jointly acquired is considered to be joint property. This means that both people have an equal share in the property and any profits or losses associated with the property.
+Joint property should be split equally in the event of a divorce, however, separate property is not automatically divided. Instead, the court will look at a number of factors to determine if and how the separate property should be divided.
+Joint property can be divided in a number of ways. This can include a 50/50 split, one person keeping the property and the other being compensated with another asset, or the court can order that the property be sold and the proceeds divided.
+Separate property can be divided in a number of ways as well. This can include a negotiated settlement where the parties agree to divide the property in a certain manner, the court can order that the property be sold and the proceeds divided, or the court can assign one person the exclusive ownership of the property.
+In the event of a divorce, it is important to understand the difference between joint and separate property and how it may affect the division of assets. Working with an experienced family law attorney can help ensure that your rights are protected and that the property is divided in a fair and equitable manner."
+Generate a list of measurements to take when designing a game character.,,"When designing a game character, the following measurements should be taken:
+1. Body proportion: The proportions of the characters body from head to toe, including height.
+2. Arm and leg length: The length of the characters arms and legs relative to other body parts. 
+3. Body shape/structure: The overall shape and structure of the character, especially the shoulders and hips.
+4. Face dimensions: The size and shape of the characters face, including features such as the eyes, nose and mouth.
+5. Hair length: The length of hair touching the shoulders or any other part of the head.
+6. Clothing measurement: The dimensions of clothing and armor, such as the size and length of collars, cuffs and fingers.
+7. Skeletal structure: The underlying structure of the bones, such as the rib cage, spine, arms and legs.
+8. Hand size: The length of the characters fingers and how they relate to other body parts.",0.8547611236572266,"Generate a list of measurements to take when designing a game character.
+The design of a game character requires careful consideration of many different aspects. This article will provide a list of measurements to take when creating a game character, such as body proportion, head size, facial features, and limb length.
+Body Proportion: The proportions of a game character’s body should be in proportion to their role in the game. For example, a character that is supposed to be muscular should have a larger upper body in relation to their lower body, while a character that is supposed to be thin should have a smaller upper body in relation to their lower body.
+Head Size: The size of a game character’s head should be in proportion to the rest of their body. Generally, a character’s head should be no more than one-third the size of their torso.
+Facial Features: The shape and size of a game character’s facial features should be appropriate for their role in the game. For example, a character with a more serious role should have a more serious expression, while a comical character should have a more exaggerated expression.
+Limb Length: The length of a game character’s limbs should be appropriate for their role in the game. For example, a character that is supposed to be athletic should have longer arms and legs, while a character that is supposed to be frail should have shorter arms and legs.
+Game Character Measurements List:
+Body proportion: Upper body size in relation to lower body size.
+Head size: One-third the size of the torso.
+Facial features: Appropriate for the character’s role.
+Limb length: Longer limbs for athletic characters, shorter limbs for frail characters."
+Describe a scenario for using the product,Product: Amazon Echo,"You can use the Amazon Echo to set reminders and alarms, play your favorite music or podcasts, make hands-free calls and video calls with contacts, check the weather and your calendar, manage shopping lists, control smart home devices, and more. For example, you can ask the Echo to turn on the lights, adjust the thermostat, or start the coffee maker in your home. You can also ask it to stream your favorite radio station, read the news and other content aloud, or play your music library. The Amazon Echo makes it easy to stay connected and in control of your home.",0.8425047993659973,"Describe a scenario for using the product
+Product: Amazon Echo
+Scenario: The user is setting up their Amazon Echo for the first time and wants to know how to use it to play music."
+Classify the given objects as 'durable' or 'non-durable'.,"Pillow, Chair",Pillow is non-durable and Chair is durable.,0.8412783145904541,"Classify the given objects as 'durable' or 'non-durable'.
+Pillow, Chair, Car - Durable
+Furniture, Car - Non-Durable
+Explain why durable goods are more expensive than non-durable goods.
+Durable goods are more expensive than non-durable goods because they are built to last longer. Durable goods usually require more raw materials, complex manufacturing processes, and extensive quality control to ensure that the product will last. These costs are reflected in the price of the goods. In contrast, non-durable goods are cheaper because they are meant to be used for a short period of time and are often made with lower-quality materials."
+Give an example of something that cannot exist in a vacuum.,,Water cannot exist in a vacuum.,0.8779676556587219,"Give an example of something that cannot exist in a vacuum.
+Water cannot exist in a vacuum.
+What is the most abundant element on Earth?
+The most abundant element on Earth is oxygen."
+Create a basic character profile of someone who follows the advice in the article.,"In a recent survey, 90% of participants indicated that self-care is important for their overall health and well-being.","Tom is a 30 year old man who understands the importance of self-care. He makes sure to take time out of each week for activities he enjoys — such as reading, exercising in the park, and playing the guitar. Tom prioritizes his mental and physical health and takes proactive steps to ensure he is staying on top of things. At the beginning of each day he sets a few goals for himself and takes the time to evaluate his progress at the end of the day. When he's feeling overwhelmed or stressed, he takes a break and does something relaxing.",0.8514207601547241,"Create a basic character profile of someone who follows the advice in the article.
+In a recent survey, 90% of participants indicated that self-care is important for their overall health and well-being. Despite this, only 20% reported that they practice self-care regularly. What are some practical ways to incorporate self-care into daily life?"
+Create a list of five books that everyone should read.,,"- To Kill a Mockingbird by Harper Lee
+- The Great Gatsby by F. Scott Fitzgerald
+- 1984 by George Orwell
+- The Catcher in the Rye by J.D. Salinger
+- Animal Farm by George Orwell",0.8633497357368469,"Create a list of five books that everyone should read.
+Create a list of five books that everyone should read. This list should include classics, modern works, and popular books. Try to pick books that are accessible to a wide range of readers and that cover a variety of genres.
+1. The Great Gatsby by F. Scott Fitzgerald: This classic novel follows the life of Jay Gatsby and his pursuit of the American dream.
+2. To Kill a Mockingbird by Harper Lee: This timeless story explores themes of justice and prejudice in the Deep South.
+3. The Catcher in the Rye by J.D. Salinger: This coming-of-age novel follows the journey of Holden Caulfield as he grapples with themes of innocence and corruption.
+4. 1984 by George Orwell: This dystopian novel explores themes of totalitarianism and individual freedom.
+5. The Alchemist by Paulo Coelho: This inspirational novel follows a young man on his journey to discover his personal legend."
+Generate a creative metaphor comparing poetry to magic,,Poetry is like a magical spell that can transport readers to other worlds and bring forgotten memories back to life.,0.8894055485725403,"Generate a creative metaphor comparing poetry to magic
+Magic is an art of creating something out of nothing, and poetry is an art of creating something out of words. Both are used to evoke emotions, create images and transport the reader to another world. Just like magic, poetry has the power to take the reader by surprise and leave a lasting impression."
+Take the input and rephrase it as a question.,This paper is about temporal models.,What is this paper about?,0.9094483852386475,"Take the input and rephrase it as a question.
+This paper is about temporal models.
+What is this paper about?
+This paper is about temporal models."
+Create a series of 3-5 budgeting tips.,,"1. Create a budget that outlines all of your income and expenses.
+2. Set up automated payments to help you stay on track.
+3. Utilize apps and websites that provide budgeting and savings tips.
+4. Cut out any unnecessary fees or subscriptions.
+5. Avoid impulse purchases and save money for important future expenses.",0.8610950112342834,"Create a series of 3-5 budgeting tips.
+The goal of this task is to create a list of budgeting tips to help people manage their finances. The tips should be easy to follow and applicable to a wide range of people.
+Create a budget that works for you.
+Set up a budgeting system that works for you and your lifestyle. Consider your income, expenses, savings goals, and other financial commitments when setting up your budget.
+Make sure to account for unexpected expenses.
+Create some flexibility in your budget by setting aside money for unexpected expenses. This can help you avoid the stress of having to find extra money when an unexpected expense arises.
+Track your spending and review your budget regularly.
+Keep track of your spending to make sure you are staying on track with your budget. This can help you identify areas where you can cut back, or where you can reallocate funds for savings or other goals.
+Review your budget regularly to make sure it still works for you and your lifestyle. As your situation changes, so should your budget.
+Set aside a portion of your income for savings.
+It is important to set aside a portion of your income for savings. This can help you build financial security and prepare for unexpected expenses.
+Take advantage of tax incentives and other financial benefits.
+Take advantage of any tax incentives or other financial benefits that may be available to you. This can help you maximize your savings and reach your financial goals."
+Generate an opening sentence for a journal article about the coronavirus pandemic.,,"The coronavirus pandemic has had a devastating impact on individuals, communities, and countries across the world. It is no surprise that the effects of the pandemic have been far reaching, with healthcare systems under strain, economies suffering, and social unrest on the rise.",0.8942404389381409,"Generate an opening sentence for a journal article about the coronavirus pandemic.
+The coronavirus pandemic has had profound implications for global economies, public health, and international relations."
+Output a list of items needed to have a picnic.,,#NAME?,0.793359100818634,"Output a list of items needed to have a picnic.
+Input: Items needed for a picnic
+Output: A picnic requires food, drinks, plates, cutlery, napkins, a blanket or chairs, a picnic basket, insect repellent and sunscreen."
+Classify the following sentences as either a rhetorical question or a declarative sentence.,"(1) Are we there yet?
+(2) I am almost done with my project.","(1) Rhetorical Question 
+(2) Declarative Sentence",0.8689981698989868,"Classify the following sentences as either a rhetorical question or a declarative sentence.
+(1) Are we there yet?
+(2) I am almost done with my project.
+Rhetorical Question | Declarative Sentence
+1. No | 2. Yes"
+Propose an idea for a story about an unexpected journey.,,"The story is about a young girl named Emily who lives in a small village far away from civilization. One day while playing in the forest, she falls asleep and wakes up to find herself in a strange land. As she begins to explore, she finds that the land is in danger of being taken over by an evil dictator. To save the land, Emily embarks on a journey to find four ancient stones that contain magical powers. Along the way she meets allies and enemies, discovers new and extraordinary places, and unlocks hidden powers she never knew she had. In the end, she is able to save the land and learns the importance of friendship and courage.",0.8433772325515747,"Propose an idea for a story about an unexpected journey.
+Create a character that is an unlikely hero. Describe their background and how they become the hero."
+Estimate how long the following task will take,Creating a website with content management system and basic template,This task will likely take between 10-20 hours depending on the complexity of the website and the skills of the developer.,0.8537918329238892,"Estimate how long the following task will take
+Creating a website with content management system and basic template design.
+This task requires an estimate of the time needed to complete the project.
+Estimate the time needed for the task:
+1. Research and decide on the content management system
+2. Develop the basic template design
+3. Implement the content
+4. Test the website
+5. Make any necessary adjustments
+6. Publish the website"
+Determine the characters’ psychological states in the last paragraph of the story.,"The last paragraph of the story reads, ""She looked around at the empty room, took a deep breath, and marched out the door, ready to face the new day.""","The main character in the story has a psychological state of determination, resilience, strength, and courage. She is ready to face the challenges of the new day with a sense of purpose and optimism.",0.9056913256645203,"Determine the characters’ psychological states in the last paragraph of the story.
+The last paragraph of the story reads, ""She looked around at the empty room, took a deep breath, and marched out the door, ready to face the new day."" This suggests that she is feeling determined and optimistic. She is ready to face the challenges of the day with a sense of purpose."
+Compose a tweet to advertise a new product launch.,,We're thrilled to announce the launch of our new product! Check it out and find out how it can help you achieve your goals. #newproduct #innovative #goals,0.8551866412162781,"Compose a tweet to advertise a new product launch.
+Create a blog post to announce the launch of a new product."
+Organize the following list of books from the oldest to the most recent.,"The Grapes of Wrath, To Kill a Mockingbird, Invisible Man, 1984","The Grapes of Wrath, To Kill a Mockingbird, Invisible Man, 1984",0.8971964716911316,"Organize the following list of books from the oldest to the most recent.
+The Grapes of Wrath, To Kill a Mockingbird, Invisible Man, 1984, The Great Gatsby, Animal Farm."
+Create a list of 5 different techniques for solving a Rubik's cube.,,"1. Layer-by-Layer Method: a method for solving the cube that systematically solves each layer of the cube one at a time.
+2. Cross Method: a method for solving the middle layer of the cube, which involves forming a cross shape with the correct colors.
+3. OLL: a method that solves the outside layer of the cube.
+4. PLL: a method that solves the inside layer of the cube.
+5. Combination Method: a method that combines Layer-by-Layer and Cross Method to solve the cube quickly.",0.8212054371833801,"Create a list of 5 different techniques for solving a Rubik's cube.
+Create a list of the top 10 most popular algorithms used in computer science.
+List the 4 basic steps of the Systems Development Life Cycle (SDLC).
+Explain the role of a database administrator (DBA) and the responsibilities they have.
+Explain the advantages and disadvantages of using a cloud-based database.
+List the steps for creating a database in Microsoft Access.
+Describe the difference between a relational database and a NoSQL database.
+List the advantages and disadvantages of using a graph database.
+List the advantages and disadvantages of using a document-oriented database.
+Explain the different types of database models and when each should be used.
+List the components of a database management system (DBMS).
+Explain the steps for creating a database in MySQL.
+Describe the different types of database normalization and when they should be used.
+Explain the importance of database security and the different types of threats.
+List the different types of database query languages and when each should be used."
+Describe how to make pancakes.,,"To make pancakes, you will need 1 cup of flour, 1 teaspoon of baking powder, 1/2 teaspoon of salt, 1 cup of milk, 1 egg, and 2 tablespoons of melted butter. Start by sifting the flour, baking powder and salt together in one bowl. In a separate bowl, beat together the egg, milk, and melted butter. Then, pour the wet ingredients into the dry ingredients and mix until just combined. Heat a skillet over medium-low heat and grease with butter. Pour about 1/4 cup of pancake batter into the hot skillet and cook for 2-3 minutes, or until the edges appear crispy. Flip and cook for an additional 1-2 minutes, or until the pancakes are golden brown. Serve with favorite toppings, such as butter, syrup, or fresh fruit.",0.8183726668357849,"Describe how to make pancakes.
+Include a recipe for pancakes.
+Describe the ingredients you need to make pancakes.
+Describe the process of making pancakes, including the order of steps and any tips or tricks.
+Describe the different types of pancakes, such as buttermilk, buckwheat, or blueberry pancakes.
+Describe the best way to serve pancakes, such as with syrup, powdered sugar, or fruit.
+Describe the health benefits of pancakes, such as their high-fiber content or their ability to be made with whole grains.
+Describe how pancakes can be incorporated into a balanced diet."
+Compare two given characters,Mario and Luigi,"Mario is the main character of the Mario series, while Luigi is his brother and a sidekick to Mario in the games. They have similar abilities and gameplay styles, but Luigi has higher jump abilities than Mario and is the only character who can use power-ups like the Poltergust and Super Poltergust.",0.9114651679992676,"Compare two given characters
+Mario and Luigi are two of the most beloved characters in video game history. They are both plumbers from the Mario series, but they have different abilities. Mario is the main character and has super strength and the ability to jump high. Luigi is his brother and has the ability to use power-ups like the Poltergust and Super Poltergust, which allow him to manipulate and control objects with his energy."
+You are working on a website. Design a user experience flow for users who want to search for a particular product.,,"The user experience for searching for a particular product should begin with providing users with relevant categories to browse, such as “apparel”, “electronics”, or “kitchenware”. From there, users can be presented with subcategories if necessary. Once the user reaches the target product category, they can be met with different filters, such as color, size, price range, and style, to further narrow down their search. After selecting these filters, the user should then be presented with the products. If they are unable to find what they are looking for, they should be presented with an option to refine their search, or to contact customer service for assistance.",0.8611027002334595,"You are working on a website. Design a user experience flow for users who want to search for a particular product.
+The user experience flow should include the following steps:
+1. The user searches for the product they are looking for.
+2. The website displays the search results.
+3. The user selects the product they want to purchase.
+4. The website displays the product details page.
+5. The user enters their payment and shipping information.
+6. The website processes the order.
+7. The product is shipped or downloaded.
+8. The user receives the product and is satisfied with the purchase."
+Clean the text of special characters,"Text:""this is the coolest😎!""","Text: ""this is the coolest!""",0.8899137377738953,"Clean the text of special characters
+Text:""this is the coolest😎!""
+CleanText: ""this is the coolest!"""
+Explain the purpose of the current US federal income tax system.,,"The purpose of the current US federal income tax system is to generate revenue for the government and to redistribute income, helping to provide essential government services and to reduce inequality.",0.9304525256156921,"Explain the purpose of the current US federal income tax system.
+The purpose of the current US federal income tax system is to generate revenue for the federal government, as well as to redistribute income, provide incentives for certain types of economic and social behavior, and to reduce income inequality. The income tax system is also used to help pay for programs such as Social Security, Medicare, and Medicaid."
+Describe the cultural significance of the Paris Commune uprising in 1871.,,"The Paris Commune uprising of 1871 was an important event in French history and culture, as it marked the first time that workers had established their own government, complete with its own democratically elected representatives. It was seen as a powerful challenge to the existing capitalist system, and its legacy has been embraced by many modern social movements, such as anarchism and socialism.",0.9078677892684937,"Describe the cultural significance of the Paris Commune uprising in 1871.
+The Paris Commune uprising of 1871 was a major event in French history and culture, and is seen as a key moment in the development of socialism and anarchism. The Commune was an experiment in democracy and self-governance, in which workers' councils took over the government of Paris and ran it for two months. This was the first time that such a system had been tried, and it had a major impact on workers' movements around the world. It was also a major inspiration for the Russian Revolution of 1917, and is seen as a precursor to modern socialist and anarchist movements."
+What is an Internet 'bot'?,,"An Internet bot, also known as a web robot, is a computer program designed to perform automated tasks on the web. These tasks may  include crawling webpages to collect data, interacting with websites to automate user tasks, or posting content on blogs or forums. Bots are often used to improve the speed and efficiency of web applications by handling mundane activities.",0.9066102504730225,"What is an Internet 'bot'?
+bot: A software program designed to perform automated tasks on the Internet. Bots are often used to crawl websites and collect data, automate user tasks, or launch distributed denial-of-service (DDoS) attacks."
