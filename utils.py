@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-import os
-import random
 from typing import Final
-
-import numpy as np
-import torch
 
 SEED: Final[int] = 21946520
 
@@ -15,20 +10,27 @@ def set_seed(seed: int = SEED) -> None:
 
 	:param seed: seed number
 	"""
+	import torch
+	import random
+	import numpy as np
+
 	torch.manual_seed(seed)
 	torch.cuda.manual_seed_all(seed)
-	torch.backends.cudnn.deterministic = True
-	torch.backends.cudnn.benchmark = False
+	# torch.backends.cudnn.deterministic = True
+	# torch.backends.cudnn.benchmark = False
 	np.random.seed(seed)
 	random.seed(seed)
 
 
-def set_mtec_env() -> torch.device:
+def set_mtec_env():
 	"""
 	Set environments for MTEC server
 
 	:return: PyTorch device
 	"""
+	import os
+	import torch
+
 	os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 	gpu_list = [torch.cuda.get_device_name(i) for i in range(torch.cuda.device_count())]
 	print(f"... {len(gpu_list)} visible 'logical' GPUs: {gpu_list}")

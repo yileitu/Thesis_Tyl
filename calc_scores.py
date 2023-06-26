@@ -21,4 +21,3 @@ if 'mover_score' not in df.columns:
 # hyps = df['alpaca_output'].tolist()
 # scores = word_mover_score(refs=refs, hyps=hyps, idf_dict_ref=idf_dict_ref, idf_dict_hyp=idf_dict_hyp)
 # print(scores)
-
