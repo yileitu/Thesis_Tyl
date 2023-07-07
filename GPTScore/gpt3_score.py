@@ -1,4 +1,4 @@
-from gpt_inference import GPT3Model
+from GPTScore.gpt_inference import GPT3Model
 
 def gpt3score(input, output,gpt3model=None,api_key=None):
     gpt3model_name = ''
