@@ -21,5 +21,5 @@ for index, row in df.iterrows():
 json_data: str = json.dumps(data, ensure_ascii=False)
 
 # Save the JSON data to a file
-with open('../data/alpaca_eval_for_pandalm.json', 'w', encoding='utf-8') as f:
+with open('../data/AlpacaEval_for_pandalm.json', 'w', encoding='utf-8') as f:
 	f.write(json_data)

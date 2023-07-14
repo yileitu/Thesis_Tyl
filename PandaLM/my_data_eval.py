@@ -18,7 +18,7 @@ llm_hf_paths: List[str] = list(llm_name2paths.values())
 
 pipeline = EvaluationPipeline(
 	candidate_paths=llm_hf_paths,
-	input_data_path="../data/alpaca_eval_for_pandalm.json",
+	input_data_path="../data/AlpacaEval_for_pandalm.json",
 	output_data_path="../data/output/alpaca_eval_for_pandalm_output.json",
 	)
 eval_results: PandaEval = pipeline.evaluate()

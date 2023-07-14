@@ -6,6 +6,17 @@ from typing import List
 from util.constants import SEED
 
 
+def gen_templated_prompt(input_text: str) -> str:
+	"""
+	Generate a prompt for a given input text and a template
+
+	:param input_text: input text
+	:return: templated prompt
+	"""
+	from util.constants import PROMPT_TEMPLATE
+
+	return PROMPT_TEMPLATE.format(input_text=input_text)
+
 def set_seed(seed: int = SEED) -> None:
 	"""
 	Set all seeds to make results reproducible

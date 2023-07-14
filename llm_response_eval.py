@@ -7,19 +7,19 @@ import torch
 from bert_score import score
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from util.util_func import set_seed
+from util.util_func import set_seed, set_mtec_env
 
 # Set environments
 set_seed()
-warnings.filterwarnings("ignore", category=UserWarning)
+device = set_mtec_env(num_gpus=1)
 
 # Constants
-DF_PATH: str = "data/alpaca_sample50.csv"
-COLS_TO_ADD: List[str] = ['bert_score', 'alpaca_output']
+DF_PATH: str = "data/AlpacaEval.csv"
+COLS_TO_ADD: List[str] = []  # ['bert_score', 'alpaca_output']
 DF_TYPE = {
-	'instruction': str,
-	'input'      : str,
-	'output'     : str,
+	'instruction'            : str,
+	'output-text_davinci_003': str,
+	'dataset'                : str,
 	}
 
 df = pd.read_csv(DF_PATH, dtype=DF_TYPE)
