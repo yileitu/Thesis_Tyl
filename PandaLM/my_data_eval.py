@@ -6,15 +6,13 @@ from typing import Dict, List, Tuple
 from typing_extensions import TypeAlias
 
 from pandalm import EvaluationPipeline
-from util.util_func import set_mtec_env, set_seed
+from util.util_func import set_mtec_env, set_seed, get_llm_names_and_hf_paths
 
 set_mtec_env(num_gpus=1)
 set_seed()
 PandaEval: TypeAlias = Dict[Tuple[str, str], List[int]]
 
-with open('../util/llm_hf_paths.json', 'r') as f:
-	llm_name2paths: Dict[str, str] = json.load(f)
-llm_hf_paths: List[str] = list(llm_name2paths.values())
+llm_name2hf_path, reverse_dict, _, llm_hf_paths = get_llm_names_and_hf_paths()
 
 pipeline = EvaluationPipeline(
 	candidate_paths=llm_hf_paths,
@@ -23,8 +21,6 @@ pipeline = EvaluationPipeline(
 	)
 eval_results: PandaEval = pipeline.evaluate()
 
-# Construct a reverse dictionary to find the key from a value
-reverse_dict: Dict[str, str] = {v: k for k, v in llm_name2paths.items()}
 # Initialize a new empty dictionary to store the transformed data
 new_eval_results: PandaEval = {}
 # Iterate through the original dictionary

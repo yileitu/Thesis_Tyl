@@ -1,21 +1,8 @@
 # -*- coding: utf-8 -*-
-import operator
-import subprocess
-from typing import List
+from typing import Dict, List, Tuple
 
 from util.constants import SEED
 
-
-def gen_templated_prompt(input_text: str) -> str:
-	"""
-	Generate a prompt for a given input text and a template
-
-	:param input_text: input text
-	:return: templated prompt
-	"""
-	from util.constants import PROMPT_TEMPLATE
-
-	return PROMPT_TEMPLATE.format(input_text=input_text)
 
 def set_seed(seed: int = SEED) -> None:
 	"""
@@ -40,6 +27,8 @@ def get_total_gpus() -> int:
 	Get total number of GPUs in the server
 	:return: number of GPUs
 	"""
+	import subprocess
+
 	sp = subprocess.Popen(['nvidia-smi', '--list-gpus'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	out_str = sp.communicate()
 	out_list = out_str[0].decode("utf-8").split('\n')
@@ -55,6 +44,9 @@ def get_idle_gpus(num_gpus: int = 2) -> List[int]:
 	:param num_gpus: requested number of GPUs
 	:return: list of idle GPU IDs
 	"""
+	import operator
+	import subprocess
+
 	total_gpus = get_total_gpus()
 	if num_gpus > total_gpus:
 		raise ValueError(f'Requested number of GPUs ({num_gpus}) exceeds available GPUs ({total_gpus})')
@@ -99,3 +91,52 @@ def set_mtec_env(num_gpus: int = 2):
 	print(f"... using {device}")
 
 	return device
+
+
+def get_llm_names_and_hf_paths() -> Tuple[Dict[str, str], Dict[str, str], List[str], List[str]]:
+	"""
+	Get LLM names and their HF paths from a JSON file
+	:return: key-value pairs of LLM names and their HF paths
+	"""
+	import json
+	from util.constants import LLM_HF_PATHS_DIR
+
+	with open(LLM_HF_PATHS_DIR, 'r') as f:
+		llm_name2hf_path: Dict[str, str] = json.load(f)
+	llm_hf_path2name: Dict[str, str] = {v: k for k, v in llm_name2hf_path.items()}
+	llm_names: List[str] = list(llm_name2hf_path.keys())
+	llm_hf_paths: List[str] = list(llm_name2hf_path.values())
+	print(f"... {len(llm_names)} LLMs found: {llm_names}")
+
+	return llm_name2hf_path, llm_hf_path2name, llm_names, llm_hf_paths
+
+
+def gen_templated_prompt(input_text: str) -> str:
+	"""
+	Generate a prompt for a given input text and a template
+
+	:param input_text: input text
+	:return: templated prompt
+	"""
+	from util.constants import PROMPT_TEMPLATE
+
+	return PROMPT_TEMPLATE.format(input_text=input_text)
+
+
+def gen_clean_output(output_text: str) -> str:
+	"""
+	Generate a clean output from the raw output
+
+	:param output_text: raw output text
+	:return: clean output text
+	"""
+	import re
+	from util.constants import RESPONSE_SPLIT
+
+	pattern = re.compile(
+		r"<unk>|<pad>|<s>|</s>|\[PAD\]|<\|endoftext\|>|\[UNK\]|\[CLS\]|\[MASK\]|<\|startofpiece\|>|<\|endofpiece\|>|\[gMASK\]|\[sMASK\]"
+		)
+	clean_output = output_text.split(RESPONSE_SPLIT)[1].strip()
+	clean_output = pattern.sub("", clean_output.strip()).strip()
+
+	return clean_output
