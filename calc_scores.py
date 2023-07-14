@@ -2,7 +2,7 @@
 import pandas as pd
 
 from moverscore.moverscore_v2 import get_idf_dict, word_mover_score
-from utils import set_mtec_env, set_seed
+from util.util_func import set_mtec_env, set_seed
 
 # Set environments
 set_seed()

@@ -1,0 +1,10 @@
+{
+  "alpaca-7b": "chavinlo/alpaca-native",
+  "alpaca-13b": "chavinlo/alpaca-13b",
+  "koala-7b": "TheBloke/koala-7B-HF",
+  "koala-13b": "TheBloke/koala-13B-HF",
+  "vicuna-7b": "eachadea/vicuna-7b-1.1",
+  "vicuna-13b": "eachadea/vicuna-13b-1.1",
+  "falcon-7b": "tiiuae/falcon-7b",
+  "dolly-v2-3b": "databricks/dolly-v2-3b"
+}

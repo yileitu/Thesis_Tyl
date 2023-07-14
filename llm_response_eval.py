@@ -7,7 +7,7 @@ import torch
 from bert_score import score
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from utils import set_seed
+from util.util_func import set_seed
 
 # Set environments
 set_seed()
