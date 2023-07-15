@@ -33,7 +33,7 @@ for llm_name, llm_hf_path in tqdm(llm_name2hf_path.items()):
 
 	# Load LLM
 	tokenizer = AutoTokenizer.from_pretrained(llm_hf_path)
-	model = AutoModelForCausalLM.from_pretrained(llm_hf_path, torch_dtype=torch.float16)
+	model = AutoModelForCausalLM.from_pretrained(llm_hf_path, torch_dtype=torch.bfloat16)
 	print(f"Loaded {llm_name}")
 	# model.to(device)
 	model = DataParallel(model)
@@ -68,7 +68,7 @@ for llm_name, llm_hf_path in tqdm(llm_name2hf_path.items()):
 
 			# Calculate BERTScore
 			_, _, F1 = score([output_text], [row['output-text_davinci_003']], lang='en')
-			df.loc[idx, bert_score_col_name] = F1.item()
+			df.loc[idx, bert_score_col_name] = F1.item().float()
 
 			# Save the dataframe every 10 rows
 			if idx % 10 == 0:
