@@ -68,7 +68,7 @@ for llm_name, llm_hf_path in tqdm(llm_name2hf_path.items()):
 
 			# Calculate BERTScore
 			_, _, F1 = score([output_text], [row['output-text_davinci_003']], lang='en')
-			df.loc[idx, bert_score_col_name] = F1.item().float()
+			df.loc[idx, bert_score_col_name] = F1.item()
 
 			# Save the dataframe every 10 rows
 			if idx % 10 == 0:
