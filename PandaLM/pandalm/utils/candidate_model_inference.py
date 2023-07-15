@@ -12,7 +12,7 @@ import transformers
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from util.constants import GEN_CONFIG_FOR_ALL_LLM
+from util.constants import GEN_CONFIG_FOR_ALL_LLM, RESPONSE_SPLIT, PROMPT_TEMPLATE
 
 
 def seed_everything(seed):
@@ -31,12 +31,9 @@ def seed_everything(seed):
 # }
 
 prompt_templates = {
-	"alpaca": {
-		"description"    : "Template used by Alpaca-LoRA.",
-		"prompt_input"   : "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Response:\n",
-		"prompt_no_input": "Below is an input that describes a task or asks a problem. Write a response that appropriately completes the request.\n\n### Input:\n{instruction}\n\n### Response:\n",
-		"response_split" : "### Response:",
-		}
+	"prompt_input"   : "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Response:\n",
+	"prompt_no_input": PROMPT_TEMPLATE,
+	"response_split" : RESPONSE_SPLIT,
 	}
 
 
@@ -45,9 +42,9 @@ class CandidateBatchInferenceProvider(object):
 	Batch inference provider for candidate generation models.
 	"""
 
-	def __init__(self, model_path, prompt_template_name="alpaca") -> None:
+	def __init__(self, model_path) -> None:
 		super().__init__()
-		self.template = prompt_templates[prompt_template_name]
+		self.template = prompt_templates
 		try:
 			tokenizer = AutoTokenizer.from_pretrained(model_path)
 		except:

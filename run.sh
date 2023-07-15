@@ -2,13 +2,14 @@
 
 #SBATCH -A es_sachan
 #SBATCH -n 1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=1
 #SBATCH --gpus=v100:1
-#SBATCH --time=4:00:00
-#SBATCH --mem-per-cpu=10240
+#SBATCH --time=24:00:00
+#SBATCH --mem-per-cpu=16384
 
 module load eth_proxy
-module load gcc/8.2.0
+module load gcc/9.3.0
+module load cuda/11.7.0
 conda activate thesis
 
-python3 llm_response_eval.py
+python3 llm_gen_response.py
