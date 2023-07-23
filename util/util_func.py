@@ -140,3 +140,22 @@ def gen_clean_output(output_text: str) -> str:
 	clean_output = pattern.sub("", clean_output.strip()).strip()
 
 	return clean_output
+
+
+def gen_clean_output_flan(output_text: str) -> str:
+	"""
+	Generate a clean output from the raw output
+
+	:param output_text: raw output text
+	:return: clean output text
+	"""
+	import re
+
+	pattern = re.compile(
+		r"<unk>|<pad>|<s>|</s>|\[PAD\]|<\|endoftext\|>|\[UNK\]|\[CLS\]|\[MASK\]|<\|startofpiece\|>|<\|endofpiece\|>|\[gMASK\]|\[sMASK\]"
+		)
+	clean_output = output_text.split("Response:")[1].strip()
+	clean_output = pattern.sub("", clean_output.strip()).strip()
+
+	return clean_output
+
