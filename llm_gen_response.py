@@ -21,15 +21,17 @@ device = set_mtec_env(num_gpus=NUM_GPU)
 logging.set_verbosity_error()
 
 # Load the dataset
-DF_PATH: str = "data/qa.csv"
+DF_PATH: str = "data/output/qa.csv"
 df = pd.read_csv(DF_PATH)
 llm_name2hf_path, _, _, _ = get_llm_names_and_hf_paths()
 
 for llm_name, llm_hf_path in tqdm(llm_name2hf_path.items()):
 	output_col_name = f'response_{llm_name}'
 	bert_score_col_name = f'BertScore_{llm_name}'
-	df[output_col_name] = None
-	df[bert_score_col_name] = None
+	if output_col_name not in df.columns:
+		df[output_col_name] = None
+	if bert_score_col_name not in df.columns:
+		df[bert_score_col_name] = None
 
 	# Load LLM
 	tokenizer = AutoTokenizer.from_pretrained(llm_hf_path)
@@ -41,6 +43,7 @@ for llm_name, llm_hf_path in tqdm(llm_name2hf_path.items()):
 
 	# Find the first row that has not been processed
 	start_index = df[bert_score_col_name].isna().idxmax()
+	print(f"... Starting from index {start_index}")
 
 	# 迭代处理行
 	# 使用DataFrame的groupby方法将行分成批次，每个批次的大小等于GPU的数量。

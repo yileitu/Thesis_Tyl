@@ -20,7 +20,7 @@ llm_name = 'FLAN-T5-large'
 llm_hf_path = 'google/flan-t5-large'
 
 # Load the dataset
-DF_PATH: str = "data/qa.csv"
+DF_PATH: str = "data/output/qa.csv"
 df = pd.read_csv(DF_PATH)
 
 tokenizer = T5Tokenizer.from_pretrained(llm_hf_path)
@@ -31,11 +31,14 @@ model.eval()
 
 output_col_name = f'response_{llm_name}'
 bert_score_col_name = f'BertScore_{llm_name}'
-df[output_col_name] = None
-df[bert_score_col_name] = None
+if output_col_name not in df.columns:
+	df[output_col_name] = None
+if bert_score_col_name not in df.columns:
+	df[bert_score_col_name] = None
 
 # Find the first row that has not been processed
 start_index = df[bert_score_col_name].isna().idxmax()
+print(f"... Starting from index {start_index}")
 
 # Iterate through the rows and generate responses
 for idx, row in tqdm(df.iloc[start_index:].iterrows()):
@@ -52,8 +55,7 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 	_, _, F1 = score([output_text], [row['response']], lang='en')
 	df.loc[idx, bert_score_col_name] = F1.item()
 
-	# Save the dataframe every 10 rows
-	if idx % 10 == 0:
+	if idx % 100 == 0:
 		df.to_csv(DF_PATH, index=False)
 
 df.to_csv(DF_PATH, index=False)
