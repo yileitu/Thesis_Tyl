@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 import pandas as pd
 
@@ -169,19 +169,19 @@ def find_first_unprocessed(df: pd.DataFrame, target_col_name: str) -> int:
 	:param target_col_name: column to check
 	:return: first unprocessed row index
 	"""
-	# Mark all non-null values as 1, null values as 0
-	mask = df[target_col_name].notna().astype(int)
+	# Get mask of the data where True for non-NaN (processed) and False for NaN (unprocessed)
+	mask = df[target_col_name].notna()
 
-	# Find which rows are boundary rows (i.e., they are non-null and their next row is null)
-	boundaries = (mask.diff() == -1)
+	# Find indices where there are changes from non-NaN to NaN
+	changes = mask.ne(mask.shift())
 
-	# Find the first boundary row, then add 1 to get the index of the first null value
-	start_index = boundaries.idxmax() + 1
+	# Identify indices where it changes from True (non-NaN) to False (NaN)
+	boundaries = changes.loc[mask.shift() & ~mask].index
 
-	# If the last row of df is non-null, then start_index will return the index of the last row
-	# So, we check if start_index exceeds the index range of df
-	if start_index > df.index[-1]:
-		# If it does, we assume that all rows have been processed and return -1
-		return -1
+	if boundaries.empty:
+		print(f"... All rows are processed. Exiting...")
+		exit(0)
 	else:
+		# As the indices are the locations of NaNs, we add 1 to point to the next unprocessed row
+		start_index = boundaries.max() + 1
 		return start_index

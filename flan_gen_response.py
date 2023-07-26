@@ -36,9 +36,6 @@ if bert_score_col_name not in df.columns:
 	df[bert_score_col_name] = None
 
 start_index = find_first_unprocessed(df=df, target_col_name=output_col_name)
-if start_index == -1:
-	print("... All rows have been processed. Exiting...")
-	exit(0)
 print(f"... Starting from index {start_index}")
 
 # Iterate through the rows and generate responses
