@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from typing import Dict, List, Tuple
 
-import pandas as pd
+from pandas import DataFrame
 
 from util.constants import SEED
 
@@ -9,8 +9,8 @@ from util.constants import SEED
 def set_seed(seed: int = SEED) -> None:
 	"""
 	Set all seeds to make results reproducible
-
 	:param seed: seed number
+	:return: None
 	"""
 	import torch
 	import random
@@ -70,6 +70,7 @@ def get_idle_gpus(num_gpus: int = 2) -> List[int]:
 def set_mtec_env(num_gpus: int = 2):
 	"""
 	Set environments for MTEC server
+	:param num_gpus: number of GPUs to use
 	:return: PyTorch device
 	"""
 	import os
@@ -116,13 +117,24 @@ def get_llm_names_and_hf_paths() -> Tuple[Dict[str, str], Dict[str, str], List[s
 def gen_templated_prompt(input_text: str) -> str:
 	"""
 	Generate a prompt for a given input text and a template
-
 	:param input_text: input text
 	:return: templated prompt
 	"""
 	from util.constants import PROMPT_TEMPLATE
 
 	return PROMPT_TEMPLATE.format(input_text=input_text)
+
+
+def gen_tf_templated_prompt(passage: str, question: str) -> str:
+	"""
+	Generate a prompt for a given passage and a question
+	:param passage: passage text
+	:param question: question text
+	:return: templated prompt for Ture/False questions
+	"""
+	from util.constants import TF_PROMPT_TEMPLATE
+
+	return TF_PROMPT_TEMPLATE.format(passage=passage, question=question)
 
 
 def gen_clean_output(output_text: str) -> str:
@@ -144,33 +156,20 @@ def gen_clean_output(output_text: str) -> str:
 	return clean_output
 
 
-def gen_clean_output_flan(output_text: str) -> str:
-	"""
-	Generate a clean output from the raw output
-
-	:param output_text: raw output text
-	:return: clean output text
-	"""
-	import re
-
-	pattern = re.compile(
-		r"<unk>|<pad>|<s>|</s>|\[PAD\]|<\|endoftext\|>|\[UNK\]|\[CLS\]|\[MASK\]|<\|startofpiece\|>|<\|endofpiece\|>|\[gMASK\]|\[sMASK\]"
-		)
-	clean_output = output_text.split("Response:")[1].strip()
-	clean_output = pattern.sub("", clean_output.strip()).strip()
-
-	return clean_output
-
-
-def find_first_unprocessed(df: pd.DataFrame, target_col_name: str) -> int:
+def find_first_unprocessed(df: DataFrame, target_col_name: str) -> int:
 	"""
 	Find the first unprocessed row in a dataframe
-	:param df: dataframe
+	:param df: pandas dataframe
 	:param target_col_name: column to check
 	:return: first unprocessed row index
 	"""
 	# Get mask of the data where True for non-NaN (processed) and False for NaN (unprocessed)
 	mask = df[target_col_name].notna()
+
+	# Check if all rows are unprocessed
+	if not mask.any():
+		# All rows are unprocessed, return the first index
+		return df.index[0]
 
 	# Find indices where there are changes from non-NaN to NaN
 	changes = mask.ne(mask.shift())
