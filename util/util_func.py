@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
+
+import pandas as pd
 
 from util.constants import SEED
 
@@ -159,3 +161,27 @@ def gen_clean_output_flan(output_text: str) -> str:
 
 	return clean_output
 
+
+def find_first_unprocessed(df: pd.DataFrame, target_col_name: str) -> int:
+	"""
+	Find the first unprocessed row in a dataframe
+	:param df: dataframe
+	:param target_col_name: column to check
+	:return: first unprocessed row index
+	"""
+	# Mark all non-null values as 1, null values as 0
+	mask = df[target_col_name].notna().astype(int)
+
+	# Find which rows are boundary rows (i.e., they are non-null and their next row is null)
+	boundaries = (mask.diff() == -1)
+
+	# Find the first boundary row, then add 1 to get the index of the first null value
+	start_index = boundaries.idxmax() + 1
+
+	# If the last row of df is non-null, then start_index will return the index of the last row
+	# So, we check if start_index exceeds the index range of df
+	if start_index > df.index[-1]:
+		# If it does, we assume that all rows have been processed and return -1
+		return -1
+	else:
+		return start_index
