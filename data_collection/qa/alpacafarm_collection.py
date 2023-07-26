@@ -19,4 +19,4 @@ df['input'] = df.apply(
 df = df.drop(columns=['instruction', 'output_1', 'output_2', 'preference', 'raw_preference'])
 
 print(df.head())
-df.to_csv('../../data/sampled/alpacafarm.csv', index=False)
+df.to_csv('../../data/sampled/qa/alpacafarm.csv', index=False)

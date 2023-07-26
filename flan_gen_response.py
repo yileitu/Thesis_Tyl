@@ -3,12 +3,11 @@ import gc
 
 import pandas as pd
 import torch
-from bert_score import score
 from tqdm import tqdm
 from transformers import T5ForConditionalGeneration, T5Tokenizer, logging
 
 from util.constants import GEN_CONFIG_FOR_ALL_LLM
-from util.util_func import gen_clean_output_flan, gen_templated_prompt, set_mtec_env, set_seed
+from util.util_func import find_first_unprocessed, gen_templated_prompt, set_mtec_env, set_seed
 
 # Set environments
 NUM_GPU: int = 1
@@ -36,8 +35,10 @@ if output_col_name not in df.columns:
 if bert_score_col_name not in df.columns:
 	df[bert_score_col_name] = None
 
-# Find the first row that has not been processed
-start_index = df[bert_score_col_name].isna().idxmax()
+start_index = find_first_unprocessed(df=df, target_col_name=output_col_name)
+if start_index == -1:
+	print("... All rows have been processed. Exiting...")
+	exit(0)
 print(f"... Starting from index {start_index}")
 
 # Iterate through the rows and generate responses
@@ -51,9 +52,9 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 	output_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
 	df.loc[idx, output_col_name] = output_text
 
-	# Calculate BERTScore
-	_, _, F1 = score([output_text], [row['response']], lang='en')
-	df.loc[idx, bert_score_col_name] = F1.item()
+	# # Calculate BERTScore
+	# _, _, F1 = score([output_text], [row['response']], lang='en')
+	# df.loc[idx, bert_score_col_name] = F1.item()
 
 	if idx % 100 == 0:
 		df.to_csv(DF_PATH, index=False)

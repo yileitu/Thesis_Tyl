@@ -9,7 +9,7 @@ df['input'] = df.apply(
 	)
 df = df.drop(columns=['instruction', 'context'])
 
-df.to_csv('/Users/tuyilei/Desktop/Thesis/Thesis_Tyl/data/sampled/dolly.csv', index=False)
+df.to_csv('../../data/sampled/qa/dolly.csv', index=False)
 
 source_counts = df['category'].value_counts()
 for source, count in source_counts.items():

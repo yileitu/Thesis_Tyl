@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 
-df_gpt4all = pd.read_csv("../../data/sampled/gpt4all.csv")
-df_dolly = pd.read_csv("../../data/sampled/dolly.csv")
-df_alpaca = pd.read_csv("../../data/sampled/alpacafarm.csv")
-df_baize = pd.read_csv("../../data/sampled/baize.csv")
-df_instinwild = pd.read_csv("../../data/sampled/instinwild.csv")
-df_fastchat = pd.read_csv("../../data/sampled/fastchat.csv")
+df_gpt4all = pd.read_csv("../../data/sampled/qa/gpt4all.csv")
+df_dolly = pd.read_csv("../../data/sampled/qa/dolly.csv")
+df_alpaca = pd.read_csv("../../data/sampled/qa/alpacafarm.csv")
+df_baize = pd.read_csv("../../data/sampled/qa/baize.csv")
+df_instinwild = pd.read_csv("../../data/sampled/qa/instinwild.csv")
+df_fastchat = pd.read_csv("../../data/sampled/qa/fastchat.csv")
 
 
 df_alpaca["category"] = None

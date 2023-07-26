@@ -7,7 +7,7 @@ from datasets import DatasetDict, load_dataset
 
 SEED: int = 21946520
 NUM_SAMPLES: int = 15000
-DATASETS_PATHS_DIR: str = "../../util/datasets_hf_path.json"
+DATASETS_PATHS_DIR: str = "qa_datasets_hf_path.json"
 
 with open(DATASETS_PATHS_DIR, 'r') as f:
 	dataset_name2hf_path: Dict[str, str] = json.load(f)
@@ -21,5 +21,5 @@ for name, path in dataset_name2hf_path.items():
 		)
 	sampled_df.drop(columns=["instruction"], inplace=True)
 	sampled_df.rename(columns={"output": "response"}, inplace=True)
-	sampled_df.to_csv(f'../../data/sampled/{name}.csv', index=False)
+	sampled_df.to_csv(f'../../data/sampled/qa/{name}.csv', index=False)
 	print(f"Finished sampling '{name}' dataset.")

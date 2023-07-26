@@ -25,7 +25,7 @@ sampled_df = df_filtered.groupby('source').apply(
 	).reset_index(drop=True)
 sampled_df = sampled_df.rename(columns={'prompt': 'input', 'source': 'category'})
 sampled_df = sampled_df[['input', 'response', 'category']]
-sampled_df.to_csv('../../data/sampled/gpt4all.csv', index=False)
+sampled_df.to_csv('../../data/sampled/qa/gpt4all.csv', index=False)
 
 source_counts = sampled_df['category'].value_counts()
 for source, count in source_counts.items():
