@@ -7,9 +7,13 @@ from transformers import GenerationConfig
 SEED: Final[int] = 21946520
 
 # Strings
-PROMPT_TEMPLATE: str = "Below is an input that describes a task or asks a problem. Write a response that appropriately completes the request.\n\n### Input:\n{input_text}\n\n### Response:\n"
-RESPONSE_SPLIT: Final[str] = "### Response:"
-
+"""
+QA = Question Answering
+TF = True/False
+MC = Multiple Choice
+"""
+QA_PROMPT_TEMPLATE: str = "Below is an input that describes a task or asks a problem. Write a response that appropriately completes the request.\n\n### Input:\n{input_text}\n\n### Response:\n"
+QA_RESPONSE_SPLIT: Final[str] = "### Response:"
 TF_PROMPT_TEMPLATE: str = "Based on the information in: \"{passage}\", please respond to the following question with either 'TRUE' or 'FALSE': \"{question}\""
 
 # Paths

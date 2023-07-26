@@ -120,9 +120,9 @@ def gen_templated_prompt(input_text: str) -> str:
 	:param input_text: input text
 	:return: templated prompt
 	"""
-	from util.constants import PROMPT_TEMPLATE
+	from util.constants import QA_PROMPT_TEMPLATE
 
-	return PROMPT_TEMPLATE.format(input_text=input_text)
+	return QA_PROMPT_TEMPLATE.format(input_text=input_text)
 
 
 def gen_tf_templated_prompt(passage: str, question: str) -> str:
@@ -145,12 +145,12 @@ def gen_clean_output(output_text: str) -> str:
 	:return: clean output text
 	"""
 	import re
-	from util.constants import RESPONSE_SPLIT
+	from util.constants import QA_RESPONSE_SPLIT
 
 	pattern = re.compile(
 		r"<unk>|<pad>|<s>|</s>|\[PAD\]|<\|endoftext\|>|\[UNK\]|\[CLS\]|\[MASK\]|<\|startofpiece\|>|<\|endofpiece\|>|\[gMASK\]|\[sMASK\]"
 		)
-	clean_output = output_text.split(RESPONSE_SPLIT)[1].strip()
+	clean_output = output_text.split(QA_RESPONSE_SPLIT)[1].strip()
 	clean_output = pattern.sub("", clean_output.strip()).strip()
 
 	return clean_output

@@ -12,7 +12,7 @@ import transformers
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from util.constants import GEN_CONFIG_FOR_ALL_LLM, RESPONSE_SPLIT, PROMPT_TEMPLATE
+from util.constants import GEN_CONFIG_FOR_ALL_LLM, QA_RESPONSE_SPLIT, QA_PROMPT_TEMPLATE
 
 
 def seed_everything(seed):
@@ -32,8 +32,8 @@ def seed_everything(seed):
 
 prompt_templates = {
 	"prompt_input"   : "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Response:\n",
-	"prompt_no_input": PROMPT_TEMPLATE,
-	"response_split" : RESPONSE_SPLIT,
+	"prompt_no_input": QA_PROMPT_TEMPLATE,
+	"response_split" : QA_RESPONSE_SPLIT,
 	}
 
 
