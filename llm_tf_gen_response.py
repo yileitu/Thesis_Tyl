@@ -55,13 +55,12 @@ for llm_name, llm_hf_path in tqdm(llm_name2hf_path.items()):
 			with torch.no_grad():
 				output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_ALL_LLM)
 		output_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
-		clean_output = gen_clean_output(output_text)
-		df.loc[idx, output_col_name] = clean_output
+		df.loc[idx, output_col_name] = output_text
 
 		# Save the dataframe every SAVE_INTERVAL rows and clear memory
 		if (idx + 1) % SAVE_INTERVAL == 0:
 			df.to_csv(DF_PATH, index=False)
-			del input_ids, output_ids, input_text, output_text, clean_output
+			del input_ids, output_ids, input_text, output_text
 			gc.collect()
 			torch.cuda.empty_cache()
 
