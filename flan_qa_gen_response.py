@@ -8,7 +8,7 @@ from tqdm import tqdm
 from transformers import T5ForConditionalGeneration, T5Tokenizer, logging
 
 from util.constants import GEN_CONFIG_FOR_ALL_LLM
-from util.util_func import find_first_unprocessed, gen_templated_prompt, set_mtec_env, set_seed
+from util.util_func import find_first_unprocessed, gen_qa_templated_prompt, set_mtec_env, set_seed
 
 SAVE_INTERVAL: int = 100
 
@@ -43,7 +43,7 @@ print(f"... Starting from index {start_index}")
 
 # Iterate through the rows and generate responses
 for idx, row in tqdm(df.iloc[start_index:].iterrows()):
-	input_text = gen_templated_prompt(row['input'])
+	input_text = gen_qa_templated_prompt(row['input'])
 
 	# Generate response
 	# Use autocast() to generate responses faster

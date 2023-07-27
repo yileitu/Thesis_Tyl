@@ -114,7 +114,7 @@ def get_llm_names_and_hf_paths() -> Tuple[Dict[str, str], Dict[str, str], List[s
 	return llm_name2hf_path, llm_hf_path2name, llm_names, llm_hf_paths
 
 
-def gen_templated_prompt(input_text: str) -> str:
+def gen_qa_templated_prompt(input_text: str) -> str:
 	"""
 	Generate a prompt for a given input text and a template
 	:param input_text: input text
