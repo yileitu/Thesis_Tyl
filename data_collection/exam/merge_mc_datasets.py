@@ -21,5 +21,4 @@ df_openbookqa = df_openbookqa[cols]
 
 # Combine the datasets
 df_combined = pd.concat([df_agieval, df_mmlu, df_openbookqa], ignore_index=True)
-df_combined.to_csv("../../data/archive/exam.csv", index=False)
-
+df_combined.to_csv("../../data/archive/mc.csv", index=False)

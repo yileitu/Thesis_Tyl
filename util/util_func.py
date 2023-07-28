@@ -1,9 +1,23 @@
 # -*- coding: utf-8 -*-
+from dataclasses import dataclass
 from typing import Dict, List, Tuple
 
 from pandas import DataFrame
 
 from util.constants import SEED
+
+
+# Structures
+@dataclass
+class MCOptions:
+	"""
+	Option texts for multiple choice questions
+	"""
+	A: str = ''
+	B: str = ''
+	C: str = ''
+	D: str = ''
+	E: str = ''
 
 
 def set_seed(seed: int = SEED) -> None:
@@ -127,7 +141,7 @@ def gen_qa_templated_prompt(input_text: str) -> str:
 
 def gen_tf_templated_prompt(passage: str, question: str) -> str:
 	"""
-	Generate a prompt for a given passage and a question
+	Generate a prompt for a given passage and a question for True/False questions
 	:param passage: passage text
 	:param question: question text
 	:return: templated prompt for Ture/False questions
@@ -135,6 +149,40 @@ def gen_tf_templated_prompt(passage: str, question: str) -> str:
 	from util.constants import TF_PROMPT_TEMPLATE
 
 	return TF_PROMPT_TEMPLATE.format(passage=passage, question=question)
+
+
+def gen_mc_templated_prompt(passage: str, question: str, options: MCOptions) -> str:
+	"""
+	Generate a prompt for a given passage, question and options for multiple choice questions
+	:param passage: passage text
+	:param question: question text
+	:param options: options for the question, should be an instance of MCOptions
+	:return: templated prompt for multiple choice questions
+	"""
+	from util.constants import MC_PROMPT_TEMPLATE_A2E, MC_PROMPT_TEMPLATE_A2D, MC_PROMPT_TEMPLATE_A2E_NO_PASSAGE, \
+		MC_PROMPT_TEMPLATE_A2D_NO_PASSAGE
+
+	if passage:
+		if options.E:
+			return MC_PROMPT_TEMPLATE_A2E.format(
+				passage=passage, question=question, option_A=options.A, option_B=options.B, option_C=options.C,
+				option_D=options.D, option_E=options.E
+				)
+		else:
+			return MC_PROMPT_TEMPLATE_A2D.format(
+				passage=passage, question=question, option_A=options.A, option_B=options.B, option_C=options.C,
+				option_D=options.D
+				)
+	else:
+		if options.E:
+			return MC_PROMPT_TEMPLATE_A2E_NO_PASSAGE.format(
+				question=question, option_A=options.A, option_B=options.B, option_C=options.C, option_D=options.D,
+				option_E=options.E
+				)
+		else:
+			return MC_PROMPT_TEMPLATE_A2D_NO_PASSAGE.format(
+				question=question, option_A=options.A, option_B=options.B, option_C=options.C, option_D=options.D
+				)
 
 
 def gen_clean_output(output_text: str) -> str:
@@ -145,12 +193,12 @@ def gen_clean_output(output_text: str) -> str:
 	:return: clean output text
 	"""
 	import re
-	from util.constants import QA_RESPONSE_SPLIT
+	from util.constants import RESPONSE_SPLIT
 
 	pattern = re.compile(
 		r"<unk>|<pad>|<s>|</s>|\[PAD\]|<\|endoftext\|>|\[UNK\]|\[CLS\]|\[MASK\]|<\|startofpiece\|>|<\|endofpiece\|>|\[gMASK\]|\[sMASK\]"
 		)
-	clean_output = output_text.split(QA_RESPONSE_SPLIT)[1].strip()
+	clean_output = output_text.split(RESPONSE_SPLIT)[1].strip()
 	clean_output = pattern.sub("", clean_output.strip()).strip()
 
 	return clean_output
