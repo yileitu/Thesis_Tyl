@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import gc
 
+import numpy as np
 import pandas as pd
 import torch
 from torch.cuda.amp import autocast
@@ -23,6 +24,7 @@ logging.set_verbosity_error()
 # Load the dataset
 DF_PATH: str = "data/output/mc.csv"
 df = pd.read_csv(DF_PATH)
+df = df.replace({np.nan: None})  # NaN is the default value when reading from CSV, replace it with None
 llm_name2hf_path, _, _, _ = get_llm_names_and_hf_paths()
 
 for llm_name, llm_hf_path in tqdm(llm_name2hf_path.items()):

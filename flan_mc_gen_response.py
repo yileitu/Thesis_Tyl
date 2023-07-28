@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import gc
 
+import numpy as np
 import pandas as pd
 import torch
 from tqdm import tqdm
@@ -23,6 +24,7 @@ llm_hf_path = 'google/flan-t5-large'
 # Load the dataset
 DF_PATH: str = "data/output/mc.csv"
 df = pd.read_csv(DF_PATH)
+df = df.replace({np.nan: None})  # NaN is the default value when reading from CSV, replace it with None
 
 tokenizer = T5Tokenizer.from_pretrained(llm_hf_path)
 model = T5ForConditionalGeneration.from_pretrained(llm_hf_path, torch_dtype=torch.bfloat16)
