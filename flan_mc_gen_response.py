@@ -43,7 +43,6 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 		A=row['option_A'], B=row['option_B'], C=row['option_C'], D=row['option_D'], E=row['option_E']
 		)
 	input_text = gen_mc_templated_prompt(passage=row['passage'], question=row['question'], options=options)
-	print(input_text)
 
 	# Generate response
 	input_ids = tokenizer.encode(input_text, return_tensors='pt').to(device)

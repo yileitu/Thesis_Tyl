@@ -94,9 +94,6 @@ def set_mtec_env(num_gpus: int = 2):
 	if num_gpus < 1 or num_gpus > 8:
 		raise ValueError(f"GPU count should be between 1 and 8. Your input is {num_gpus}.")
 
-	# os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-	# gpu_indices = ",".join(str(i) for i in range(num_gpus))
-	# os.environ["CUDA_VISIBLE_DEVICES"] = gpu_indices
 	idle_gpus = get_idle_gpus(num_gpus)
 	os.environ["CUDA_VISIBLE_DEVICES"] = ','.join(map(str, idle_gpus))
 	print(f"... setting up GPUs {idle_gpus}")
