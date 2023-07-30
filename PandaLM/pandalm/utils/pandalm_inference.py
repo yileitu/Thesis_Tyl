@@ -11,7 +11,7 @@ import transformers
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from util.constants import GEN_CONFIG_FOR_ALL_LLM
+from util.constants import GEN_CONFIG_FOR_QA
 
 
 def seed_everything(seed):
@@ -138,7 +138,7 @@ class PandaLMBatchInferenceProvider(object):
 		for idx in tqdm(range(len(self.prepared))):
 			inputs = self.prepared[idx]
 			input_ids = inputs["input_ids"].to(self.model.device)
-			generation_config = GEN_CONFIG_FOR_ALL_LLM
+			generation_config = GEN_CONFIG_FOR_QA
 			with torch.no_grad():
 				generation_output = self.model.generate(
 					input_ids=input_ids,

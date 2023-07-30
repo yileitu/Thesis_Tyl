@@ -7,7 +7,7 @@ from torch.cuda.amp import autocast
 from tqdm import tqdm
 from transformers import T5ForConditionalGeneration, T5Tokenizer, logging
 
-from util.constants import GEN_CONFIG_FOR_ALL_LLM
+from util.constants import GEN_CONFIG_FOR_QA
 from util.util_func import find_first_unprocessed, gen_qa_templated_prompt, set_mtec_env, set_seed
 
 SAVE_INTERVAL: int = 100
@@ -50,7 +50,7 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 	with autocast():
 		input_ids = tokenizer.encode(input_text, return_tensors='pt').to(device)
 		with torch.no_grad():
-			output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_ALL_LLM)
+			output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_QA)
 	output_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
 	df.loc[idx, output_col_name] = output_text
 

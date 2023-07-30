@@ -12,7 +12,7 @@ import transformers
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from util.constants import GEN_CONFIG_FOR_ALL_LLM, RESPONSE_SPLIT, QA_PROMPT_TEMPLATE
+from util.constants import GEN_CONFIG_FOR_QA, RESPONSE_SPLIT, QA_PROMPT_TEMPLATE
 
 
 def seed_everything(seed):
@@ -143,7 +143,7 @@ class CandidateBatchInferenceProvider(object):
 			with torch.no_grad():
 				generation_output = self.model.generate(
 					input_ids=input_ids,
-					generation_config=GEN_CONFIG_FOR_ALL_LLM,
+					generation_config=GEN_CONFIG_FOR_QA,
 					return_dict_in_generate=True,
 					output_scores=True,
 					)
