@@ -3,7 +3,7 @@
 #SBATCH -A es_sachan
 #SBATCH -n 2
 #SBATCH --gpus=a100_80gb:1
-#SBATCH --time=24:00:00
+#SBATCH --time=48:00:00
 #SBATCH --mem-per-cpu=16384
 
 module load eth_proxy

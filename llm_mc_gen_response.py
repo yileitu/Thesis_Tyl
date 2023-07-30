@@ -12,7 +12,7 @@ from util.constants import GEN_CONFIG_FOR_EXAM, RESPONSE_SPLIT
 from util.util_func import MCOptions, find_first_unprocessed, gen_clean_output, gen_mc_templated_prompt, \
 	get_llm_names_and_hf_paths, set_mtec_env, set_seed
 
-SAVE_INTERVAL: int = 10
+SAVE_INTERVAL: int = 20
 
 # Set environments
 NUM_GPU: int = 1
@@ -63,8 +63,6 @@ for llm_name, llm_hf_path in tqdm(llm_name2hf_path.items()):
 		# Save the dataframe every SAVE_INTERVAL rows and clear memory
 		if (idx + 1) % SAVE_INTERVAL == 0:
 			df.to_csv(DF_PATH, index=False)
-			del input_ids, output_ids, input_text, output_text, clean_output
-			gc.collect()
 			torch.cuda.empty_cache()
 
 	# Save the remaining rows
