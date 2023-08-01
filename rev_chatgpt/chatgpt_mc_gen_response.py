@@ -2,19 +2,22 @@
 """
 Generate responses for multiple choice questions using revChatGPT.
 """
+# # Make sure to run this script from the root directory correctly
+# import os
+# import sys
+#
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import json
-import os
 
 import pandas as pd
 from tqdm import tqdm
 
-from rev_chatgpt.my_chatbot import MyChatbot
-from util.constants import RESPONSE_SPLIT
+from my_chatbot import MyChatbot
 from util.util_func import MCOptions, find_first_unprocessed, gen_mc_templated_prompt
 
 # Load revChatGPT config
-CUR_DIR = os.path.dirname(os.path.abspath(__file__))
-REV_CHATGPT_CONFIG_PATH = os.path.join(CUR_DIR, 'rev_chatgpt_config.json')
+REV_CHATGPT_CONFIG_PATH = 'rev_chatgpt_config.json'
 with open(REV_CHATGPT_CONFIG_PATH, 'r') as f:
 	rev_chatgpt_config = json.load(f)
 LLM_NAME: str = rev_chatgpt_config['model']
@@ -41,7 +44,6 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 		A=row['option_A'], B=row['option_B'], C=row['option_C'], D=row['option_D'], E=row['option_E']
 		)
 	input_text = gen_mc_templated_prompt(passage=row['passage'], question=row['question'], options=options)
-	input_text += "\n\n" + RESPONSE_SPLIT
 	output_text = rev_chatgpt.get_response(input_text)
 	df.loc[idx, output_col_name] = output_text
 

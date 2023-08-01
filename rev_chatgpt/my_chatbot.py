@@ -6,7 +6,7 @@ from datetime import datetime
 
 current_date = datetime.now()
 current_date = current_date.strftime("%Y-%m-%d")
-SYS_PROMPT = f"You are ChatGPT, a large language model trained by OpenAI. \n\
+SYS_PROMPT = f"You are ChatGPT, a large language model trained by OpenAI, based on the GPT-3.5 architecture. \n\
 Knowledge cutoff: 2021-09 \n\
 Current date: {current_date}"
 
