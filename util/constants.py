@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+from enum import IntEnum
 from typing import Final
 
 import numpy as np
@@ -21,36 +23,58 @@ QA_PROMPT_TEMPLATE: str = "Below is an input that describes a task or asks a pro
 TF_PROMPT_TEMPLATE: str = "Based on the information in: \"{passage}\", please respond to the following question with either 'TRUE' or 'FALSE': \"{question}\". You don't have to provide reasons for your answer."
 MC_PROMPT_TEMPLATE_A2E: str = "Please consider the following scenario: \n\n\"{passage}\"\n\nNow, I have a question based on this scenario: \n\n\"{question}\"\n\nHere are your five options: \nA: {option_A}\nB: {option_B}\nC: {option_C}\nD: {option_D}\nE: {option_E}\n\nPlease provide me with the best answer in the form of a single letter (A, B, C, D or E). You don't have to provide reasons for your answer."
 MC_PROMPT_TEMPLATE_A2D: str = "Please consider the following scenario: \n\n\"{passage}\"\n\nNow, I have a question based on this scenario: \n\n\"{question}\"\n\nHere are your four options: \nA: {option_A}\nB: {option_B}\nC: {option_C}\nD: {option_D}\n\nPlease provide me with the best answer in the form of a single letter (A, B, C, or D). You don't have to provide reasons for your answer."
-MC_PROMPT_TEMPLATE_A2E_NO_PASSAGE: str = "Here is a question for you: \n\n\"{question}\"\n\nHere are your five options: \nA: {option_A}\nB: {option_B}\nC: {option_C}\nD: {option_D}\nE: {option_E}\n\nPlease provide me with the best answer in the form of a single letter (A, B, C, D or E). You don't have to provide reasons for your answer."
-MC_PROMPT_TEMPLATE_A2D_NO_PASSAGE: str = "Here is a question for you: \n\n\"{question}\"\n\nHere are your four options: \nA: {option_A}\nB: {option_B}\nC: {option_C}\nD: {option_D}\n\nPlease provide me with the best answer in the form of a single letter (A, B, C, or D). You don't have to provide reasons for your answer."
+MC_PROMPT_TEMPLATE_A2E_NO_PASSAGE: str = "Here is a question for you: \n\n\"{question}\"\n\nHere are your five options: \nA: {option_A}\nB: {option_B}\nC: {option_C}\nD: {option_D}\nE: {option_E}\n\nPlease provide me with the best answer based on your own knowledge in the form of a single letter (A, B, C, D or E). You don't have to provide reasons for your answer."
+MC_PROMPT_TEMPLATE_A2D_NO_PASSAGE: str = "Here is a question for you: \n\n\"{question}\"\n\nHere are your four options: \nA: {option_A}\nB: {option_B}\nC: {option_C}\nD: {option_D}\n\nPlease provide me with the best answer based on your own knowledge in the form of a single letter (A, B, C, or D). You don't have to provide reasons for your answer."
+
+current_date = datetime.now().strftime("%Y-%m-%d")
+CHATGPT_SYS_PROMPT = f"You are ChatGPT, a large language model trained by OpenAI, based on the GPT-3.5 architecture. \n\
+Knowledge cutoff: 2021-09 \n\
+Current date: {current_date}"
 
 # Paths
 LLM_HF_PATHS_DIR: Final[str] = "util/llm_name2hf_path.json"
 
-# Classes
+# Configs
+MAX_LEN_QA: Final[int] = 5000
+MAX_LEN_EXAM: Final[int] = 50
+TEMPERATURE: Final[float] = 0.1
+TOP_P: Final[float] = 1.0
+TOP_K: Final[int] = 10
+NUM_BEAMS: Final[int] = 5
+EARLY_STOPPING: Final[bool] = True
+DO_SAMPLE: Final[bool] = False
+
 GEN_CONFIG_FOR_QA: Final[GenerationConfig] = GenerationConfig(
-	max_length=5000,
-	max_new_tokens=5000,
-	temperature=0.1,
-	top_p=1.0,
-	top_k=10,
-	num_beams=5,
-	repetition_penalty=1.2,
-	early_stopping=True,
-	do_sample=False,
+	max_length=MAX_LEN_QA,
+	max_new_tokens=MAX_LEN_QA,
+	temperature=TEMPERATURE,
+	top_p=TOP_P,
+	top_k=TOP_K,
+	num_beams=NUM_BEAMS,
+	early_stopping=EARLY_STOPPING,
+	do_sample=DO_SAMPLE
 	)
 
 GEN_CONFIG_FOR_EXAM: Final[GenerationConfig] = GenerationConfig(
-	max_length=50,
-	max_new_tokens=50,
-	temperature=0.1,
-	top_p=1.0,
-	top_k=10,
-	num_beams=5,
-	repetition_penalty=1.2,
-	early_stopping=True,
-	do_sample=False,
+	max_length=MAX_LEN_EXAM,
+	max_new_tokens=MAX_LEN_EXAM,
+	temperature=TEMPERATURE,
+	top_p=TOP_P,
+	top_k=TOP_K,
+	num_beams=NUM_BEAMS,
+	early_stopping=EARLY_STOPPING,
+	do_sample=DO_SAMPLE
 	)
 
 # Others
 NULL_VALUES = ['', None, np.nan]
+
+
+class Task(IntEnum):
+	"""
+	Enum for task types
+	"""
+	QA: int = 0  # Question Answering
+	MC: int = 1  # Multiple Choice
+	TF: int = 2  # True/False
+	EXAM: int = 3  # MC + TF
