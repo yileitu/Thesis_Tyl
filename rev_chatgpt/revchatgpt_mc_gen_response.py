@@ -13,7 +13,7 @@ import json
 import pandas as pd
 from tqdm import tqdm
 
-from my_chatbot import MyChatbot
+from rev_chatgpt.my_chatbot import MyChatbot
 from util.util_func import MCOptions, find_first_unprocessed, gen_mc_templated_prompt
 
 # Load revChatGPT config
@@ -21,11 +21,10 @@ REV_CHATGPT_CONFIG_PATH = 'rev_chatgpt_config.json'
 with open(REV_CHATGPT_CONFIG_PATH, 'r') as f:
 	rev_chatgpt_config = json.load(f)
 LLM_NAME: str = rev_chatgpt_config['model']
-SAVE_INTERVAL: int = 20
 
 # Load the dataset
 # DF_PATH: str = "data/output/toy_mc.csv"
-DF_PATH: str = "/Users/tuyilei/Desktop/Thesis/Thesis_Tyl/data/output/toy_mc.csv"
+DF_PATH: str = "/Users/tuyilei/Desktop/Thesis/Thesis_Tyl/data/output/mc.csv"
 df = pd.read_csv(DF_PATH)
 output_col_name = f'response_{LLM_NAME}'
 if output_col_name not in df.columns:
@@ -46,9 +45,4 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 	input_text = gen_mc_templated_prompt(passage=row['passage'], question=row['question'], options=options)
 	output_text = rev_chatgpt.get_response(input_text)
 	df.loc[idx, output_col_name] = output_text
-
-	# Save the dataframe every SAVE_INTERVAL rows and clear memory
-	if (idx + 1) % SAVE_INTERVAL == 0:
-		df.to_csv(DF_PATH, index=False)
-
-df.to_csv(DF_PATH, index=False)
+	df.to_csv(DF_PATH, index=False)

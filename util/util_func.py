@@ -5,7 +5,7 @@ from typing import Dict, List, Tuple
 import numpy as np
 from pandas import DataFrame
 
-from util.constants import NONE_VALUES, SEED
+from util.constants import NULL_VALUES, SEED
 
 
 # Structures
@@ -160,8 +160,8 @@ def gen_mc_templated_prompt(passage: str, question: str, options: MCOptions) -> 
 	from util.constants import MC_PROMPT_TEMPLATE_A2E, MC_PROMPT_TEMPLATE_A2D, MC_PROMPT_TEMPLATE_A2E_NO_PASSAGE, \
 		MC_PROMPT_TEMPLATE_A2D_NO_PASSAGE
 
-	if passage not in NONE_VALUES:
-		if options.E not in NONE_VALUES:
+	if passage not in NULL_VALUES:
+		if options.E not in NULL_VALUES:
 			return MC_PROMPT_TEMPLATE_A2E.format(
 				passage=passage, question=question, option_A=options.A, option_B=options.B, option_C=options.C,
 				option_D=options.D, option_E=options.E
@@ -172,7 +172,7 @@ def gen_mc_templated_prompt(passage: str, question: str, options: MCOptions) -> 
 				option_D=options.D
 				)
 	else:
-		if options.E not in NONE_VALUES:
+		if options.E not in NULL_VALUES:
 			return MC_PROMPT_TEMPLATE_A2E_NO_PASSAGE.format(
 				question=question, option_A=options.A, option_B=options.B, option_C=options.C, option_D=options.D,
 				option_E=options.E
