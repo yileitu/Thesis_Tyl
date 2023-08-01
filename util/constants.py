@@ -35,7 +35,7 @@ Current date: {current_date}"
 LLM_HF_PATHS_DIR: Final[str] = "util/llm_name2hf_path.json"
 
 # Configs
-MAX_LEN_QA: Final[int] = 5000
+MAX_LEN_QA: Final[int] = 2000
 MAX_LEN_EXAM: Final[int] = 50
 TEMPERATURE: Final[float] = 0.1
 TOP_P: Final[float] = 1.0

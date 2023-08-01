@@ -29,32 +29,46 @@ output_col_name = f'response_{LLM_NAME}'
 if output_col_name not in df.columns:
 	df[output_col_name] = None
 
-# Find the first row that has not been processed
-start_index = find_first_unprocessed(df=df, target_col_name=output_col_name)
-print(f"... Starting from index {start_index}")
 
-# Iterate through the rows and generate responses
-for idx, row in tqdm(df.iloc[start_index:].iterrows()):
-	if TASK == Task.MC:
-		options = MCOptions(
-			A=row['option_A'], B=row['option_B'], C=row['option_C'], D=row['option_D'], E=row['option_E']
-			)
-		input_text = gen_mc_templated_prompt(passage=row['passage'], question=row['question'], options=options)
-	elif TASK == Task.TF:
-		input_text = gen_tf_templated_prompt(passage=row['passage'], question=row['question'])
-	else:
-		raise ValueError("Invalid task type")
+def process_chatgpt_response() -> None:
+	"""
+	Get response using ChatGPT API and save the responses to the dataset.
+	"""
+	# Find the first row that has not been processed
+	start_index = find_first_unprocessed(df=df, target_col_name=output_col_name)
+	print(f"... Starting from index {start_index}")
 
-	response = openai.ChatCompletion.create(
-		model=LLM_NAME,
-		messages=[
-			{"role": "system", "content": CHATGPT_SYS_PROMPT},
-			{"role": "user", "content": input_text},
-			],
-		temperature=TEMPERATURE,
-		top_p=TOP_P,
-		max_tokens=MAX_LEN_EXAM,
-		)
-	output_text = response["choices"][0]["message"]["content"]
-	df.loc[idx, output_col_name] = output_text
-	df.to_csv(DF_PATH, index=False)
+	# Iterate through the rows and generate responses
+	for idx, row in tqdm(df.iloc[start_index:].iterrows()):
+		if TASK == Task.MC:
+			options = MCOptions(
+				A=row['option_A'], B=row['option_B'], C=row['option_C'], D=row['option_D'], E=row['option_E']
+				)
+			input_text = gen_mc_templated_prompt(passage=row['passage'], question=row['question'], options=options)
+		elif TASK == Task.TF:
+			input_text = gen_tf_templated_prompt(passage=row['passage'], question=row['question'])
+		else:
+			raise ValueError("Invalid task type")
+
+		try:
+			response = openai.ChatCompletion.create(
+				model=LLM_NAME,
+				messages=[
+					{"role": "system", "content": CHATGPT_SYS_PROMPT},
+					{"role": "user", "content": input_text},
+					],
+				temperature=TEMPERATURE,
+				top_p=TOP_P,
+				max_tokens=MAX_LEN_EXAM,
+				)
+			output_text = response["choices"][0]["message"]["content"]
+			df.loc[idx, output_col_name] = output_text
+			df.to_csv(DF_PATH, index=False)
+		except openai.error.APIError as e:
+			print(f"... Error: {e}")
+			print(f"... Stopping at index {idx}")
+			print("... Restarting from the beginning.")
+			process_chatgpt_response()
+
+
+process_chatgpt_response()

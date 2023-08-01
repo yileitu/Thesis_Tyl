@@ -2,7 +2,6 @@
 """
 Asks all LLMs to generate responses for the AlpacaEval dataset and calculates the BERTScore for each response.
 """
-import gc
 
 import pandas as pd
 import torch
@@ -68,17 +67,7 @@ for llm_name, llm_hf_path in tqdm(llm_name2hf_path.items()):
 		# Save the dataframe every SAVE_INTERVAL rows and clear memory
 		if (idx + 1) % SAVE_INTERVAL == 0:
 			df.to_csv(DF_PATH, index=False)
-			del input_ids, output_ids, input_text, output_text, clean_output
-			gc.collect()
 			torch.cuda.empty_cache()
 
 	# Save the remaining rows
 	df.to_csv(DF_PATH, index=False)
-
-	# Clear memory
-	del model
-	del tokenizer
-	torch.cuda.empty_cache()
-	gc.collect()
-
-df.to_csv(DF_PATH, index=False)
