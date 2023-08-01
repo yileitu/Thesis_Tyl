@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+Use OpenAI ChatGPT API to generate responses for datasets of different tasks.
+"""
 import os
 
 import openai
@@ -20,6 +23,7 @@ elif TASK == Task.TF:
 	DF_PATH: str = "/Users/tuyilei/Desktop/Thesis/Thesis_Tyl/data/output/boolq.csv"
 else:
 	raise ValueError("Invalid task type")
+
 df = pd.read_csv(DF_PATH)
 output_col_name = f'response_{LLM_NAME}'
 if output_col_name not in df.columns:
