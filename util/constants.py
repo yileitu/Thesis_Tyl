@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from dataclasses import dataclass
 from typing import Final
 
+import numpy as np
 from transformers import GenerationConfig
 
 # Numbers
@@ -51,3 +51,6 @@ GEN_CONFIG_FOR_EXAM: Final[GenerationConfig] = GenerationConfig(
 	early_stopping=True,
 	do_sample=False,
 	)
+
+# Others
+NULL_VALUES = ['', None, np.nan]
