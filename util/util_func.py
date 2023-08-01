@@ -228,5 +228,5 @@ def find_first_unprocessed(df: DataFrame, target_col_name: str) -> int:
 		exit(0)
 	else:
 		# As the indices are the locations of NaNs, we add 1 to point to the next unprocessed row
-		start_index = boundaries.max() + 1
+		start_index = boundaries.max()
 		return start_index

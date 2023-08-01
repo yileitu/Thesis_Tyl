@@ -14,9 +14,9 @@ SEED: Final[int] = 21946520
 QA = Question Answering
 TF = True/False
 MC = Multiple Choice
+EXAM = MC + TF
 A2E = 5 options (A, B, C, D, E)
 A2D = 4 options (A, B, C, D)
-EXAM = MC + TF
 """
 RESPONSE_SPLIT: Final[str] = "### Response:"
 QA_PROMPT_TEMPLATE: str = "Below is an input that describes a task or asks a problem. Write a response that appropriately completes the request.\n\n### Input:\n{input_text}"
