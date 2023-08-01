@@ -53,8 +53,6 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 	# Save the dataframe every SAVE_INTERVAL rows and clear memory
 	if (idx + 1) % SAVE_INTERVAL == 0:
 		df.to_csv(DF_PATH, index=False)
-		del input_ids, output_ids, input_text, output_text
-		gc.collect()
 		torch.cuda.empty_cache()
 
 # Save the remaining rows
