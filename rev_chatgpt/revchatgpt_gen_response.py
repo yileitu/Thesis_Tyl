@@ -21,8 +21,9 @@ from util.util_func import MCOptions, find_first_unprocessed, gen_mc_templated_p
 TASK = Task.QA
 
 # Load revChatGPT config
-REV_CHATGPT_CONFIG_PATH = 'rev_chatgpt_config.json'
-with open(REV_CHATGPT_CONFIG_PATH, 'r') as f:
+REV_CHATGPT_CONFIG_PATH1 = 'rev_chatgpt_config_account_ETH.json'
+REV_CHATGPT_CONFIG_PATH2 = 'rev_chatgpt_config_account_Google.json'
+with open(REV_CHATGPT_CONFIG_PATH2, 'r') as f:
 	rev_chatgpt_config = json.load(f)
 LLM_NAME: str = rev_chatgpt_config['model']
 
