@@ -2,7 +2,7 @@
 
 #SBATCH -A es_sachan
 #SBATCH -n 2
-#SBATCH --gpus=a100_80gb:1
+#SBATCH --gpus=v100:1
 #SBATCH --time=48:00:00
 #SBATCH --mem-per-cpu=16384
 
