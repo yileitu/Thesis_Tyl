@@ -23,7 +23,7 @@ TASK = Task.QA
 # Load revChatGPT config
 REV_CHATGPT_CONFIG_PATH1 = 'rev_chatgpt_config_account_ETH.json'
 REV_CHATGPT_CONFIG_PATH2 = 'rev_chatgpt_config_account_Google.json'
-with open(REV_CHATGPT_CONFIG_PATH2, 'r') as f:
+with open(REV_CHATGPT_CONFIG_PATH1, 'r') as f:
 	rev_chatgpt_config = json.load(f)
 LLM_NAME: str = rev_chatgpt_config['model']
 
