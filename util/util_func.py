@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+
 from dataclasses import dataclass
 from typing import Dict, List, Tuple
 
-import numpy as np
 from pandas import DataFrame
 
 from util.constants import NULL_VALUES, SEED
@@ -230,3 +230,25 @@ def find_first_unprocessed(df: DataFrame, target_col_name: str) -> int:
 		# As the indices are the locations of NaNs, we add 1 to point to the next unprocessed row
 		start_index = boundaries.max()
 		return start_index
+
+
+def setup_signal_handlers(df_to_save, save_path):
+	"""
+	Setup signal handlers to save data when program is terminated manually by user
+	:param df_to_save: dataframe to save
+	:param save_path: path to save the dataframe
+	"""
+	import signal
+	import sys
+
+	def save_data():
+		df_to_save.to_csv(save_path, index=False)
+		print("Program terminated by user. Data saved successfully!")
+
+	def signal_handler(sig, frame):
+		save_data()
+		sys.exit(0)
+
+	# 设置信号处理器捕捉 SIGINT 和 SIGTERM
+	signal.signal(signal.SIGINT, signal_handler)
+	signal.signal(signal.SIGTERM, signal_handler)

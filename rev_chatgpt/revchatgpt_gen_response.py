@@ -16,14 +16,15 @@ from tqdm import tqdm
 
 from rev_chatgpt.my_chatbot import MyChatbot
 from util.constants import Task
-from util.util_func import MCOptions, find_first_unprocessed, gen_mc_templated_prompt, gen_qa_templated_prompt
+from util.util_func import MCOptions, find_first_unprocessed, gen_mc_templated_prompt, gen_qa_templated_prompt, \
+	setup_signal_handlers
 
 TASK = Task.QA
 
 # Load revChatGPT config
 REV_CHATGPT_CONFIG_PATH1 = 'rev_chatgpt_config_account_ETH.json'
 REV_CHATGPT_CONFIG_PATH2 = 'rev_chatgpt_config_account_Google.json'
-with open(REV_CHATGPT_CONFIG_PATH1, 'r') as f:
+with open(REV_CHATGPT_CONFIG_PATH1) as f:
 	rev_chatgpt_config = json.load(f)
 LLM_NAME: str = rev_chatgpt_config['model']
 
@@ -49,6 +50,12 @@ if not os.path.exists(RESPONSE_PATH):
 else:
 	print(f"... File already exists: {RESPONSE_PATH}")
 	response_df = pd.read_csv(RESPONSE_PATH)
+	dummy_df = pd.DataFrame(index=df.index, columns=[output_col_name])
+	dummy_df.update(response_df)
+	dummy_df = dummy_df.where(pd.notnull(dummy_df), None)
+	response_df = dummy_df
+
+setup_signal_handlers(df_to_save=response_df, save_path=RESPONSE_PATH)
 
 # Find the first row that has not been processed
 start_index = find_first_unprocessed(df=response_df, target_col_name=output_col_name)
@@ -71,3 +78,5 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 	output_text = rev_chatgpt.get_response(input_text)
 	response_df.loc[idx, output_col_name] = output_text
 	response_df.to_csv(RESPONSE_PATH, index=False)
+
+response_df.to_csv(RESPONSE_PATH, index=False)
