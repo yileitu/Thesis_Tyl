@@ -15,9 +15,9 @@ from util.util_func import MCOptions, find_first_unprocessed, gen_mc_templated_p
 TASK = Task.QA
 
 # Load revChatGPT config
-REV_CHATGPT_CONFIG_PATH1 = 'rev_chatgpt_config_account_ETH.json'
+# REV_CHATGPT_CONFIG_PATH1 = 'rev_chatgpt_config_account_ETH.json'
 REV_CHATGPT_CONFIG_PATH2 = 'rev_chatgpt_config_account_Google.json'
-with open(REV_CHATGPT_CONFIG_PATH1) as tmp_f:
+with open(REV_CHATGPT_CONFIG_PATH2) as tmp_f:
 	tmp_rev_chatgpt_config = json.load(tmp_f)
 LLM_NAME: str = tmp_rev_chatgpt_config['model']
 
@@ -56,8 +56,8 @@ print(f"... Starting from index {start_index}")
 
 # Initialize revChatGPT chatbot
 MAX_ATTEMPTS = 100  # 总尝试次数，比如每个配置尝试2次，则总次数为4
-WAITING_MINUTES = 45  # config_paths全部失败后等待的分钟数
-config_paths = [REV_CHATGPT_CONFIG_PATH1, REV_CHATGPT_CONFIG_PATH2]
+WAITING_MINUTES = 60  # config_paths全部失败后等待的分钟数
+config_paths = [REV_CHATGPT_CONFIG_PATH2]
 current_config_index = 1
 attempts = 0
 
@@ -103,7 +103,10 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 				exit(0)
 			elif attempts % len(config_paths) == 0:
 				# 如果每个配置都失败了一次，那么休息45分钟
-				print("... All configurations have failed. Waiting for 45 minutes before retrying...")
+				print(
+					f"... Attempt {attempts} - Error with configuration {current_config_index}: {e}. Switching to next configuration..."
+					)
+				print(f"... All configurations have failed. Waiting for {WAITING_MINUTES} minutes before retrying...")
 				time.sleep(WAITING_MINUTES * 60)  # 45分钟
 				rev_chatgpt = switch_config()  # 切换配置
 			else:
