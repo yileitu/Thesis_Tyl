@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 from typing import Dict, List, Tuple
 
+import pandas as pd
 from pandas import DataFrame
 
 from util.constants import NULL_VALUES, SEED
@@ -243,7 +244,7 @@ def setup_signal_handlers(df_to_save, save_path):
 
 	def save_data():
 		df_to_save.to_csv(save_path, index=False)
-		print("Program terminated by user. Data saved successfully!")
+		print(f"\n ... Program terminated by user. Data {save_path} saved successfully!")
 
 	def signal_handler(sig, frame):
 		save_data()
@@ -252,3 +253,28 @@ def setup_signal_handlers(df_to_save, save_path):
 	# 设置信号处理器捕捉 SIGINT 和 SIGTERM
 	signal.signal(signal.SIGINT, signal_handler)
 	signal.signal(signal.SIGTERM, signal_handler)
+
+
+def gen_response_file(response_df_path: str, task_df: pd.DataFrame, col_name: str) -> pd.DataFrame:
+	"""
+	Generate a response file for a given task dataframe if it does not exist. If exists, update its index to match the task_df
+	:param response_df_path: Path to the response dataframe
+	:param task_df: Task dataframe
+	:param col_name: Column name for the response
+	:return: Response dataframe with the same index as the task dataframe
+	"""
+	import os
+	# Check if the file exists, create it if not
+	if not os.path.exists(response_df_path):
+		response_df = pd.DataFrame(index=task_df.index, columns=[col_name])
+		response_df.to_csv(response_df_path, index=False)
+		print(f"... Empty DataFrame saved to {response_df_path}")
+	else:
+		print(f"... File already exists: {response_df_path}")
+		response_df = pd.read_csv(response_df_path)
+		dummy_df = pd.DataFrame(index=task_df.index, columns=[col_name])
+		dummy_df.update(response_df)
+		dummy_df = dummy_df.where(pd.notnull(dummy_df), None)
+		response_df = dummy_df
+
+	return response_df

@@ -1,21 +1,19 @@
 # -*- coding: utf-8 -*-
-import os
 
 import numpy as np
 import pandas as pd
 import torch
-from torch.cuda.amp import autocast
 from tqdm import tqdm
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, logging
 
-from util.constants import GEN_CONFIG_FOR_EXAM, Task
+from util.constants import GEN_CONFIG_FOR_EXAM, GEN_CONFIG_FOR_QA, Task
 from util.util_func import MCOptions, find_first_unprocessed, gen_mc_templated_prompt, gen_qa_templated_prompt, \
-	gen_tf_templated_prompt, set_mtec_env, set_seed, setup_signal_handlers
+	gen_response_file, gen_tf_templated_prompt, set_mtec_env, set_seed, setup_signal_handlers
 
 # Constant Initialization
-TASK = Task.TF
-LLM_NAME: str = "T0"
-LLM_PATH: str = "bigscience/T0"
+TASK = Task.MC
+LLM_NAME: str = "T0_3B"
+LLM_PATH: str = f"bigscience/{LLM_NAME}"
 NUM_GPU: int = 1
 
 # Set environments
@@ -38,22 +36,9 @@ else:
 
 df = pd.read_csv(DF_PATH)
 df = df.replace({np.nan: None})  # NaN is the default value when reading from CSV, replace it with None
-num_rows = df.shape[0]
 output_col_name = f'response_{LLM_NAME}'
 
-# Check if the file exists, create it if not
-if not os.path.exists(RESPONSE_PATH):
-	response_df = pd.DataFrame(index=df.index, columns=[output_col_name])
-	response_df.to_csv(RESPONSE_PATH, index=False)
-	print(f"... Empty DataFrame saved to {RESPONSE_PATH}")
-else:
-	print(f"... File already exists: {RESPONSE_PATH}")
-	response_df = pd.read_csv(RESPONSE_PATH)
-	dummy_df = pd.DataFrame(index=df.index, columns=[output_col_name])
-	dummy_df.update(response_df)
-	dummy_df = dummy_df.where(pd.notnull(dummy_df), None)
-	response_df = dummy_df
-
+response_df = gen_response_file(response_df_path=RESPONSE_PATH, task_df=df, col_name=output_col_name)
 setup_signal_handlers(df_to_save=response_df, save_path=RESPONSE_PATH)
 
 # Find the first row that has not been processed
@@ -82,11 +67,13 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 		raise ValueError(f"... Invalid task: {TASK}")
 
 	# Generate response
-	# Use autocast() to generate responses faster
-	with autocast():
-		input_ids = tokenizer.encode(input_text, return_tensors='pt').to(device)
-		with torch.no_grad():
+	input_ids = tokenizer.encode(input_text, return_tensors='pt').to(device)
+	with torch.no_grad():
+		if TASK == Task.QA:
+			output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_QA)
+		else:
 			output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_EXAM)
+
 	output_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
 	response_df.loc[idx, output_col_name] = output_text
 	response_df.to_csv(RESPONSE_PATH, index=False)
