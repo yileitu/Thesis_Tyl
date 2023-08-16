@@ -78,3 +78,4 @@ class Task(IntEnum):
 	MC: int = 1  # Multiple Choice
 	TF: int = 2  # True/False
 	EXAM: int = 3  # MC + TF
+	TOY: int = 4  # Toy task

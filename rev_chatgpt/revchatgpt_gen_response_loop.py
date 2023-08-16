@@ -32,7 +32,6 @@ else:
 	raise ValueError("Invalid task type")
 
 df = pd.read_csv(DF_PATH)
-num_rows = df.shape[0]
 output_col_name = f'response_{LLM_NAME}'
 
 # Check if the file exists, create it if not
