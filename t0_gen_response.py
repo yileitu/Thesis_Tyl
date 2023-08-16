@@ -13,10 +13,10 @@ from util.util_func import MCOptions, find_first_unprocessed, gen_mc_templated_p
 	gen_tf_templated_prompt, set_mtec_env, set_seed, setup_signal_handlers
 
 # Constant Initialization
-TASK = Task.QA
-SAVE_INTERVAL: int = 20
-NUM_GPU: int = 1
+TASK = Task.TF
 LLM_NAME: str = "T0"
+LLM_PATH: str = "bigscience/T0"
+NUM_GPU: int = 1
 
 # Set environments
 set_seed()
@@ -61,8 +61,8 @@ start_index = find_first_unprocessed(df=response_df, target_col_name=output_col_
 print(f"... Starting from index {start_index}")
 
 # Load LLM
-tokenizer = AutoTokenizer.from_pretrained("bigscience/T0pp")
-model = AutoModelForSeq2SeqLM.from_pretrained("bigscience/T0pp", torch_dtype=torch.bfloat16, trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained(LLM_PATH)
+model = AutoModelForSeq2SeqLM.from_pretrained(LLM_PATH, torch_dtype=torch.bfloat16, trust_remote_code=True)
 print(f"... Loaded {LLM_NAME}")
 model.to(device)
 model.eval()
@@ -77,7 +77,7 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 	elif TASK == Task.TF:
 		input_text = gen_tf_templated_prompt(passage=row['passage'], question=row['question'])
 	elif TASK == Task.QA:
-		input_text = gen_qa_templated_prompt(row['input'])
+		input_text = gen_qa_templated_prompt(input_text=row['input'])
 	else:
 		raise ValueError(f"... Invalid task: {TASK}")
 
