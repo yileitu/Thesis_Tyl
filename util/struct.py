@@ -22,4 +22,4 @@ class Task(IntEnum):
 	MC: int = 1  # Multiple Choice
 	TF: int = 2  # True/False
 	EXAM: int = 3  # MC + TF
-	TOY_MC: int = 4  # Toy task
+	TOY_MC: int = 4  # Toy task for debugging, MC only
