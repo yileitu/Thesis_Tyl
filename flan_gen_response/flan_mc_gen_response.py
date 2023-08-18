@@ -8,7 +8,8 @@ from tqdm import tqdm
 from transformers import T5ForConditionalGeneration, T5Tokenizer, logging
 
 from util.constants import GEN_CONFIG_FOR_QA
-from util.util_func import MCOptions, find_first_unprocessed, gen_mc_templated_prompt, set_mtec_env, set_seed
+from util.util_func import find_first_unprocessed, gen_mc_templated_prompt, set_mtec_env, set_seed
+from util.struct import MCOptions
 
 SAVE_INTERVAL: int = 100
 

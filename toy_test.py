@@ -6,8 +6,9 @@ from tqdm import tqdm
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, logging
 
 from util.constants import GEN_CONFIG_FOR_EXAM
-from util.util_func import MCOptions, find_first_unprocessed, gen_mc_templated_prompt, gen_response_file, set_mtec_env, \
+from util.util_func import find_first_unprocessed, gen_mc_templated_prompt, gen_response_file, set_mtec_env, \
 	set_seed, setup_signal_handlers
+from util.struct import MCOptions
 
 LLM_NAME: str = "T0_3B"
 LLM_PATH = "bigscience/T0_3B"

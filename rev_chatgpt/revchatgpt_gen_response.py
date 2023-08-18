@@ -15,9 +15,9 @@ import pandas as pd
 from tqdm import tqdm
 
 from rev_chatgpt.my_chatbot import MyChatbot
-from util.constants import Task
-from util.util_func import MCOptions, find_first_unprocessed, gen_mc_templated_prompt, gen_qa_templated_prompt, \
+from util.util_func import find_first_unprocessed, gen_mc_templated_prompt, gen_qa_templated_prompt, \
 	setup_signal_handlers
+from util.struct import MCOptions, Task
 
 TASK = Task.QA
 

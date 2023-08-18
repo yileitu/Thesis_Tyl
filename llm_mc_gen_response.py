@@ -9,8 +9,9 @@ from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer, logging
 
 from util.constants import GEN_CONFIG_FOR_EXAM, RESPONSE_SPLIT
-from util.util_func import MCOptions, find_first_unprocessed, gen_clean_output, gen_mc_templated_prompt, \
+from util.util_func import find_first_unprocessed, gen_clean_output, gen_mc_templated_prompt, \
 	get_llm_names_and_hf_paths, set_mtec_env, set_seed
+from util.struct import MCOptions
 
 SAVE_INTERVAL: int = 20
 

@@ -1,25 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from dataclasses import dataclass
 from typing import Dict, List, Tuple
 
 import pandas as pd
 from pandas import DataFrame
 
 from util.constants import NULL_VALUES, SEED
-
-
-# Structures
-@dataclass
-class MCOptions:
-	"""
-	Option texts for multiple choice questions
-	"""
-	A: str = ''
-	B: str = ''
-	C: str = ''
-	D: str = ''
-	E: str = ''
+from util.struct import MCOptions
 
 
 def set_seed(seed: int = SEED) -> None:

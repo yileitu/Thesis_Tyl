@@ -8,8 +8,9 @@ import openai
 import pandas as pd
 from tqdm import tqdm
 
-from util.constants import CHATGPT_SYS_PROMPT, MAX_LEN_EXAM, TEMPERATURE, TOP_P, Task
-from util.util_func import MCOptions, find_first_unprocessed, gen_mc_templated_prompt, gen_tf_templated_prompt
+from util.constants import CHATGPT_SYS_PROMPT, MAX_LEN_EXAM, TEMPERATURE, TOP_P
+from util.util_func import find_first_unprocessed, gen_mc_templated_prompt, gen_tf_templated_prompt
+from util.struct import MCOptions, Task
 
 # ChatGPT
 openai.api_key = os.getenv("OPENAI_API_KEY")

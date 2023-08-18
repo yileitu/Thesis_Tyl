@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from enum import IntEnum
 from typing import Final
 
 import numpy as np
@@ -68,14 +67,3 @@ GEN_CONFIG_FOR_EXAM: Final[GenerationConfig] = GenerationConfig(
 
 # Others
 NULL_VALUES = ['', None, np.nan]
-
-
-class Task(IntEnum):
-	"""
-	Enum for task types
-	"""
-	QA: int = 0  # Question Answering
-	MC: int = 1  # Multiple Choice
-	TF: int = 2  # True/False
-	EXAM: int = 3  # MC + TF
-	TOY: int = 4  # Toy task
