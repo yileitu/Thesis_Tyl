@@ -3,18 +3,19 @@
 import numpy as np
 import pandas as pd
 import torch
+from torch.cuda.amp import autocast
 from tqdm import tqdm
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, logging
+from transformers import LlamaForCausalLM, LlamaTokenizer, logging
 
-from util.constants import GEN_CONFIG_FOR_EXAM, GEN_CONFIG_FOR_QA
-from util.util_func import find_first_unprocessed, gen_mc_templated_prompt, gen_qa_templated_prompt, \
-	gen_response_file, gen_tf_templated_prompt, set_mtec_env, set_seed, setup_signal_handlers
+from util.constants import GEN_CONFIG_FOR_EXAM, GEN_CONFIG_FOR_QA, RESPONSE_SPLIT
 from util.struct import MCOptions, Task
+from util.util_func import find_first_unprocessed, gen_clean_output, gen_mc_templated_prompt, gen_qa_templated_prompt, \
+	gen_response_file, gen_tf_templated_prompt, set_mtec_env, set_seed, setup_signal_handlers
 
 # Constant Initialization
-TASK = Task.TF
-LLM_NAME: str = "T0_3B"
-LLM_PATH: str = f"bigscience/{LLM_NAME}"
+TASK = Task.MC
+LLM_NAME: str = "Llama-2-7b-chat"
+LLM_PATH: str = f"meta-llama/{LLM_NAME}-hf"
 NUM_GPU: int = 1
 
 # Set environments
@@ -32,6 +33,9 @@ elif TASK == Task.TF:
 elif TASK == Task.QA:
 	DF_PATH: str = "data/output/qa.csv"
 	RESPONSE_PATH: str = f"data/output/qa_response_{LLM_NAME}.csv"
+elif TASK == Task.TOY_MC:
+	DF_PATH: str = "data/output/toy_mc.csv"
+	RESPONSE_PATH: str = f"data/output/toy_mc_response_{LLM_NAME}.csv"
 else:
 	raise ValueError("Invalid task type")
 
@@ -47,15 +51,23 @@ start_index = find_first_unprocessed(df=response_df, target_col_name=output_col_
 print(f"... Starting from index {start_index}")
 
 # Load LLM
-tokenizer = AutoTokenizer.from_pretrained(LLM_PATH)
-model = AutoModelForSeq2SeqLM.from_pretrained(LLM_PATH, torch_dtype=torch.bfloat16, trust_remote_code=True)
+tokenizer = LlamaTokenizer.from_pretrained(LLM_PATH, use_auth_token=True)
+model = LlamaForCausalLM.from_pretrained(LLM_PATH, torch_dtype=torch.bfloat16, use_auth_token=True)
 print(f"... Loaded {LLM_NAME}")
+
+# Follow up HF tips https://huggingface.co/docs/transformers/model_doc/llama2
+padding_token = "<pad>"
+pad_token_id = tokenizer.add_special_tokens({"pad_token": padding_token})
+model.resize_token_embeddings(len(tokenizer))
+model.config.pad_token_id = pad_token_id
+model.config.pretraining_tp = 100
+
 model.to(device)
 model.eval()
 
 # Iterate through the rows and generate responses
 for idx, row in tqdm(df.iloc[start_index:].iterrows()):
-	if TASK == Task.MC:
+	if TASK == Task.MC or TASK == Task.TOY_MC:
 		options = MCOptions(
 			A=row['option_A'], B=row['option_B'], C=row['option_C'], D=row['option_D'], E=row['option_E']
 			)
@@ -66,17 +78,20 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 		input_text = gen_qa_templated_prompt(input_text=row['input'])
 	else:
 		raise ValueError(f"... Invalid task: {TASK}")
+	input_text += "\n\n" + RESPONSE_SPLIT
 
 	# Generate response
-	input_ids = tokenizer.encode(input_text, return_tensors='pt').to(device)
-	with torch.no_grad():
-		if TASK == Task.QA:
-			output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_QA)
-		else:
-			output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_EXAM)
+	with autocast():
+		input_ids = tokenizer.encode(input_text, return_tensors='pt').to(device)
+		with torch.no_grad():
+			if TASK == Task.QA:
+				output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_QA)
+			else:
+				output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_EXAM)
 
 	output_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
-	response_df.loc[idx, output_col_name] = output_text
+	clean_output = gen_clean_output(output_text)
+	response_df.loc[idx, output_col_name] = clean_output
 	response_df.to_csv(RESPONSE_PATH, index=False)
 
 response_df.to_csv(RESPONSE_PATH, index=False)

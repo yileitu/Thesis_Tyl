@@ -11,4 +11,4 @@ module load gcc/9.3.0
 module load cuda/11.7.0
 conda activate thesis
 
-python3 t0_gen_response.py
+python3 llama_gen_response.py
