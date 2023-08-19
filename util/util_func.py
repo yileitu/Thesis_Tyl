@@ -5,7 +5,7 @@ from typing import Dict, List, Tuple
 import pandas as pd
 from pandas import DataFrame
 
-from util.constants import NULL_VALUES, SEED
+from util.constants import NULL_VALUES, RESPONSE_SPLIT, SEED
 from util.struct import MCOptions, Task
 
 
@@ -171,6 +171,15 @@ def gen_mc_templated_prompt(passage: str, question: str, options: MCOptions) -> 
 				)
 
 
+def gen_input_with_split(text: str) -> str:
+	"""
+	Generate input text with the response split
+	:param text: original input text
+	:return: input text with the response split
+	"""
+	return text + "\n\n" + RESPONSE_SPLIT
+
+
 def gen_clean_output(output_text: str) -> str:
 	"""
 	Generate a clean output from the raw output
@@ -267,7 +276,7 @@ def gen_response_file(response_df_path: str, task_df: pd.DataFrame, col_name: st
 	return response_df
 
 
-def get_task_df_path(task: Task, llm_name:str) -> Tuple[str, str]:
+def get_task_df_path(task: Task, llm_name: str) -> Tuple[str, str]:
 	"""
 	Get the path to the task dataframe and the response dataframe
 	:param task: Task type

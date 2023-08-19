@@ -6,15 +6,15 @@ import torch
 from torch.cuda.amp import autocast
 from tqdm import tqdm
 from transformers import LlamaForCausalLM, LlamaTokenizer, logging
-from typing import Tuple
 
-from util.constants import GEN_CONFIG_FOR_EXAM, GEN_CONFIG_FOR_QA, RESPONSE_SPLIT
+from util.constants import GEN_CONFIG_FOR_EXAM, GEN_CONFIG_FOR_QA
 from util.struct import MCOptions, Task
-from util.util_func import find_first_unprocessed, gen_clean_output, gen_mc_templated_prompt, gen_qa_templated_prompt, \
-	gen_response_file, gen_tf_templated_prompt, get_task_df_path, set_mtec_env, set_seed, setup_signal_handlers
+from util.util_func import find_first_unprocessed, gen_clean_output, gen_input_with_split, gen_mc_templated_prompt, \
+	gen_qa_templated_prompt, gen_response_file, gen_tf_templated_prompt, get_task_df_path, set_mtec_env, set_seed, \
+	setup_signal_handlers
 
 # Constant Initialization
-TASK = Task.TF
+TASK = Task.MC
 LLM_NAME: str = "Llama-2-13b-chat"
 LLM_PATH: str = f"meta-llama/{LLM_NAME}-hf"
 NUM_GPU: int = 1
@@ -64,7 +64,7 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 		input_text = gen_qa_templated_prompt(input_text=row['input'])
 	else:
 		raise ValueError(f"... Invalid task: {TASK}")
-	input_text += "\n\n" + RESPONSE_SPLIT
+	input_text = gen_input_with_split(text=input_text)
 
 	# Generate response
 	with autocast():
