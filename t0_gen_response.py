@@ -7,8 +7,7 @@ from tqdm import tqdm
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, logging
 
 from util.constants import GEN_CONFIG_FOR_EXAM, GEN_CONFIG_FOR_QA
-from util.util_func import find_first_unprocessed, gen_mc_templated_prompt, gen_qa_templated_prompt, \
-	gen_response_file, gen_tf_templated_prompt, set_mtec_env, set_seed, setup_signal_handlers
+from util.util_func import find_first_unprocessed, gen_mc_templated_prompt, gen_qa_templated_prompt, gen_response_file, gen_tf_templated_prompt, set_mtec_env, set_seed, setup_signal_handlers, get_task_df_path
 from util.struct import MCOptions, Task
 
 # Constant Initialization
@@ -22,23 +21,11 @@ set_seed()
 device = set_mtec_env(num_gpus=NUM_GPU)
 logging.set_verbosity_error()
 
-# Load the dataset
-if TASK == Task.MC:
-	DF_PATH: str = "data/output/mc.csv"
-	RESPONSE_PATH: str = f"data/output/mc_response_{LLM_NAME}.csv"
-elif TASK == Task.TF:
-	DF_PATH: str = "data/output/boolq.csv"
-	RESPONSE_PATH: str = f"data/output/tf_response_{LLM_NAME}.csv"
-elif TASK == Task.QA:
-	DF_PATH: str = "data/output/qa.csv"
-	RESPONSE_PATH: str = f"data/output/qa_response_{LLM_NAME}.csv"
-else:
-	raise ValueError("Invalid task type")
 
+DF_PATH, RESPONSE_PATH = get_task_df_path(task=TASK, llm_name=LLM_NAME)
 df = pd.read_csv(DF_PATH)
 df = df.replace({np.nan: None})  # NaN is the default value when reading from CSV, replace it with None
 output_col_name = f'response_{LLM_NAME}'
-
 response_df = gen_response_file(response_df_path=RESPONSE_PATH, task_df=df, col_name=output_col_name)
 setup_signal_handlers(df_to_save=response_df, save_path=RESPONSE_PATH)
 
@@ -55,7 +42,7 @@ model.eval()
 
 # Iterate through the rows and generate responses
 for idx, row in tqdm(df.iloc[start_index:].iterrows()):
-	if TASK == Task.MC:
+	if TASK == Task.MC or TASK == Task.TOY_MC:
 		options = MCOptions(
 			A=row['option_A'], B=row['option_B'], C=row['option_C'], D=row['option_D'], E=row['option_E']
 			)

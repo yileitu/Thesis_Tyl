@@ -29,6 +29,8 @@ def extract_letter(response: str, options: str, option_texts: List[str]) -> Opti
 		return None
 
 
+COLS_TO_CLEAN:List[str] = ['response_FLAN-T5-large', 'response_Vicuna-13b', 'response_gpt-3.5-turbo']
+
 df = pd.read_csv('../data/output/mc.csv')
 df.reset_index(level=0, inplace=True)
 df.rename(columns={'index': 'id'}, inplace=True)
