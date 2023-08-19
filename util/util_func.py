@@ -6,7 +6,7 @@ import pandas as pd
 from pandas import DataFrame
 
 from util.constants import NULL_VALUES, SEED
-from util.struct import MCOptions
+from util.struct import MCOptions, Task
 
 
 def set_seed(seed: int = SEED) -> None:
@@ -265,3 +265,28 @@ def gen_response_file(response_df_path: str, task_df: pd.DataFrame, col_name: st
 		response_df = dummy_df
 
 	return response_df
+
+
+def get_task_df_path(task: Task, llm_name:str) -> Tuple[str, str]:
+	"""
+	Get the path to the task dataframe and the response dataframe
+	:param task: Task type
+	:param llm_name: Name of the
+	:return:
+	"""
+	if task == Task.MC:
+		df_path: str = "data/output/mc.csv"
+		response_path: str = f"data/output/mc_response_{llm_name}.csv"
+	elif task == Task.TF:
+		df_path: str = "data/output/boolq.csv"
+		response_path: str = f"data/output/tf_response_{llm_name}.csv"
+	elif task == Task.QA:
+		df_path: str = "data/output/qa.csv"
+		response_path: str = f"data/output/qa_response_{llm_name}.csv"
+	elif task == Task.TOY_MC:
+		df_path: str = "data/output/toy_mc.csv"
+		response_path: str = f"data/output/toy_mc_response_{llm_name}.csv"
+	else:
+		raise ValueError("Invalid task type")
+
+	return df_path, response_path
