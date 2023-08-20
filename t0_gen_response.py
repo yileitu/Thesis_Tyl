@@ -7,18 +7,18 @@ from tqdm import tqdm
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, logging
 
 from util.constants import GEN_CONFIG_FOR_EXAM, GEN_CONFIG_FOR_QA
-from util.util_func import find_first_unprocessed, gen_mc_templated_prompt, gen_qa_templated_prompt, gen_response_file, gen_tf_templated_prompt, set_mtec_env, set_seed, setup_signal_handlers, get_task_df_path
+from util.util_func import find_first_unprocessed, gen_mc_templated_prompt, gen_qa_templated_prompt, gen_response_file, gen_tf_templated_prompt, set_gpu_env, set_seed, setup_signal_handlers, get_task_df_path
 from util.struct import MCOptions, Task
 
 # Constant Initialization
-TASK = Task.TF
-LLM_NAME: str = "T0_3B"
+TASK = Task.QA
+LLM_NAME: str = "T0"
 LLM_PATH: str = f"bigscience/{LLM_NAME}"
 NUM_GPU: int = 1
 
 # Set environments
 set_seed()
-device = set_mtec_env(num_gpus=NUM_GPU)
+device = set_gpu_env(num_gpus=NUM_GPU)
 logging.set_verbosity_error()
 
 

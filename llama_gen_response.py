@@ -10,18 +10,18 @@ from transformers import LlamaForCausalLM, LlamaTokenizer, logging
 from util.constants import GEN_CONFIG_FOR_EXAM, GEN_CONFIG_FOR_QA
 from util.struct import MCOptions, Task
 from util.util_func import find_first_unprocessed, gen_clean_output, gen_input_with_split, gen_mc_templated_prompt, \
-	gen_qa_templated_prompt, gen_response_file, gen_tf_templated_prompt, get_task_df_path, set_mtec_env, set_seed, \
+	gen_qa_templated_prompt, gen_response_file, gen_tf_templated_prompt, get_task_df_path, set_gpu_env, set_seed, \
 	setup_signal_handlers
 
 # Constant Initialization
 TASK = Task.TF
-LLM_NAME: str = "Llama-2-13b-chat"
+LLM_NAME: str = "Llama-2-70b-chat"
 LLM_PATH: str = f"meta-llama/{LLM_NAME}-hf"
 NUM_GPU: int = 1
 
 # Set environments
 set_seed()
-device = set_mtec_env(num_gpus=NUM_GPU)
+device = set_gpu_env(num_gpus=NUM_GPU)
 logging.set_verbosity_error()
 
 # Load the dataset

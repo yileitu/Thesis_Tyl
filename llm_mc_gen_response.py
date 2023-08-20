@@ -10,7 +10,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, logging
 
 from util.constants import GEN_CONFIG_FOR_EXAM, RESPONSE_SPLIT
 from util.util_func import find_first_unprocessed, gen_clean_output, gen_mc_templated_prompt, \
-	get_llm_names_and_hf_paths, set_mtec_env, set_seed
+	get_llm_names_and_hf_paths, set_gpu_env, set_seed
 from util.struct import MCOptions
 
 SAVE_INTERVAL: int = 20
@@ -18,7 +18,7 @@ SAVE_INTERVAL: int = 20
 # Set environments
 NUM_GPU: int = 1
 set_seed()
-device = set_mtec_env(num_gpus=NUM_GPU)
+device = set_gpu_env(num_gpus=NUM_GPU)
 logging.set_verbosity_error()
 
 # Load the dataset

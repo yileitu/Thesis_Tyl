@@ -70,22 +70,18 @@ def get_idle_gpus(num_gpus: int = 2) -> List[int]:
 	return idle_gpus
 
 
-def set_mtec_env(num_gpus: int = 2):
+def set_gpu_env(num_gpus: int = 1):
 	"""
-	Set environments for MTEC server
+	Set GPU environments in the server
 	:param num_gpus: number of GPUs to use
 	:return: PyTorch device
 	"""
 	import os
 	import torch
 
-	# Check if number of GPUs is valid
-	if num_gpus < 1 or num_gpus > 8:
-		raise ValueError(f"GPU count should be between 1 and 8. Your input is {num_gpus}.")
-
 	idle_gpus = get_idle_gpus(num_gpus)
 	os.environ["CUDA_VISIBLE_DEVICES"] = ','.join(map(str, idle_gpus))
-	print(f"... setting up GPUs {idle_gpus}")
+	print(f"... Available GPUs {idle_gpus}")
 	# list available GPUs
 	gpu_list = [torch.cuda.get_device_name(i) for i in range(torch.cuda.device_count())]
 	print(f"... {len(gpu_list)} visible 'logical' GPUs: {gpu_list}")

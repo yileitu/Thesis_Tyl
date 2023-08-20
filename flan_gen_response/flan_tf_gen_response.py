@@ -8,14 +8,14 @@ from tqdm import tqdm
 from transformers import T5ForConditionalGeneration, T5Tokenizer, logging
 
 from util.constants import GEN_CONFIG_FOR_QA
-from util.util_func import find_first_unprocessed, gen_tf_templated_prompt, set_mtec_env, set_seed
+from util.util_func import find_first_unprocessed, gen_tf_templated_prompt, set_gpu_env, set_seed
 
 SAVE_INTERVAL: int = 100
 
 # Set environments
 NUM_GPU: int = 1
 set_seed()
-device = set_mtec_env(num_gpus=NUM_GPU)
+device = set_gpu_env(num_gpus=NUM_GPU)
 logging.set_verbosity_error()
 
 llm_name = 'FLAN-T5-large'

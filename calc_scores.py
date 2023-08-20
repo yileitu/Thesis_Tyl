@@ -2,11 +2,11 @@
 import pandas as pd
 
 from moverscore.moverscore_v2 import get_idf_dict, word_mover_score
-from util.util_func import set_mtec_env, set_seed
+from util.util_func import set_gpu_env, set_seed
 
 # Set environments
 set_seed()
-device = set_mtec_env()
+device = set_gpu_env()
 
 df = pd.read_csv('data/alpaca_sample50.csv')
 if 'mover_score' not in df.columns:

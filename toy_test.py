@@ -6,7 +6,7 @@ from tqdm import tqdm
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, logging
 
 from util.constants import GEN_CONFIG_FOR_EXAM
-from util.util_func import find_first_unprocessed, gen_mc_templated_prompt, gen_response_file, set_mtec_env, \
+from util.util_func import find_first_unprocessed, gen_mc_templated_prompt, gen_response_file, set_gpu_env, \
 	set_seed, setup_signal_handlers
 from util.struct import MCOptions
 
@@ -24,7 +24,7 @@ response_df = gen_response_file(response_df_path=RESPONSE_PATH, task_df=df, col_
 setup_signal_handlers(df_to_save=response_df, save_path=RESPONSE_PATH)
 
 set_seed()
-device = set_mtec_env(num_gpus=NUM_GPU)
+device = set_gpu_env(num_gpus=NUM_GPU)
 logging.set_verbosity_error()
 
 tokenizer = AutoTokenizer.from_pretrained(LLM_PATH)

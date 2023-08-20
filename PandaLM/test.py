@@ -2,9 +2,9 @@
 import pickle
 
 from pandalm import EvaluationPipeline
-from util.util_func import set_mtec_env
+from util.util_func import set_gpu_env
 
-set_mtec_env()
+set_gpu_env()
 
 pipeline = EvaluationPipeline(
 	candidate_paths=["huggyllama/llama-7b", "facebook/opt-6.7b"],
