@@ -14,8 +14,8 @@ from util.util_func import find_first_unprocessed, gen_clean_output, gen_input_w
 	setup_signal_handlers
 
 # Constant Initialization
-TASK = Task.TF
-LLM_NAME: str = "Llama-2-70b-chat"
+TASK = Task.QA
+LLM_NAME: str = "Llama-2-7b-chat"
 LLM_PATH: str = f"meta-llama/{LLM_NAME}-hf"
 NUM_GPU: int = 1
 
