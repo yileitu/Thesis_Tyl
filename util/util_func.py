@@ -280,18 +280,17 @@ def get_task_df_path(task: Task, llm_name: str) -> Tuple[str, str]:
 	:return:
 	"""
 	if task == Task.MC:
-		df_path: str = "data/output/mc.csv"
-		response_path: str = f"data/output/mc_response_{llm_name}.csv"
+		task_name = 'mc'
 	elif task == Task.TF:
-		df_path: str = "data/output/boolq.csv"
-		response_path: str = f"data/output/tf_response_{llm_name}.csv"
+		task_name = 'tf'
 	elif task == Task.QA:
-		df_path: str = "data/output/qa.csv"
-		response_path: str = f"data/output/qa_response_{llm_name}.csv"
+		task_name = 'qa'
 	elif task == Task.TOY_MC:
-		df_path: str = "data/output/toy_mc.csv"
-		response_path: str = f"data/output/toy_mc_response_{llm_name}.csv"
+		task_name = 'toy_mc'
 	else:
-		raise ValueError("Invalid task type")
+		raise ValueError(f"Invalid task type {task}")
+
+	df_path: str = f"data/output/{task_name}/{task_name}.csv"
+	response_path: str = f"data/output/{task_name}/{task_name}_response_{llm_name}.csv"
 
 	return df_path, response_path

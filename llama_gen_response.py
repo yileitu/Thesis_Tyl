@@ -3,9 +3,8 @@
 import numpy as np
 import pandas as pd
 import torch
-from torch.cuda.amp import autocast
 from tqdm import tqdm
-from transformers import LlamaForCausalLM, LlamaTokenizer, logging
+from transformers import BitsAndBytesConfig, LlamaForCausalLM, LlamaTokenizer, logging
 
 from util.constants import GEN_CONFIG_FOR_EXAM, GEN_CONFIG_FOR_QA
 from util.struct import MCOptions, Task
@@ -14,8 +13,9 @@ from util.util_func import find_first_unprocessed, gen_clean_output, gen_input_w
 	setup_signal_handlers
 
 # Constant Initialization
-TASK = Task.QA
-LLM_NAME: str = "Llama-2-7b-chat"
+TASK = Task.TOY_MC
+LLM_PARAM: int = 70  # Choose from [7, 13, 70]
+LLM_NAME: str = f"Llama-2-{LLM_PARAM}b-chat"
 LLM_PATH: str = f"meta-llama/{LLM_NAME}-hf"
 NUM_GPU: int = 1
 
@@ -38,7 +38,24 @@ print(f"... Starting from index {start_index}")
 
 # Load LLM
 tokenizer = LlamaTokenizer.from_pretrained(LLM_PATH, use_auth_token=True)
-model = LlamaForCausalLM.from_pretrained(LLM_PATH, torch_dtype=torch.bfloat16, use_auth_token=True)
+tokenizer.pad_token_id = tokenizer.eos_token_id  # for open-ended generation
+if LLM_PARAM == 70:
+	# Use 4-bit quantization for Llama-2-70b
+	bnb_config = BitsAndBytesConfig(
+		load_in_4bit=True,
+		bnb_4bit_quant_type="nf4",
+		bnb_4bit_compute_dtype=torch.float16,
+		bnb_4bit_use_double_quant=True,
+		)
+	model = LlamaForCausalLM.from_pretrained(
+		LLM_PATH, torch_dtype=torch.float16, use_auth_token=True, trust_remote_code=True, bnb_config=bnb_config
+		)
+elif LLM_PARAM == 13 or LLM_PARAM == 7:
+	model = LlamaForCausalLM.from_pretrained(
+		LLM_PATH, torch_dtype=torch.bfloat16, use_auth_token=True, trust_remote_code=True
+		)
+else:
+	raise ValueError(f"... Invalid number of parameters of Llama: {LLM_PARAM}")
 print(f"... Loaded {LLM_NAME}")
 
 # Follow up HF tips https://huggingface.co/docs/transformers/model_doc/llama2
@@ -67,13 +84,12 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 	input_text = gen_input_with_split(text=input_text)
 
 	# Generate response
-	with autocast():
-		input_ids = tokenizer.encode(input_text, return_tensors='pt').to(device)
-		with torch.no_grad():
-			if TASK == Task.QA:
-				output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_QA)
-			else:
-				output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_EXAM)
+	input_ids = tokenizer.encode(input_text, return_tensors='pt').to(device)
+	with torch.no_grad():
+		if TASK == Task.QA:
+			output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_QA)
+		else:
+			output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_EXAM)
 
 	output_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
 	clean_output = gen_clean_output(output_text)
