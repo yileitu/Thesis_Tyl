@@ -3,16 +3,19 @@ import re
 from typing import List, Optional
 
 import pandas as pd
+from fuzzywuzzy import process
 
 from util.struct import Task
 
 
-def extract_letter(response: str, options: str, option_texts: List[str]) -> Optional[str]:
+def extract_letter(response: str, options: str, option_texts: List[str], fuzziness_threshold: int = 80) \
+		-> Optional[str]:
 	"""
 	Extract the answer letter from the response.
 	:param response: response from the LLM
 	:param options: options for the multiple choice question, 'ABCDE' or 'ABCD'
 	:param option_texts: list of option texts
+	:param fuzziness_threshold: threshold for fuzzy matching
 	:return:
 	"""
 	if response is None or pd.isna(response):
@@ -23,11 +26,10 @@ def extract_letter(response: str, options: str, option_texts: List[str]) -> Opti
 		return match.group(0).upper()
 	else:
 		# If no option letter is found, search for the option text
-		for option, option_text in zip(options, option_texts):
-			if pd.isna(option_text):
-				continue
-			if option_text in response:
-				return option
+		best_match = process.extractOne(response, option_texts, score_cutoff=fuzziness_threshold)
+		if best_match:
+			index = option_texts.index(best_match[0])
+			return options[index]
 		return None
 
 
@@ -51,13 +53,17 @@ else:
 	raise NotImplementedError(f"... Task {TASK} not implemented yet!")
 LLM_NAMES: List[str] = ['T0_3B', 'T0', 'Llama-2-7b-chat', 'Llama-2-13b-chat', 'Vicuna-13b', 'gpt-3.5-turbo']
 TASK_DATA_PATH: str = f'../data/output/{TASK_NAME}/{TASK_NAME}.csv'
+FUZZY_THRESHOLD: int = 50  # Threshold for fuzzy matching
 
 df_task = pd.read_csv(TASK_DATA_PATH)
 if 'id' not in df_task.columns:
 	df_task.reset_index(level=0, inplace=True)
 	df_task.rename(columns={'index': 'id'}, inplace=True)
 
-df_answers = df_task[['id', 'answer']].copy()  # Extract the answers and form the new DataFrame
+if TASK == Task.MC:
+	df_answers = df_task[['id', 'answer', 'data_source', 'subject']].copy()  # Extract the answers and form the new DataFrame
+elif TASK == Task.TF:
+	df_answers = df_task[['id', 'answer']].copy()
 df_answers.rename(columns={'answer': 'answer_ground_truth'}, inplace=True)
 
 dfs_to_merge = [df_task]
@@ -86,7 +92,8 @@ for col in cols_to_clean:
 				response=row[col],
 				options='ABCDE' if pd.notna(row['option_E']) else 'ABCD',
 				option_texts=[row['option_A'], row['option_B'], row['option_C'], row['option_D'],
-				              row['option_E'] if pd.notna(row['option_E']) else None]
+				              row['option_E'] if pd.notna(row['option_E']) else None],
+				fuzziness_threshold=FUZZY_THRESHOLD
 				),
 			axis=1
 			)

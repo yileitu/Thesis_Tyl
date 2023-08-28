@@ -13,7 +13,7 @@ from util.struct import MCOptions, Task
 # Constant Initialization
 TASK = Task.QA
 LLM_NAME: str = "T0"
-LLM_PATH: str = f"bigscience/{LLM_NAME}"
+LLM_HF_PATH: str = f"bigscience/{LLM_NAME}"
 NUM_GPU: int = 1
 
 # Set environments
@@ -34,8 +34,8 @@ start_index = find_first_unprocessed(df=response_df, target_col_name=output_col_
 print(f"... Starting from index {start_index}")
 
 # Load LLM
-tokenizer = AutoTokenizer.from_pretrained(LLM_PATH)
-model = AutoModelForSeq2SeqLM.from_pretrained(LLM_PATH, torch_dtype=torch.bfloat16, trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained(LLM_HF_PATH)
+model = AutoModelForSeq2SeqLM.from_pretrained(LLM_HF_PATH, torch_dtype=torch.bfloat16, trust_remote_code=True)
 print(f"... Loaded {LLM_NAME}")
 model.to(device)
 model.eval()

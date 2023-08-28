@@ -4,7 +4,8 @@ import numpy as np
 import pandas as pd
 import torch
 from tqdm import tqdm
-from transformers import BitsAndBytesConfig, LlamaForCausalLM, LlamaTokenizer, logging
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, LlamaForCausalLM, LlamaTokenizer, \
+	logging
 
 from util.constants import GEN_CONFIG_FOR_EXAM, GEN_CONFIG_FOR_QA
 from util.struct import MCOptions, Task
@@ -16,7 +17,7 @@ from util.util_func import find_first_unprocessed, gen_clean_output, gen_input_w
 TASK = Task.TOY_MC
 LLM_PARAM: int = 70  # Choose from [7, 13, 70]
 LLM_NAME: str = f"Llama-2-{LLM_PARAM}b-chat"
-LLM_PATH: str = f"meta-llama/{LLM_NAME}-hf"
+LLM_HF_PATH: str = f"meta-llama/{LLM_NAME}-hf"
 NUM_GPU: int = 1
 
 # Set environments
@@ -37,25 +38,33 @@ start_index = find_first_unprocessed(df=response_df, target_col_name=output_col_
 print(f"... Starting from index {start_index}")
 
 # Load LLM
-tokenizer = LlamaTokenizer.from_pretrained(LLM_PATH, use_auth_token=True)
+if LLM_PARAM == 70:
+	tokenizer = AutoTokenizer.from_pretrained(LLM_HF_PATH)
+elif LLM_PARAM == 13 or LLM_PARAM == 7:
+	tokenizer = LlamaTokenizer.from_pretrained(LLM_HF_PATH, use_auth_token=True)
+else:
+	raise ValueError(f"... Invalid number of parameters of Llama: {LLM_PARAM}")
 tokenizer.pad_token_id = tokenizer.eos_token_id  # for open-ended generation
+
 if LLM_PARAM == 70:
 	# Use 4-bit quantization for Llama-2-70b
 	bnb_config = BitsAndBytesConfig(
 		load_in_4bit=True,
 		bnb_4bit_quant_type="nf4",
-		bnb_4bit_compute_dtype=torch.float16,
+		bnb_4bit_compute_dtype=torch.bfloat16,
 		bnb_4bit_use_double_quant=True,
 		)
-	model = LlamaForCausalLM.from_pretrained(
-		LLM_PATH, torch_dtype=torch.float16, use_auth_token=True, trust_remote_code=True, bnb_config=bnb_config
+	model = AutoModelForCausalLM.from_pretrained(
+		LLM_HF_PATH,
+		quantization_config=bnb_config,
+		device_map="auto",
+		trust_remote_code=True,
 		)
 elif LLM_PARAM == 13 or LLM_PARAM == 7:
 	model = LlamaForCausalLM.from_pretrained(
-		LLM_PATH, torch_dtype=torch.bfloat16, use_auth_token=True, trust_remote_code=True
+		LLM_HF_PATH, torch_dtype=torch.bfloat16, use_auth_token=True, trust_remote_code=True
 		)
-else:
-	raise ValueError(f"... Invalid number of parameters of Llama: {LLM_PARAM}")
+
 print(f"... Loaded {LLM_NAME}")
 
 # Follow up HF tips https://huggingface.co/docs/transformers/model_doc/llama2
