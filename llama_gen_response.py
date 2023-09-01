@@ -14,8 +14,8 @@ from util.util_func import find_first_unprocessed, gen_clean_output, gen_input_w
 	setup_signal_handlers
 
 # Constant Initialization
-TASK = Task.TOY_MC
-LLM_PARAM: int = 70  # Choose from [7, 13, 70]
+TASK = Task.QA
+LLM_PARAM: int = 7  # Choose from [7, 13, 70]
 LLM_NAME: str = f"Llama-2-{LLM_PARAM}b-chat"
 LLM_HF_PATH: str = f"meta-llama/{LLM_NAME}-hf"
 NUM_GPU: int = 1
