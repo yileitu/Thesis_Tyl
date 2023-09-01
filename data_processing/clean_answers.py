@@ -5,6 +5,7 @@ from typing import List, Optional
 import pandas as pd
 from fuzzywuzzy import process
 
+from constants_for_clean import LLM_NAMES
 from util.struct import Task
 
 
@@ -44,14 +45,13 @@ def extract_tf(response: Optional[str]) -> Optional[str]:
 	return match.group(0).upper() if match else None
 
 
-TASK: Task = Task.MC
+TASK: Task = Task.TF
 if TASK == Task.MC:
 	TASK_NAME = 'mc'
 elif TASK == Task.TF:
 	TASK_NAME = 'tf'
 else:
 	raise NotImplementedError(f"... Task {TASK} not implemented yet!")
-LLM_NAMES: List[str] = ['T0_3B', 'T0', 'Llama-2-7b-chat', 'Llama-2-13b-chat', 'Vicuna-13b', 'gpt-3.5-turbo']
 TASK_DATA_PATH: str = f'../data/output/{TASK_NAME}/{TASK_NAME}.csv'
 FUZZY_THRESHOLD: int = 50  # Threshold for fuzzy matching
 
@@ -61,7 +61,8 @@ if 'id' not in df_task.columns:
 	df_task.rename(columns={'index': 'id'}, inplace=True)
 
 if TASK == Task.MC:
-	df_answers = df_task[['id', 'answer', 'data_source', 'subject']].copy()  # Extract the answers and form the new DataFrame
+	df_answers = df_task[
+		['id', 'answer', 'data_source', 'subject']].copy()  # Extract the answers and form the new DataFrame
 elif TASK == Task.TF:
 	df_answers = df_task[['id', 'answer']].copy()
 df_answers.rename(columns={'answer': 'answer_ground_truth'}, inplace=True)
@@ -112,5 +113,4 @@ for col in answer_col_names:
 with open(f"../data/processed/{TASK_NAME}/{TASK_NAME}_missing_values_info.txt", "w") as text_file:
 	text_file.write(missing_values_info)
 
-df_clean = df_answers.dropna()  # Drop rows with any missing values
-df_clean.to_csv(f'../data/processed/{TASK_NAME}/{TASK_NAME}_answers.csv', index=False)
+df_answers.to_csv(f'../data/processed/{TASK_NAME}/{TASK_NAME}_answers.csv', index=False)
