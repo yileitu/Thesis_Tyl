@@ -35,22 +35,19 @@ Current date: {current_date}"
 LLM_HF_PATHS_DIR: Final[str] = "util/llm_name2hf_path.json"
 
 # Configs
+# No need: top_k, num_beams
 MAX_LEN_QA: Final[int] = 2000
 MAX_LEN_EXAM: Final[int] = 50
 TEMPERATURE: Final[float] = 0.1
-TOP_P: Final[float] = 1.0
-TOP_K: Final[int] = 10
-NUM_BEAMS: Final[int] = 5
+TOP_P: Final[float] = 0.9
 EARLY_STOPPING: Final[bool] = True
-DO_SAMPLE: Final[bool] = False
+DO_SAMPLE: Final[bool] = True
 
 GEN_CONFIG_FOR_QA: Final[GenerationConfig] = GenerationConfig(
 	max_length=MAX_LEN_QA,
 	max_new_tokens=MAX_LEN_QA,
 	temperature=TEMPERATURE,
 	top_p=TOP_P,
-	top_k=TOP_K,
-	num_beams=NUM_BEAMS,
 	early_stopping=EARLY_STOPPING,
 	do_sample=DO_SAMPLE
 	)
@@ -60,8 +57,6 @@ GEN_CONFIG_FOR_EXAM: Final[GenerationConfig] = GenerationConfig(
 	max_new_tokens=MAX_LEN_EXAM,
 	temperature=TEMPERATURE,
 	top_p=TOP_P,
-	top_k=TOP_K,
-	num_beams=NUM_BEAMS,
 	early_stopping=EARLY_STOPPING,
 	do_sample=DO_SAMPLE
 	)
