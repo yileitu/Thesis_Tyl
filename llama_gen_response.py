@@ -7,7 +7,6 @@ from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, LlamaForCausalLM, LlamaTokenizer, \
 	logging
 
-from util.constants import GEN_CONFIG_FOR_EXAM, GEN_CONFIG_FOR_QA
 from util.struct import MCOptions, Task
 from util.util_func import find_first_unprocessed, gen_clean_output, gen_input_with_split, gen_mc_templated_prompt, \
 	gen_qa_templated_prompt, gen_response_file, gen_tf_templated_prompt, get_task_df_path, set_gpu_env, set_llm_config, \
@@ -68,7 +67,7 @@ else:
 	raise ValueError(f"... Invalid number of parameters of Llama: {LLM_PARAM}")
 
 print(f"... Loaded {LLM_NAME}")
-set_llm_config(model=model, tokenizer=tokenizer, device=device)
+gen_config = set_llm_config(model=model, tokenizer=tokenizer, device=device, task=TASK)
 
 # Iterate through the rows and generate responses
 for idx, row in tqdm(df.iloc[start_index:].iterrows()):
@@ -88,10 +87,7 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 	# Generate response
 	input_ids = tokenizer.encode(input_text, return_tensors='pt').to(device)
 	with torch.no_grad():
-		if TASK == Task.QA:
-			output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_QA)
-		else:
-			output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_EXAM)
+		output_ids = model.generate(input_ids, generation_config=gen_config)
 
 	output_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
 	clean_output = gen_clean_output(output_text, task=TASK)

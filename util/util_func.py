@@ -302,13 +302,17 @@ def get_task_df_path(task: Task, llm_name: str) -> Tuple[str, str]:
 	return df_path, response_path
 
 
-def set_llm_config(model, tokenizer, device) -> None:
+def set_llm_config(model, tokenizer, device, task: Task):
 	"""
 	Set LLM configurations. Follow up HF tips https://huggingface.co/docs/transformers/model_doc/llama2
 	:param model: LLM model
 	:param tokenizer: LLM tokenizer
+	:param device: PyTorch device
+	:param task: Task type
 	:return: None
 	"""
+	from util.constants import MAX_LEN_QA, MAX_LEN_EXAM, TEMPERATURE, TOP_P, EARLY_STOPPING, DO_SAMPLE
+	from transformers import GenerationConfig
 
 	pad_token_id = tokenizer.add_special_tokens({"pad_token": PADDING_TOKEN})
 	model.resize_token_embeddings(len(tokenizer))
@@ -316,3 +320,14 @@ def set_llm_config(model, tokenizer, device) -> None:
 	model.config.pretraining_tp = 100
 	model.to(device)
 	model.eval()
+
+	gen_config = GenerationConfig(
+		max_length=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
+		max_new_tokens=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
+		temperature=TEMPERATURE,
+		top_p=TOP_P,
+		early_stopping=EARLY_STOPPING,
+		do_sample=DO_SAMPLE,
+		pad_token_id=pad_token_id,
+		)
+	return gen_config

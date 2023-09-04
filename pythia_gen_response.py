@@ -38,7 +38,7 @@ print(f"... Starting from index {start_index}")
 tokenizer = AutoTokenizer.from_pretrained(LLM_HF_PATH)
 model = GPTNeoXForCausalLM.from_pretrained(LLM_HF_PATH, torch_dtype=torch.bfloat16, trust_remote_code=True)
 print(f"... Loaded {LLM_NAME}")
-set_llm_config(model=model, tokenizer=tokenizer, device=device)
+gen_config = set_llm_config(model=model, tokenizer=tokenizer, device=device, task=TASK)
 
 # Iterate through the rows and generate responses
 for idx, row in tqdm(df.iloc[start_index:].iterrows()):
@@ -58,10 +58,7 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 	# Generate response
 	input_ids = tokenizer.encode(input_text, return_tensors='pt').to(device)
 	with torch.no_grad():
-		if TASK == Task.QA:
-			output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_QA)
-		else:
-			output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_EXAM)
+		output_ids = model.generate(input_ids, generation_config=gen_config)
 
 	output_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
 	clean_output = gen_clean_output(output_text=output_text, task=TASK)
