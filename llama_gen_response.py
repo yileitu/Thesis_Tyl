@@ -10,8 +10,8 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from util.constants import GEN_CONFIG_FOR_EXAM, GEN_CONFIG_FOR_QA
 from util.struct import MCOptions, Task
 from util.util_func import find_first_unprocessed, gen_clean_output, gen_input_with_split, gen_mc_templated_prompt, \
-	gen_qa_templated_prompt, gen_response_file, gen_tf_templated_prompt, get_task_df_path, set_gpu_env, set_seed, \
-	setup_signal_handlers
+	gen_qa_templated_prompt, gen_response_file, gen_tf_templated_prompt, get_task_df_path, set_gpu_env, set_llm_config, \
+	set_seed, setup_signal_handlers
 
 # Constant Initialization
 TASK = Task.QA
@@ -64,18 +64,11 @@ elif LLM_PARAM == 13 or LLM_PARAM == 7:
 	model = LlamaForCausalLM.from_pretrained(
 		LLM_HF_PATH, torch_dtype=torch.bfloat16, use_auth_token=True, trust_remote_code=True
 		)
+else:
+	raise ValueError(f"... Invalid number of parameters of Llama: {LLM_PARAM}")
 
 print(f"... Loaded {LLM_NAME}")
-
-# Follow up HF tips https://huggingface.co/docs/transformers/model_doc/llama2
-padding_token = "<pad>"
-pad_token_id = tokenizer.add_special_tokens({"pad_token": padding_token})
-model.resize_token_embeddings(len(tokenizer))
-model.config.pad_token_id = pad_token_id
-model.config.pretraining_tp = 100
-
-model.to(device)
-model.eval()
+set_llm_config(model=model, tokenizer=tokenizer, device=device)
 
 # Iterate through the rows and generate responses
 for idx, row in tqdm(df.iloc[start_index:].iterrows()):
@@ -90,7 +83,7 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 		input_text = gen_qa_templated_prompt(input_text=row['input'])
 	else:
 		raise ValueError(f"... Invalid task: {TASK}")
-	input_text = gen_input_with_split(text=input_text)
+	input_text = gen_input_with_split(text=input_text, task=TASK)
 
 	# Generate response
 	input_ids = tokenizer.encode(input_text, return_tensors='pt').to(device)
@@ -101,7 +94,7 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 			output_ids = model.generate(input_ids, generation_config=GEN_CONFIG_FOR_EXAM)
 
 	output_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
-	clean_output = gen_clean_output(output_text)
+	clean_output = gen_clean_output(output_text, task=TASK)
 	response_df.loc[idx, output_col_name] = clean_output
 	response_df.to_csv(RESPONSE_PATH, index=False)
 

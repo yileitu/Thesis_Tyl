@@ -5,7 +5,7 @@ from typing import Dict, List, Tuple
 import pandas as pd
 from pandas import DataFrame
 
-from util.constants import NULL_VALUES, RESPONSE_SPLIT, SEED
+from util.constants import NULL_VALUES, PADDING_TOKEN, RESPONSE_SPLIT_FOR_EXAM, RESPONSE_SPLIT_FOR_QA, SEED
 from util.struct import MCOptions, Task
 
 
@@ -167,29 +167,35 @@ def gen_mc_templated_prompt(passage: str, question: str, options: MCOptions) -> 
 				)
 
 
-def gen_input_with_split(text: str) -> str:
+def gen_input_with_split(text: str, task: Task) -> str:
 	"""
 	Generate input text with the response split
 	:param text: original input text
+	:param task: task type
 	:return: input text with the response split
 	"""
-	return text + "\n\n" + RESPONSE_SPLIT
+	if task == Task.QA:
+		return text + "\n\n" + RESPONSE_SPLIT_FOR_QA
+	else:
+		return text + "\n\n" + RESPONSE_SPLIT_FOR_EXAM
 
 
-def gen_clean_output(output_text: str) -> str:
+def gen_clean_output(output_text: str, task: Task) -> str:
 	"""
 	Generate a clean output from the raw output
-
 	:param output_text: raw output text
+	:param task: task type
 	:return: clean output text
 	"""
 	import re
-	from util.constants import RESPONSE_SPLIT
 
 	pattern = re.compile(
 		r"<unk>|<pad>|<s>|</s>|\[PAD\]|<\|endoftext\|>|\[UNK\]|\[CLS\]|\[MASK\]|<\|startofpiece\|>|<\|endofpiece\|>|\[gMASK\]|\[sMASK\]"
 		)
-	clean_output = output_text.split(RESPONSE_SPLIT)[1].strip()
+	if task == Task.QA:
+		clean_output = output_text.split(RESPONSE_SPLIT_FOR_QA)[1].strip()
+	else:
+		clean_output = output_text.split(RESPONSE_SPLIT_FOR_EXAM)[1].strip()
 	clean_output = pattern.sub("", clean_output.strip()).strip()
 
 	return clean_output
@@ -294,3 +300,19 @@ def get_task_df_path(task: Task, llm_name: str) -> Tuple[str, str]:
 	response_path: str = f"data/output/{task_name}/{task_name}_response_{llm_name}.csv"
 
 	return df_path, response_path
+
+
+def set_llm_config(model, tokenizer, device) -> None:
+	"""
+	Set LLM configurations. Follow up HF tips https://huggingface.co/docs/transformers/model_doc/llama2
+	:param model: LLM model
+	:param tokenizer: LLM tokenizer
+	:return: None
+	"""
+
+	pad_token_id = tokenizer.add_special_tokens({"pad_token": PADDING_TOKEN})
+	model.resize_token_embeddings(len(tokenizer))
+	model.config.pad_token_id = pad_token_id
+	model.config.pretraining_tp = 100
+	model.to(device)
+	model.eval()
