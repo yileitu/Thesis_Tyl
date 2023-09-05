@@ -315,7 +315,6 @@ def set_llm_config(model, tokenizer, device, task: Task):
 	from transformers import GenerationConfig
 
 	eos_token_id = tokenizer.eos_token_id
-	model.resize_token_embeddings(len(tokenizer))
 	model.config.pad_token_id = eos_token_id
 	model.to(device)
 	model.eval()
