@@ -6,14 +6,13 @@ import torch
 from tqdm import tqdm
 from transformers import AutoTokenizer, GPTNeoXForCausalLM, logging
 
-from util.constants import GEN_CONFIG_FOR_EXAM, GEN_CONFIG_FOR_QA
 from util.struct import MCOptions, Task
 from util.util_func import find_first_unprocessed, gen_clean_output, gen_input_with_split, gen_mc_templated_prompt, \
 	gen_qa_templated_prompt, gen_response_file, gen_tf_templated_prompt, get_task_df_path, set_gpu_env, set_llm_config, \
 	set_seed, setup_signal_handlers
 
 # Constant Initialization
-TASK = Task.TOY_MC
+TASK = Task.TF
 LLM_NAME: str = "pythia-2.8b"
 LLM_HF_PATH: str = f"EleutherAI/pythia-2.8b-deduped"
 NUM_GPU: int = 1

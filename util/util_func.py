@@ -304,7 +304,37 @@ def get_task_df_path(task: Task, llm_name: str) -> Tuple[str, str]:
 
 def set_llm_config(model, tokenizer, device, task: Task):
 	"""
-	Set LLM configurations. Follow up HF tips https://huggingface.co/docs/transformers/model_doc/llama2
+	Set LLM configurations. Padding token is the same as EOS token
+	:param model: LLM model
+	:param tokenizer: LLM tokenizer
+	:param device: PyTorch device
+	:param task: Task type
+	:return: None
+	"""
+	from util.constants import MAX_LEN_QA, MAX_LEN_EXAM, TEMPERATURE, TOP_P, EARLY_STOPPING, DO_SAMPLE
+	from transformers import GenerationConfig
+
+	eos_token_id = tokenizer.eos_token_id
+	model.resize_token_embeddings(len(tokenizer))
+	model.config.pad_token_id = eos_token_id
+	model.to(device)
+	model.eval()
+
+	gen_config = GenerationConfig(
+		max_length=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
+		max_new_tokens=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
+		temperature=TEMPERATURE,
+		top_p=TOP_P,
+		early_stopping=EARLY_STOPPING,
+		do_sample=DO_SAMPLE,
+		pad_token_id=eos_token_id,
+		)
+	return gen_config
+
+
+def set_llama_config(model, tokenizer, device, task: Task):
+	"""
+	Set Llama configurations. Follow up HF tips https://huggingface.co/docs/transformers/model_doc/llama2
 	:param model: LLM model
 	:param tokenizer: LLM tokenizer
 	:param device: PyTorch device

@@ -9,12 +9,12 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 from util.struct import MCOptions, Task
 from util.util_func import find_first_unprocessed, gen_clean_output, gen_input_with_split, gen_mc_templated_prompt, \
-	gen_qa_templated_prompt, gen_response_file, gen_tf_templated_prompt, get_task_df_path, set_gpu_env, set_llm_config, \
+	gen_qa_templated_prompt, gen_response_file, gen_tf_templated_prompt, get_task_df_path, set_gpu_env, set_llama_config, \
 	set_seed, setup_signal_handlers
 
 # Constant Initialization
-TASK = Task.QA
-LLM_PARAM: int = 13  # Choose from [7, 13, 70]
+TASK = Task.MC
+LLM_PARAM: int = 7  # Choose from [7, 13, 70]
 LLM_NAME: str = f"Llama-2-{LLM_PARAM}b-chat"
 LLM_HF_PATH: str = f"meta-llama/{LLM_NAME}-hf"
 NUM_GPU: int = 1
@@ -67,7 +67,7 @@ else:
 	raise ValueError(f"... Invalid number of parameters of Llama: {LLM_PARAM}")
 
 print(f"... Loaded {LLM_NAME}")
-gen_config = set_llm_config(model=model, tokenizer=tokenizer, device=device, task=TASK)
+gen_config = set_llama_config(model=model, tokenizer=tokenizer, device=device, task=TASK)
 
 # Iterate through the rows and generate responses
 for idx, row in tqdm(df.iloc[start_index:].iterrows()):
