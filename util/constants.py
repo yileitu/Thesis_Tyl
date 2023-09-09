@@ -18,7 +18,7 @@ A2E = 5 options (A, B, C, D, E)
 A2D = 4 options (A, B, C, D)
 """
 RESPONSE_SPLIT_FOR_QA: Final[str] = "### Response:"
-RESPONSE_SPLIT_FOR_EXAM: Final[str] = "You answer:"
+RESPONSE_SPLIT_FOR_EXAM: Final[str] = "Here is your answer:"
 QA_PROMPT_TEMPLATE: str = "Below is an input that describes a task or asks a problem. Write a response that appropriately completes the request.\n\n### Input:\n{input_text}"
 TF_PROMPT_TEMPLATE: str = "Based on the information in: \"{passage}\", please respond to the following question with either 'TRUE' or 'FALSE': \"{question}\". You don't have to provide reasons for your answer."
 MC_PROMPT_TEMPLATE_A2E: str = "Please consider the following scenario: \n\n\"{passage}\"\n\nNow, I have a question based on this scenario: \n\n\"{question}\"\n\nHere are your five options: \nA: {option_A}\nB: {option_B}\nC: {option_C}\nD: {option_D}\nE: {option_E}\n\nPlease provide me with the best answer in the form of a single letter (A, B, C, D or E). You don't have to provide reasons for your answer."
