@@ -315,15 +315,16 @@ def set_llm_config(model, tokenizer, device, task: Task):
 	from transformers import GenerationConfig
 
 	eos_token_id = tokenizer.eos_token_id
+	tokenizer.pad_token = tokenizer.eos_token
 	model.config.pad_token_id = eos_token_id
 	model.to(device)
 	model.eval()
 
 	gen_config = GenerationConfig(
-		max_length=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
+		# max_length=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
 		max_new_tokens=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
 		temperature=TEMPERATURE,
-		# top_p=TOP_P,
+		top_p=TOP_P,
 		early_stopping=EARLY_STOPPING,
 		do_sample=DO_SAMPLE,
 		pad_token_id=eos_token_id,
@@ -351,10 +352,10 @@ def set_llama_config(model, tokenizer, device, task: Task):
 	model.eval()
 
 	gen_config = GenerationConfig(
-		max_length=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
+		# max_length=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
 		max_new_tokens=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
 		temperature=TEMPERATURE,
-		# top_p=TOP_P,
+		top_p=TOP_P,
 		early_stopping=EARLY_STOPPING,
 		do_sample=DO_SAMPLE,
 		pad_token_id=pad_token_id,

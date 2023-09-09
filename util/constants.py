@@ -39,12 +39,12 @@ LLM_HF_PATHS_DIR: Final[str] = "util/llm_name2hf_path.json"
 MAX_LEN_QA: Final[int] = 2000
 MAX_LEN_EXAM: Final[int] = 50
 TEMPERATURE: Final[float] = 0.1
-TOP_P: Final[float] = 0.7
-EARLY_STOPPING: Final[bool] = True
-DO_SAMPLE: Final[bool] = False
+TOP_P: Final[float] = 0.9
+EARLY_STOPPING: Final[bool] = False
+DO_SAMPLE: Final[bool] = True
 
 GEN_CONFIG_FOR_QA: Final[GenerationConfig] = GenerationConfig(
-	max_length=MAX_LEN_QA,
+	# max_length=MAX_LEN_QA,
 	max_new_tokens=MAX_LEN_QA,
 	temperature=TEMPERATURE,
 	# top_p=TOP_P,
@@ -53,7 +53,7 @@ GEN_CONFIG_FOR_QA: Final[GenerationConfig] = GenerationConfig(
 	)
 
 GEN_CONFIG_FOR_EXAM: Final[GenerationConfig] = GenerationConfig(
-	max_length=MAX_LEN_EXAM,
+	# max_length=MAX_LEN_EXAM,
 	max_new_tokens=MAX_LEN_EXAM,
 	temperature=TEMPERATURE,
 	# top_p=TOP_P,
