@@ -180,22 +180,30 @@ def gen_input_with_split(text: str, task: Task) -> str:
 		return text + "\n\n" + RESPONSE_SPLIT_FOR_EXAM
 
 
-def gen_clean_output(output_text: str, task: Task) -> str:
+def gen_clean_output(output_text: str, task: Task, llm_name: str = None) -> str:
 	"""
 	Generate a clean output from the raw output
 	:param output_text: raw output text
 	:param task: task type
+	:param llm_name: LLM name
 	:return: clean output text
 	"""
 	import re
+	from util.constants import EXAM_PROMPT_ENDING
 
 	pattern = re.compile(
 		r"<unk>|<pad>|<s>|</s>|\[PAD\]|<\|endoftext\|>|\[UNK\]|\[CLS\]|\[MASK\]|<\|startofpiece\|>|<\|endofpiece\|>|\[gMASK\]|\[sMASK\]"
 		)
-	if task == Task.QA:
-		clean_output = output_text.split(RESPONSE_SPLIT_FOR_QA)[1].strip()
+	if llm_name is not None and "Llama" in llm_name:
+		if task == Task.QA:
+			clean_output = output_text.split(RESPONSE_SPLIT_FOR_QA, 1)[-1].strip()
+		else:
+			clean_output = output_text.split(EXAM_PROMPT_ENDING, 1)[-1].strip()
 	else:
-		clean_output = output_text.split(RESPONSE_SPLIT_FOR_EXAM)[1].strip()
+		if task == Task.QA:
+			clean_output = output_text.split(RESPONSE_SPLIT_FOR_QA, 1)[-1].strip()
+		else:
+			clean_output = output_text.split(RESPONSE_SPLIT_FOR_EXAM, 1)[-1].strip()
 	clean_output = pattern.sub("", clean_output.strip()).strip()
 
 	return clean_output
