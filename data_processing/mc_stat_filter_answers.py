@@ -186,31 +186,6 @@ for (data_source, subject), group_df in df_clean.groupby(['data_source', 'subjec
 # Save the grouped statistics as a CSV file
 grouped_stats.to_csv(f'../data/processed/{TASK_NAME}/{TASK_NAME}_grouped_stats.csv', index=False)
 
-# Proportion of ground truth answers
-# Initialize DataFrame to store ground truth statistics
-gt_stat_df = pd.DataFrame(
-	{
-		'group'    : ['with_E', 'without_E'],
-		'prop_gt_A': [0, 0],
-		'prop_gt_B': [0, 0],
-		'prop_gt_C': [0, 0],
-		'prop_gt_D': [0, 0],
-		'prop_gt_E': [0, None]
-		}
-	)
-
-# Calculate ground truth proportions for the group with Option E
-counts_gt_with_e = df_with_e['answer_ground_truth'].value_counts(normalize=True)
-for letter in 'ABCDE':
-	gt_stat_df.loc[gt_stat_df['group'] == 'with_E', f'prop_gt_{letter}'] = counts_gt_with_e.get(letter, 0)
-
-# Calculate ground truth proportions for the group without Option E
-counts_gt_without_e = df_without_e['answer_ground_truth'].value_counts(normalize=True)
-for letter in 'ABCD':  # No 'E' in this group
-	gt_stat_df.loc[gt_stat_df['group'] == 'without_E', f'prop_gt_{letter}'] = counts_gt_without_e.get(letter, 0)
-
-gt_stat_df.to_csv(f'../data/processed/{TASK_NAME}/{TASK_NAME}_gt_stats.csv', index=False)
-
 # # Calculate the proportion of answers for each LLM
 # result_storage = []
 # # Loop over each data_source and subject
