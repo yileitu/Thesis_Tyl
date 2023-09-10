@@ -82,7 +82,7 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 		input_text = gen_qa_templated_prompt(input_text=row['input'])
 	else:
 		raise ValueError(f"... Invalid task: {TASK}")
-	# input_text = gen_input_with_split(text=input_text, task=TASK)
+	input_text = gen_input_with_split(text=input_text, task=TASK, llm_name=LLM_NAME)
 
 	# Generate response
 	input_ids = tokenizer.encode(input_text, return_tensors='pt').to(device)
@@ -90,7 +90,7 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 		output_ids = model.generate(input_ids, generation_config=gen_config)
 
 	output_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
-	clean_output = gen_clean_output(output_text, task=TASK, llm_name=LLM_NAME)
+	clean_output = gen_clean_output(output_text=output_text, task=TASK, llm_name=LLM_NAME)
 	response_df.loc[idx, output_col_name] = clean_output
 	response_df.to_csv(RESPONSE_PATH, index=False)
 

@@ -4,6 +4,7 @@ from typing import Dict, List, Tuple
 
 import pandas as pd
 from pandas import DataFrame
+from transformers import GenerationConfig
 
 from util.constants import NULL_VALUES, PADDING_TOKEN, RESPONSE_SPLIT_FOR_EXAM, RESPONSE_SPLIT_FOR_QA, SEED
 from util.struct import MCOptions, Task
@@ -167,17 +168,26 @@ def gen_mc_templated_prompt(passage: str, question: str, options: MCOptions) -> 
 				)
 
 
-def gen_input_with_split(text: str, task: Task) -> str:
+def gen_input_with_split(text: str, task: Task, llm_name: str = None) -> str:
 	"""
 	Generate input text with the response split
 	:param text: original input text
 	:param task: task type
+	:param llm_name: LLM name
 	:return: input text with the response split
 	"""
-	if task == Task.QA:
-		return text + "\n\n" + RESPONSE_SPLIT_FOR_QA
+	from util.constants import RESPONSE_SPLIT_FOR_EXAM_LLAMA
+
+	if llm_name is not None and "Llama" in llm_name:
+		if task == Task.QA:
+			return text + "\n\n" + RESPONSE_SPLIT_FOR_QA
+		else:
+			return text + "\n\n" + RESPONSE_SPLIT_FOR_EXAM_LLAMA
 	else:
-		return text + "\n\n" + RESPONSE_SPLIT_FOR_EXAM
+		if task == Task.QA:
+			return text + "\n\n" + RESPONSE_SPLIT_FOR_QA
+		else:
+			return text + "\n\n" + RESPONSE_SPLIT_FOR_EXAM
 
 
 def gen_clean_output(output_text: str, task: Task, llm_name: str = None) -> str:
@@ -189,7 +199,7 @@ def gen_clean_output(output_text: str, task: Task, llm_name: str = None) -> str:
 	:return: clean output text
 	"""
 	import re
-	from util.constants import EXAM_PROMPT_ENDING
+	from util.constants import RESPONSE_SPLIT_FOR_EXAM_LLAMA
 
 	pattern = re.compile(
 		r"<unk>|<pad>|<s>|</s>|\[PAD\]|<\|endoftext\|>|\[UNK\]|\[CLS\]|\[MASK\]|<\|startofpiece\|>|<\|endofpiece\|>|\[gMASK\]|\[sMASK\]"
@@ -198,7 +208,7 @@ def gen_clean_output(output_text: str, task: Task, llm_name: str = None) -> str:
 		if task == Task.QA:
 			clean_output = output_text.split(RESPONSE_SPLIT_FOR_QA, 1)[-1].strip()
 		else:
-			clean_output = output_text.split(EXAM_PROMPT_ENDING, 1)[-1].strip()
+			clean_output = output_text.split(RESPONSE_SPLIT_FOR_EXAM_LLAMA, 1)[-1].strip()
 	else:
 		if task == Task.QA:
 			clean_output = output_text.split(RESPONSE_SPLIT_FOR_QA, 1)[-1].strip()
@@ -310,7 +320,7 @@ def get_task_df_path(task: Task, llm_name: str) -> Tuple[str, str]:
 	return df_path, response_path
 
 
-def set_llm_config(model, tokenizer, device, task: Task):
+def set_llm_config(model, tokenizer, device, task: Task) -> GenerationConfig:
 	"""
 	Set LLM configurations. Padding token is the same as EOS token
 	:param model: LLM model
@@ -319,7 +329,7 @@ def set_llm_config(model, tokenizer, device, task: Task):
 	:param task: Task type
 	:return: None
 	"""
-	from util.constants import MAX_LEN_QA, MAX_LEN_EXAM, TEMPERATURE, TOP_P, EARLY_STOPPING, DO_SAMPLE
+	from util.constants import MAX_LEN_QA, MAX_LEN_EXAM, TEMPERATURE, EARLY_STOPPING, DO_SAMPLE, NUM_BEAMS
 	from transformers import GenerationConfig
 
 	eos_token_id = tokenizer.eos_token_id
@@ -329,10 +339,10 @@ def set_llm_config(model, tokenizer, device, task: Task):
 	model.eval()
 
 	gen_config = GenerationConfig(
-		# max_length=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
 		max_new_tokens=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
 		temperature=TEMPERATURE,
-		top_p=TOP_P,
+		# top_p=TOP_P,
+		num_beams=NUM_BEAMS,
 		early_stopping=EARLY_STOPPING,
 		do_sample=DO_SAMPLE,
 		pad_token_id=eos_token_id,
@@ -340,7 +350,7 @@ def set_llm_config(model, tokenizer, device, task: Task):
 	return gen_config
 
 
-def set_llama_config(model, tokenizer, device, task: Task):
+def set_llama_config(model, tokenizer, device, task: Task) -> GenerationConfig:
 	"""
 	Set Llama configurations. Follow up HF tips https://huggingface.co/docs/transformers/model_doc/llama2
 	:param model: LLM model
@@ -349,7 +359,7 @@ def set_llama_config(model, tokenizer, device, task: Task):
 	:param task: Task type
 	:return: None
 	"""
-	from util.constants import MAX_LEN_QA, MAX_LEN_EXAM, TEMPERATURE, TOP_P, EARLY_STOPPING, DO_SAMPLE
+	from util.constants import MAX_LEN_QA, MAX_LEN_EXAM, TEMPERATURE, EARLY_STOPPING, DO_SAMPLE, NUM_BEAMS
 	from transformers import GenerationConfig
 
 	pad_token_id = tokenizer.add_special_tokens({"pad_token": PADDING_TOKEN})
@@ -360,11 +370,11 @@ def set_llama_config(model, tokenizer, device, task: Task):
 	model.eval()
 
 	gen_config = GenerationConfig(
-		# max_length=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
 		max_new_tokens=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
 		temperature=TEMPERATURE,
-		top_p=TOP_P,
-		early_stopping=EARLY_STOPPING,
+		# top_p=TOP_P,
+		num_beams=NUM_BEAMS,
+		early_stoppingk=EARLY_STOPPING,
 		do_sample=DO_SAMPLE,
 		pad_token_id=pad_token_id,
 		)
