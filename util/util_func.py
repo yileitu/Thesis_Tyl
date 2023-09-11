@@ -376,6 +376,5 @@ def set_llama_config(model, tokenizer, device, task: Task) -> GenerationConfig:
 		num_beams=NUM_BEAMS,
 		early_stoppingk=EARLY_STOPPING,
 		do_sample=DO_SAMPLE,
-		pad_token_id=pad_token_id,
 		)
 	return gen_config
