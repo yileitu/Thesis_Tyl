@@ -47,7 +47,6 @@ EARLY_STOPPING: Final[bool] = True
 DO_SAMPLE: Final[bool] = False
 
 GEN_CONFIG_FOR_QA: Final[GenerationConfig] = GenerationConfig(
-	# max_length=MAX_LEN_QA,
 	max_new_tokens=MAX_LEN_QA,
 	temperature=TEMPERATURE,
 	# top_p=TOP_P,
@@ -56,7 +55,6 @@ GEN_CONFIG_FOR_QA: Final[GenerationConfig] = GenerationConfig(
 	)
 
 GEN_CONFIG_FOR_EXAM: Final[GenerationConfig] = GenerationConfig(
-	# max_length=MAX_LEN_EXAM,
 	max_new_tokens=MAX_LEN_EXAM,
 	temperature=TEMPERATURE,
 	# top_p=TOP_P,

@@ -329,7 +329,7 @@ def set_llm_config(model, tokenizer, device, task: Task) -> GenerationConfig:
 	:param task: Task type
 	:return: None
 	"""
-	from util.constants import MAX_LEN_QA, MAX_LEN_EXAM, TEMPERATURE, EARLY_STOPPING, DO_SAMPLE, NUM_BEAMS
+	from util.constants import MAX_LEN_QA, MAX_LEN_EXAM, TEMPERATURE, EARLY_STOPPING, NUM_BEAMS, TOP_P
 	from transformers import GenerationConfig
 
 	eos_token_id = tokenizer.eos_token_id
@@ -338,15 +338,24 @@ def set_llm_config(model, tokenizer, device, task: Task) -> GenerationConfig:
 	model.to(device)
 	model.eval()
 
-	gen_config = GenerationConfig(
-		max_new_tokens=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
-		temperature=TEMPERATURE,
-		# top_p=TOP_P,
-		num_beams=NUM_BEAMS,
-		early_stopping=EARLY_STOPPING,
-		do_sample=DO_SAMPLE,
-		pad_token_id=eos_token_id,
-		)
+	if task == Task.QA:
+		gen_config = GenerationConfig(
+			max_new_tokens=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
+			temperature=TEMPERATURE,
+			top_p=TOP_P,
+			early_stopping=EARLY_STOPPING,
+			do_sample=True,
+			pad_token_id=eos_token_id,
+			)
+	else:
+		gen_config = GenerationConfig(
+			max_new_tokens=MAX_LEN_EXAM,
+			temperature=TEMPERATURE,
+			num_beams=NUM_BEAMS,
+			early_stopping=EARLY_STOPPING,
+			do_sample=False,
+			pad_token_id=eos_token_id,
+			)
 	return gen_config
 
 
@@ -359,7 +368,7 @@ def set_llama_config(model, tokenizer, device, task: Task) -> GenerationConfig:
 	:param task: Task type
 	:return: None
 	"""
-	from util.constants import MAX_LEN_QA, MAX_LEN_EXAM, TEMPERATURE, EARLY_STOPPING, DO_SAMPLE, NUM_BEAMS
+	from util.constants import MAX_LEN_QA, MAX_LEN_EXAM, TEMPERATURE, EARLY_STOPPING, NUM_BEAMS, TOP_P
 	from transformers import GenerationConfig
 
 	pad_token_id = tokenizer.add_special_tokens({"pad_token": PADDING_TOKEN})
@@ -369,12 +378,20 @@ def set_llama_config(model, tokenizer, device, task: Task) -> GenerationConfig:
 	model.to(device)
 	model.eval()
 
-	gen_config = GenerationConfig(
-		max_new_tokens=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
-		temperature=TEMPERATURE,
-		# top_p=TOP_P,
-		num_beams=NUM_BEAMS,
-		early_stoppingk=EARLY_STOPPING,
-		do_sample=DO_SAMPLE,
-		)
+	if task == Task.QA:
+		gen_config = GenerationConfig(
+			max_new_tokens=MAX_LEN_QA,
+			temperature=TEMPERATURE,
+			top_p=TOP_P,
+			early_stoppingk=EARLY_STOPPING,
+			do_sample=True,
+			)
+	else:
+		gen_config = GenerationConfig(
+			max_new_tokens=MAX_LEN_EXAM,
+			temperature=TEMPERATURE,
+			num_beams=NUM_BEAMS,
+			early_stoppingk=EARLY_STOPPING,
+			do_sample=False,
+			)
 	return gen_config
