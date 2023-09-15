@@ -335,12 +335,13 @@ def set_llm_config(model, tokenizer, device, task: Task) -> GenerationConfig:
 	eos_token_id = tokenizer.eos_token_id
 	tokenizer.pad_token = tokenizer.eos_token
 	model.config.pad_token_id = eos_token_id
+	model.resize_token_embeddings(len(tokenizer))
 	model.to(device)
 	model.eval()
 
 	if task == Task.QA:
 		gen_config = GenerationConfig(
-			max_new_tokens=MAX_LEN_QA if task == Task.QA else MAX_LEN_EXAM,
+			max_new_tokens=MAX_LEN_QA,
 			temperature=TEMPERATURE,
 			top_p=TOP_P,
 			early_stopping=EARLY_STOPPING,

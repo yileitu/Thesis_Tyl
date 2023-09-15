@@ -13,7 +13,7 @@ from util.util_func import find_first_unprocessed, gen_clean_output, gen_input_w
 	set_seed, setup_signal_handlers
 
 # Constant Initialization
-TASK = Task.MC
+TASK = Task.QA
 LLM_PARAM: int = 13  # Choose from [7, 13, 70]
 LLM_NAME: str = f"Llama-2-{LLM_PARAM}b-chat"
 LLM_HF_PATH: str = f"meta-llama/{LLM_NAME}-hf"
