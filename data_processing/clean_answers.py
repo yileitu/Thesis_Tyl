@@ -45,7 +45,7 @@ def extract_tf(response: Optional[str]) -> Optional[str]:
 	return match.group(0).upper() if match else None
 
 
-TASK: Task = Task.TF
+TASK: Task = Task.MC
 if TASK == Task.MC:
 	TASK_NAME = 'mc'
 elif TASK == Task.TF:

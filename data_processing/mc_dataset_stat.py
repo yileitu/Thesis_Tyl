@@ -5,7 +5,7 @@ from constants_for_clean import LLM_NAMES, OPTION_E_DATASETS
 TASK_NAME = 'mc'
 mc_data = pd.read_csv('../data/output/mc/mc.csv')
 
-# 1. 对数据按照'data_source'和'subject'进行分组
+# 1. Check if Option E is empty
 groups = mc_data.groupby(['data_source', 'subject'])
 
 nonempty_option_e_list = []
