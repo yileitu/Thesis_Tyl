@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import os
 from typing import Dict, List, Tuple
 
 import pandas as pd
@@ -396,3 +396,27 @@ def set_llama_config(model, tokenizer, device, task: Task) -> GenerationConfig:
 			do_sample=False,
 			)
 	return gen_config
+
+
+def save_df_to_csv(df: pd.DataFrame, path: str, **kwargs) -> None:
+	"""
+	Save a DataFrame to a CSV file. If the target directory doesn't exist, it will be created.
+
+	:param df: DataFrame to be saved
+	:param path: Path for saving (e.g. 'some/folder/path/data.csv')
+	:param kwargs: Other arguments passed to to_csv
+	:return: None
+	"""
+	from errno import EEXIST
+
+	# Check if directory exists
+	if not os.path.exists(os.path.dirname(path)):
+		try:
+			# If it doesn't exist, create it
+			os.makedirs(os.path.dirname(path))
+		except OSError as exc:
+			if exc.errno != EEXIST:
+				raise
+
+	# Save DataFrame to CSV file
+	df.to_csv(path, **kwargs)
