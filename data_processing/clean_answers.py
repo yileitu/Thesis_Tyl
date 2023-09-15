@@ -4,9 +4,21 @@ from typing import List, Optional
 
 import pandas as pd
 from fuzzywuzzy import process
+from transformers import BertForSequenceClassification, BertTokenizer
+import torch
 
 from constants_for_clean import LLM_NAMES
 from util.struct import Task
+from util.constants import NULL_VALUES
+
+TASK: Task = Task.TF
+NEGATIVES = ["not", "no", "neither", "nor", "never", "none", "without", "hardly", "scarcely", "barely"]
+
+if TASK == Task.TF:
+	sentimental_tokenizer = BertTokenizer.from_pretrained('nlptown/bert-base-multilingual-uncased-sentiment')
+	sentimental_model = BertForSequenceClassification.from_pretrained(
+		'nlptown/bert-base-multilingual-uncased-sentiment'
+		)
 
 
 def extract_letter(response: str, options: str, option_texts: List[str], fuzziness_threshold: int = 80) \
@@ -40,12 +52,31 @@ def extract_tf(response: Optional[str]) -> Optional[str]:
 	:param response: response from the LLM
 	:return: TRUE or FALSE or None
 	"""
+	if response in NULL_VALUES:
+		return None
+
 	response = str(response)
 	match = re.search(r'\b(TRUE|FALSE)\b', response, re.IGNORECASE)
-	return match.group(0).upper() if match else None
+	if match:
+		return match.group(0).upper()
+
+	# if any(word in response.lower() for word in NEGATIVES):
+	# 	return "FALSE"
+	# return "TRUE"
+
+	inputs = sentimental_tokenizer.encode_plus(response, return_tensors="pt", max_length=512, truncation=True)
+	with torch.no_grad():
+		outputs = sentimental_model(**inputs)
+		logits = outputs[0]
+		predicted_class = torch.argmax(logits, dim=1).item()
+
+	# 如果得分为1或2，则认为是否定的，否则认为是肯定的
+	if predicted_class in [0, 1]:
+		return "FALSE"
+	else:
+		return "TRUE"
 
 
-TASK: Task = Task.MC
 if TASK == Task.MC:
 	TASK_NAME = 'mc'
 elif TASK == Task.TF:
