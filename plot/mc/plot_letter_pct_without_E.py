@@ -4,9 +4,16 @@ import seaborn as sns
 
 # 1. 读取数据
 TASK_NAME = 'mc'
-stat_df = pd.read_csv(f'../../data/processed/{TASK_NAME}/{TASK_NAME}_stats.csv')
+FILTERED: bool = False
+if FILTERED:
+	stat_path = f'../../data/processed/{TASK_NAME}/filtered/{TASK_NAME}_filtered_stats.csv'
+	gt_stat_path = f'../../data/processed/{TASK_NAME}/filtered/{TASK_NAME}_filtered_gt_stats.csv'
+else:
+	stat_path = f'../../data/processed/{TASK_NAME}/unfiltered/{TASK_NAME}_unfiltered_stats.csv'
+	gt_stat_path = f'../../data/processed/{TASK_NAME}/unfiltered/{TASK_NAME}_unfiltered_gt_stats.csv'
+stat_df = pd.read_csv(stat_path)
+gt_stat_df = pd.read_csv(gt_stat_path)
 
-gt_stat_df = pd.read_csv(f'../../data/processed/{TASK_NAME}/{TASK_NAME}_gt_stats.csv')
 prop_gt_A = gt_stat_df['prop_gt_A'].iloc[1]
 prop_gt_B = gt_stat_df['prop_gt_B'].iloc[1]
 prop_gt_C = gt_stat_df['prop_gt_C'].iloc[1]
@@ -45,11 +52,17 @@ for idx, column in enumerate(columns):
 
 plt.legend(title="Option\nLetters", loc="upper left", bbox_to_anchor=(1, 1))
 plt.ylim(0, 100)
-plt.title("Multiple Choices (MC) with Options ABCD Response Percentages Among LLMs")
+if FILTERED:
+	title = "Multiple Choices (MC) with Options ABCD Response Percentages Among LLMs (Filtered)"
+else:
+	title = "Multiple Choices (MC) with Options ABCD Response Percentages Among LLMs (Unfiltered)"
+plt.title(title)
 plt.xlabel("LLMs of Different Scales")
 plt.ylabel("Option Percentages (%)")
-# plt.xticks(rotation=45)  # 如果LLM名称很长或很多，可以旋转标签以获得更好的可读性
-
 plt.tight_layout()
-plt.savefig(f'{TASK_NAME}_letter_pct_without_E.svg', bbox_inches='tight', pad_inches=0.1)
+if FILTERED:
+	save_fig_path = f'filtered/{TASK_NAME}_filtered_letter_pct_without_E.svg'
+else:
+	save_fig_path = f'unfiltered/{TASK_NAME}_unfiltered_letter_pct_without_E.svg'
+plt.savefig(save_fig_path, bbox_inches='tight', pad_inches=0.1)
 plt.show()

@@ -4,11 +4,18 @@ import pandas as pd
 import seaborn as sns
 
 TASK_NAME = 'mc'
-stat_df = pd.read_csv(f'../../data/processed/{TASK_NAME}/{TASK_NAME}_stats.csv')
-majority_df = pd.read_csv(f'../../data/processed/{TASK_NAME}/{TASK_NAME}_majority.csv')
+FILTERED: bool = True
+
+if FILTERED:
+	stat_path = f'../../data/processed/{TASK_NAME}/filtered/{TASK_NAME}_filtered_stats.csv'
+	majority_path = f'../../data/processed/{TASK_NAME}/filtered/{TASK_NAME}_filtered_majority.csv'
+else:
+	stat_path = f'../../data/processed/{TASK_NAME}/unfiltered/{TASK_NAME}_unfiltered_stats.csv'
+	majority_path = f'../../data/processed/{TASK_NAME}/unfiltered/{TASK_NAME}_unfiltered_majority.csv'
+stat_df = pd.read_csv(stat_path)
+majority_df = pd.read_csv(majority_path)
 new_majority_df = majority_df.reindex(columns=stat_df.columns)
 combined_df = pd.concat([new_majority_df, stat_df], ignore_index=True)
-combined_df.to_csv(f'../../data/processed/{TASK_NAME}/{TASK_NAME}_combined.csv', index=False)
 num_llms = combined_df.shape[0]
 
 # Set Seaborn style
@@ -57,10 +64,14 @@ for idx, p in enumerate(ax.patches):
 		)
 
 # Customize the plot appearance
+if FILTERED:
+	title = "Multiple Choices (MC) Accuracy Comparison Among LLMs (Filtered)"
+else:
+	title = "Multiple Choices (MC) Accuracy Comparison Among LLMs (Unfiltered)"
 ax.set(
 	xlabel='LLMs of Different Scales',
 	ylabel='Accuracy (%)',
-	title='Multiple Choices (MC) Accuracy Comparison Among LLMs'
+	title=title
 	)
 ax.grid(True)
 
@@ -73,5 +84,9 @@ ax.legend(handles=handles, title='Accuracy Type', labels=legend_labels)
 sns.despine(left=True, bottom=True)
 
 # Show plot
-plt.savefig(f'{TASK_NAME}_acc.svg', bbox_inches='tight', pad_inches=0.1)
+if FILTERED:
+	save_fig_path = f'filtered/{TASK_NAME}_filtered_acc.svg'
+else:
+	save_fig_path = f'unfiltered/{TASK_NAME}_unfiltered_acc.svg'
+plt.savefig(save_fig_path, bbox_inches='tight', pad_inches=0.1)
 plt.show()
