@@ -7,7 +7,7 @@ FILTERED: bool = True
 ORIGINAL: bool = False
 
 if ORIGINAL:
-	data_path = f'../data/output/mc/mc.csv'
+	data_path = f'../../data/output/mc/mc.csv'
 else:
 	if FILTERED:
 		data_path = f'../data/processed/{TASK_NAME}/filtered/{TASK_NAME}_filtered_answers.csv'
