@@ -17,17 +17,39 @@ EXAM = MC + TF
 A2E = 5 options (A, B, C, D, E)
 A2D = 4 options (A, B, C, D)
 """
+
 RESPONSE_SPLIT_FOR_QA: Final[str] = "Response:"
 RESPONSE_SPLIT_FOR_EXAM: Final[str] = "So your answer is:"
 RESPONSE_SPLIT_FOR_EXAM_LLAMA: Final[str] = RESPONSE_SPLIT_FOR_EXAM
 # EXAM_PROMPT_ENDING: Final[str] = "You don't have to provide reasons."
 EXAM_PROMPT_ENDING: Final[str] = ""
 QA_PROMPT_TEMPLATE: str = "Below is an input that describes a task or asks a problem. Write a response that appropriately completes the request.\n\nInput:\n{input_text}"
-TF_PROMPT_TEMPLATE: str = "Based on the information in: \"{passage}\", please respond to the following question with either 'TRUE' or 'FALSE': \"{question}\". " + EXAM_PROMPT_ENDING
+TF_PROMPT_TEMPLATE: str = "Please consider the following scenario: \n\n\"{passage}\"\n\nNow, I have a question based on this scenario: \n\n\"{question}?\"\n\nPlease answer the above question with either 'YES' or 'NO'. " + EXAM_PROMPT_ENDING
 MC_PROMPT_TEMPLATE_A2E: str = "Please consider the following scenario: \n\n\"{passage}\"\n\nNow, I have a question based on this scenario: \n\n\"{question}\"\n\nHere are your five options: \nA: {option_A}\nB: {option_B}\nC: {option_C}\nD: {option_D}\nE: {option_E}\n\nPlease provide me with the best option to the question in the form of a single letter (A, B, C, D or E). " + EXAM_PROMPT_ENDING
 MC_PROMPT_TEMPLATE_A2D: str = "Please consider the following scenario: \n\n\"{passage}\"\n\nNow, I have a question based on this scenario: \n\n\"{question}\"\n\nHere are your four options: \nA: {option_A}\nB: {option_B}\nC: {option_C}\nD: {option_D}\n\nPlease provide me with the best option to the question in the form of a single letter (A, B, C, or D). " + EXAM_PROMPT_ENDING
 MC_PROMPT_TEMPLATE_A2E_NO_PASSAGE: str = "Here is a question for you: \n\n\"{question}\"\n\nHere are your five options: \nA: {option_A}\nB: {option_B}\nC: {option_C}\nD: {option_D}\nE: {option_E}\n\nPlease provide me with the best option to the question based on your own knowledge in the form of a single letter (A, B, C, D or E). " + EXAM_PROMPT_ENDING
 MC_PROMPT_TEMPLATE_A2D_NO_PASSAGE: str = "Here is a question for you: \n\n\"{question}\"\n\nHere are your four options: \nA: {option_A}\nB: {option_B}\nC: {option_C}\nD: {option_D}\n\nPlease provide me with the best option to the question based on your own knowledge in the form of a single letter (A, B, C, or D). " + EXAM_PROMPT_ENDING
+
+# A2D_CHOICES = """
+# <choices>
+#     <result>A</result>
+#     <result>B</result>
+#     <result>C</result>
+#     <result>D</result>
+# </choices>"""
+# A2E_CHOICES = """
+# <choices>
+#     <result>A</result>
+#     <result>B</result>
+#     <result>C</result>
+#     <result>D</result>
+#     <result>E</result>
+# </choices>"""
+# MC_PROMPT_TEMPLATE_A2E: str = "Please consider the following scenario: \n\n\"{passage}\"\n\nNow, I have a question based on this scenario: \n\n\"{question}\"\n\nHere are your five options: \nA: {option_A}\nB: {option_B}\nC: {option_C}\nD: {option_D}\nE: {option_E}\n\nPlease provide me with the best option to the question in the xml form of a single letter: " + A2E_CHOICES
+# MC_PROMPT_TEMPLATE_A2D: str = "Please consider the following scenario: \n\n\"{passage}\"\n\nNow, I have a question based on this scenario: \n\n\"{question}\"\n\nHere are your four options: \nA: {option_A}\nB: {option_B}\nC: {option_C}\nD: {option_D}\n\nPlease provide me with the best option to the question in the xml form of a single letter: " + A2D_CHOICES
+# MC_PROMPT_TEMPLATE_A2E_NO_PASSAGE: str = "Here is a question for you: \n\n\"{question}\"\n\nHere are your five options: \nA: {option_A}\nB: {option_B}\nC: {option_C}\nD: {option_D}\nE: {option_E}\n\nPlease provide me with the best option to the question based on your own knowledge in the xml form of a single letter: " + A2E_CHOICES
+# MC_PROMPT_TEMPLATE_A2D_NO_PASSAGE: str = "Here is a question for you: \n\n\"{question}\"\n\nHere are your four options: \nA: {option_A}\nB: {option_B}\nC: {option_C}\nD: {option_D}\n\nPlease provide me with the best option to the question based on your own knowledge in the xml form of a single letter: " + A2D_CHOICES
+
 
 current_date = datetime.now().strftime("%Y-%m-%d")
 CHATGPT_SYS_PROMPT = f"You are ChatGPT, a large language model trained by OpenAI, based on the GPT-3.5 architecture. \n\
