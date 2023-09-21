@@ -11,7 +11,7 @@ from util.util_func import find_first_unprocessed, gen_clean_output, gen_input_w
 	set_seed, setup_signal_handlers
 
 # Constant Initialization
-TASK = Task.TF
+TASK = Task.QA
 LLM_NAME: str = "pythia-2.8b"
 LLM_HF_PATH: str = f"EleutherAI/pythia-2.8b-deduped"
 NUM_GPU: int = 1

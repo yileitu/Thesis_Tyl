@@ -4,7 +4,7 @@ import seaborn as sns
 
 # 1. 读取数据
 TASK_NAME = 'tf'
-FILTERED: bool = True
+FILTERED: bool = False
 if FILTERED:
 	stat_path = f'../../data/processed/{TASK_NAME}/filtered/{TASK_NAME}_filtered_stats.csv'
 	gt_stat_path = f'../../data/processed/{TASK_NAME}/filtered/{TASK_NAME}_filtered_gt_stats.csv'

@@ -4,7 +4,7 @@ import pandas as pd
 import seaborn as sns
 
 TASK_NAME = 'tf'
-FILTERED: bool = False
+FILTERED: bool = True
 
 if FILTERED:
 	stat_path = f'../../data/processed/{TASK_NAME}/filtered/{TASK_NAME}_filtered_stats.csv'
@@ -24,11 +24,13 @@ sns.set(style="darkgrid")
 # Initialize the matplotlib figure
 plt.figure(figsize=(15, 8))
 
+if FILTERED:
+	value_vars = ['accuracy_excl_nan']
+else:
+	value_vars = ['accuracy_incl_nan', 'accuracy_excl_nan']
 # Create a colorful bar plot
 ax = sns.barplot(
-	data=combined_df.melt(
-		id_vars='llm_name', value_vars=['accuracy_excl_nan']
-		),
+	data=combined_df.melt(id_vars='llm_name', value_vars=value_vars),
 	x='llm_name',
 	hue='variable',
 	y='value',
@@ -36,23 +38,44 @@ ax = sns.barplot(
 	)
 
 # Adding numbers on top of the bars
-max_bool = majority_df['majority_bool'].iloc[0]
 ANNOT_HEIGHT_OFFSET = 1
 
-for idx, p in enumerate(ax.patches):
-	if idx == 0:
-		annot_text = f'Maj: {max_bool}\n{p.get_height():.2f}'
-		annot_pos = (p.get_x() + p.get_width() / 2., p.get_height() + ANNOT_HEIGHT_OFFSET)
-	else:
-		annot_text = f'{p.get_height():.2f}'
-		annot_pos = (p.get_x() + p.get_width() / 2., p.get_height())
-	ax.annotate(
-		annot_text,
-		annot_pos,
-		ha='center', va='center',
-		xytext=(0, 5),
-		textcoords='offset points'
-		)
+if FILTERED:
+	max_bool = majority_df['majority_bool'].iloc[0]
+	for idx, p in enumerate(ax.patches):
+		if idx == 0:
+			annot_text = f'Maj: {max_bool}\n{p.get_height():.2f}'
+			annot_pos = (p.get_x() + p.get_width() / 2., p.get_height() + ANNOT_HEIGHT_OFFSET)
+		else:
+			annot_text = f'{p.get_height():.2f}'
+			annot_pos = (p.get_x() + p.get_width() / 2., p.get_height())
+		ax.annotate(
+			annot_text,
+			annot_pos,
+			ha='center', va='center',
+			xytext=(0, 5),
+			textcoords='offset points'
+			)
+else:
+	max_bool_incl_nan = majority_df['majority_bool_incl_nan'].iloc[0]
+	max_bool_excl_nan = majority_df['majority_bool_excl_nan'].iloc[0]
+	for idx, p in enumerate(ax.patches):
+		if idx == 0:
+			annot_text = f'Maj: {max_bool_incl_nan}\n{p.get_height():.2f}'
+			annot_pos = (p.get_x() + p.get_width() / 2., p.get_height() + ANNOT_HEIGHT_OFFSET)
+		elif idx == 1 * num_llms:
+			annot_text = f'Maj: {max_bool_excl_nan}\n{p.get_height():.2f}'
+			annot_pos = (p.get_x() + p.get_width() / 2., p.get_height() + ANNOT_HEIGHT_OFFSET)
+		else:
+			annot_text = f'{p.get_height():.2f}'
+			annot_pos = (p.get_x() + p.get_width() / 2., p.get_height())
+		ax.annotate(
+			annot_text,
+			annot_pos,
+			ha='center', va='center',
+			xytext=(0, 5),
+			textcoords='offset points'
+			)
 
 # Customize the plot appearance
 if FILTERED:
@@ -68,7 +91,10 @@ ax.grid(True)
 
 # Custom legend
 handles, labels = ax.get_legend_handles_labels()
-legend_labels = ['Accuracy (Excl. N/A)']
+if FILTERED:
+	legend_labels = ['Accuracy (Excl. N/A)']
+else:
+	legend_labels = ['Accuracy (Incl. N/A)', 'Accuracy (Excl. N/A)']
 ax.legend(handles=handles, title='Accuracy Type', labels=legend_labels)
 sns.despine(left=True, bottom=True)
 

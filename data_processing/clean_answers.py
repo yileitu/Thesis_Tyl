@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import random
 import re
 from typing import List, Optional
 
@@ -10,9 +11,11 @@ import torch
 from constants_for_clean import LLM_NAMES
 from util.struct import Task
 from util.constants import NULL_VALUES
+from util.util_func import set_seed
 
 TASK: Task = Task.TF
 NEGATIVES = ["not", "no", "neither", "nor", "never", "none", "without", "hardly", "scarcely", "barely"]
+set_seed()
 
 if TASK == Task.TF:
 	sentimental_tokenizer = BertTokenizer.from_pretrained('nlptown/bert-base-multilingual-uncased-sentiment')
@@ -48,30 +51,50 @@ def extract_letter(response: str, options: str, option_texts: List[str], fuzzine
 
 def extract_tf(response: Optional[str]) -> Optional[str]:
 	"""
-	Extracts TRUE/FALSE from a response
+	Extracts TRUE/FALSE from a response based on various conditions
 	:param response: response from the LLM
-	:return: TRUE or FALSE or None
+	:return: TRUE, FALSE, or None
 	"""
-	if response in NULL_VALUES:
+	response = str(response).strip()
+
+	# Check for null or special values
+	if response in NULL_VALUES or all(c in '?!., ' for c in response) or response == "Thank you!":
 		return None
 
-	response = str(response)
-	match = re.search(r'\b(TRUE|FALSE)\b', response, re.IGNORECASE)
-	if match:
-		return match.group(0).upper()
+	# Check for the special case "YES or NO"
+	if response.lower() == "yes or no":
+		return random.choice(["TRUE", "FALSE"])
 
-	# if any(word in response.lower() for word in NEGATIVES):
-	# 	return "FALSE"
-	# return "TRUE"
+	# Replace 'True' with 'yes' and 'False' with 'no', case insensitive
+	response = re.sub(r'\btrue\b', 'yes', response, flags=re.IGNORECASE)
+	response = re.sub(r'\bfalse\b', 'no', response, flags=re.IGNORECASE)
 
+	# Count 'yes' and 'no' occurrences
+	count_yes = len(re.findall(r'\byes\b', response, re.IGNORECASE))
+	count_no = len(re.findall(r'\bno\b', response, re.IGNORECASE))
+
+	if count_yes > count_no:
+		return "TRUE"
+	elif count_no > count_yes:
+		return "FALSE"
+
+	# Check for negative words
+	if any(re.search(r'\b' + word + r'\b', response, re.IGNORECASE) for word in NEGATIVES):
+		return "FALSE"
+
+	# If count_yes and count_no are equal and greater than 0
+	if count_yes == count_no and count_yes > 0:
+		return random.choice(["TRUE", "FALSE"])
+
+	# If none of the above conditions are met, use the sentimental model for classification
 	inputs = sentimental_tokenizer.encode_plus(response, return_tensors="pt", max_length=512, truncation=True)
+
 	with torch.no_grad():
 		outputs = sentimental_model(**inputs)
 		logits = outputs[0]
 		predicted_class = torch.argmax(logits, dim=1).item()
 
-	# 如果得分为1或2，则认为是否定的，否则认为是肯定的
-	if predicted_class in [0, 1]:
+	if predicted_class in [1, 2]:
 		return "FALSE"
 	else:
 		return "TRUE"

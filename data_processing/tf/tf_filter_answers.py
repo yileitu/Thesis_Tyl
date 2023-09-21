@@ -4,7 +4,6 @@ from typing import List
 import pandas as pd
 
 from data_processing.constants_for_clean import LLM_NAMES
-from util.struct import Task
 from util.util_func import save_df_to_csv
 
 TASK_NAME = 'tf'
@@ -28,9 +27,9 @@ for idx, row in df_clean.iterrows():
 		consistent_indices.append(idx)
 
 # Save unfiltered answers
-df_unfiltered = df_clean.dropna(subset=ANSWER_COL_NAMES)
 save_path = f'../../data/processed/{TASK_NAME}/unfiltered/{TASK_NAME}_unfiltered_answers.csv'
-save_df_to_csv(df=df_unfiltered, path=save_path, index=True)
+save_df_to_csv(df=df_clean, path=save_path, index=True)
+df_unfiltered = df_clean.dropna(subset=ANSWER_COL_NAMES)
 
 # Filter out rows where all LLM's answers are correct
 df_filtered = df_unfiltered.drop(consistent_indices).dropna(subset=ANSWER_COL_NAMES)
