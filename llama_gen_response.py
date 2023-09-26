@@ -14,10 +14,9 @@ from util.util_func import find_first_unprocessed, gen_clean_output, gen_input_w
 
 # Constant Initialization
 TASK = Task.QA
-LLM_PARAM: int = 7  # Choose from [7, 13, 70]
+LLM_PARAM: int = 70  # Choose from [7, 13, 70]
 LLM_NAME: str = f"Llama-2-{LLM_PARAM}b-chat"
 # LLM_NAME: str = f"Llama-2-{LLM_PARAM}b"
-LLM_HF_PATH: str = f"meta-llama/{LLM_NAME}-hf"
 NUM_GPU: int = 1
 
 # Set environments
@@ -39,8 +38,10 @@ print(f"... Starting from index {start_index}")
 
 # Load LLM
 if LLM_PARAM == 70:
-	tokenizer = AutoTokenizer.from_pretrained(LLM_HF_PATH)
+	LLM_HF_PATH: str = "TheBloke/Llama-2-70B-chat-GPTQ"
+	tokenizer = AutoTokenizer.from_pretrained(LLM_HF_PATH, use_fast=True, use_auth_token=True)
 elif LLM_PARAM == 13 or LLM_PARAM == 7:
+	LLM_HF_PATH: str = f"meta-llama/{LLM_NAME}-hf"
 	tokenizer = LlamaTokenizer.from_pretrained(LLM_HF_PATH, use_auth_token=True)
 else:
 	raise ValueError(f"... Invalid number of parameters of Llama: {LLM_PARAM}")
@@ -48,21 +49,19 @@ tokenizer.pad_token_id = tokenizer.eos_token_id  # for open-ended generation
 
 if LLM_PARAM == 70:
 	# Use 4-bit quantization for Llama-2-70b
-	bnb_config = BitsAndBytesConfig(
-		load_in_4bit=True,
-		bnb_4bit_quant_type="nf4",
-		bnb_4bit_compute_dtype=torch.bfloat16,
-		bnb_4bit_use_double_quant=True,
-		)
 	model = AutoModelForCausalLM.from_pretrained(
 		LLM_HF_PATH,
-		quantization_config=bnb_config,
-		device_map="auto",
-		trust_remote_code=True,
+		revision="gptq-4bit-128g-actorder_True",
+		trust_remote_code=False,
+		torch_dtype=torch.bfloat16,
+		use_auth_token=True,
 		)
 elif LLM_PARAM == 13 or LLM_PARAM == 7:
 	model = LlamaForCausalLM.from_pretrained(
-		LLM_HF_PATH, torch_dtype=torch.bfloat16, use_auth_token=True, trust_remote_code=True
+		LLM_HF_PATH,
+		torch_dtype=torch.bfloat16,
+		use_auth_token=True,
+		trust_remote_code=True
 		)
 else:
 	raise ValueError(f"... Invalid number of parameters of Llama: {LLM_PARAM}")

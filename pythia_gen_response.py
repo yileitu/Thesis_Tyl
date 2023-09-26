@@ -34,7 +34,13 @@ print(f"... Starting from index {start_index}")
 
 # Load LLM
 tokenizer = AutoTokenizer.from_pretrained(LLM_HF_PATH)
-model = GPTNeoXForCausalLM.from_pretrained(LLM_HF_PATH, torch_dtype=torch.bfloat16, trust_remote_code=True)
+model = GPTNeoXForCausalLM.from_pretrained(
+	LLM_HF_PATH,
+	torch_dtype=torch.bfloat16,
+	trust_remote_code=True,
+	# device_map='auto',
+	# load_in_8bit=True,
+	)
 print(f"... Loaded {LLM_NAME}")
 gen_config = set_llm_config(model=model, tokenizer=tokenizer, device=device, task=TASK)
 
