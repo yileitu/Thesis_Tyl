@@ -344,7 +344,6 @@ def set_llm_config(model, tokenizer, device, task: Task) -> GenerationConfig:
 			max_new_tokens=MAX_LEN_QA,
 			temperature=TEMPERATURE,
 			top_p=TOP_P,
-			early_stopping=EARLY_STOPPING,
 			do_sample=True,
 			pad_token_id=eos_token_id,
 			)
@@ -369,8 +368,7 @@ def set_llama_config(model, tokenizer, device, task: Task) -> GenerationConfig:
 	:param task: Task type
 	:return: None
 	"""
-	from util.constants import MAX_LEN_QA, MAX_LEN_EXAM, TEMPERATURE, EARLY_STOPPING, NUM_BEAMS, TOP_P
-	from transformers import GenerationConfig
+	from util.constants import MAX_LEN_QA, MAX_LEN_EXAM, TEMPERATURE, NUM_BEAMS, TOP_P
 
 	pad_token_id = tokenizer.add_special_tokens({"pad_token": PADDING_TOKEN})
 	model.resize_token_embeddings(len(tokenizer))
@@ -384,7 +382,6 @@ def set_llama_config(model, tokenizer, device, task: Task) -> GenerationConfig:
 			max_new_tokens=MAX_LEN_QA,
 			temperature=TEMPERATURE,
 			top_p=TOP_P,
-			early_stoppingk=EARLY_STOPPING,
 			do_sample=True,
 			)
 	else:
@@ -392,11 +389,10 @@ def set_llama_config(model, tokenizer, device, task: Task) -> GenerationConfig:
 			max_new_tokens=MAX_LEN_EXAM,
 			temperature=TEMPERATURE,
 			num_beams=NUM_BEAMS,
-			early_stoppingk=EARLY_STOPPING,
+			early_stopping=True,
 			do_sample=False,
 			)
 	return gen_config
-
 
 def save_df_to_csv(df: pd.DataFrame, path: str, **kwargs) -> None:
 	"""
