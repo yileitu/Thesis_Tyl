@@ -9,6 +9,6 @@
 module load eth_proxy
 module load gcc/9.3.0
 module load cuda/11.7.0
-conda activate thesis
+conda activate llama
 
 python3 llama_gen_response.py
