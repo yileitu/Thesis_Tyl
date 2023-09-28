@@ -266,9 +266,10 @@ def setup_signal_handlers(df_to_save, save_path):
 		save_data()
 		sys.exit(0)
 
-	# 设置信号处理器捕捉 SIGINT 和 SIGTERM
+	# Set up signal handlers
 	signal.signal(signal.SIGINT, signal_handler)
 	signal.signal(signal.SIGTERM, signal_handler)
+	signal.signal(signal.SIGQUIT, signal_handler)  # Handling SIGQUIT
 
 
 def gen_response_file(response_df_path: str, task_df: pd.DataFrame, col_name: str) -> pd.DataFrame:
@@ -393,6 +394,7 @@ def set_llama_config(model, tokenizer, device, task: Task) -> GenerationConfig:
 			do_sample=False,
 			)
 	return gen_config
+
 
 def save_df_to_csv(df: pd.DataFrame, path: str, **kwargs) -> None:
 	"""
