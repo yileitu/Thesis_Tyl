@@ -60,9 +60,14 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 	input_text = gen_input_with_split(text=input_text, task=TASK)
 
 	# Generate response
-	input_ids = tokenizer.encode(input_text, return_tensors='pt').to(device)
+	input_ids = tokenizer.encode(input_text, return_tensors='pt', truncation=True).to(device)
 	with torch.no_grad():
-		output_ids = model.generate(input_ids, generation_config=gen_config)
+		try:
+			output_ids = model.generate(input_ids, generation_config=gen_config)
+		except RuntimeError as e:
+			print(f"... RuntimeError: {e}")
+			print(f"... Skipping index {idx}")
+			continue
 
 	output_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
 	clean_output = gen_clean_output(output_text=output_text, task=TASK)
