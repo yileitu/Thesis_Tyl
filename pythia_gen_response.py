@@ -7,8 +7,8 @@ from transformers import AutoTokenizer, GPTNeoXForCausalLM, logging
 
 from util.struct import MCOptions, Task
 from util.util_func import find_first_unprocessed, gen_clean_output, gen_input_with_split, gen_mc_templated_prompt, \
-	gen_qa_templated_prompt, gen_response_file, gen_tf_templated_prompt, get_task_df_path, set_gpu_env, set_llm_config, \
-	set_seed, setup_signal_handlers
+	gen_qa_templated_prompt, gen_response_file, gen_tf_templated_prompt, get_task_df_path, read_csv_with_bad_lines, \
+	set_gpu_env, set_llm_config, set_seed, setup_signal_handlers
 
 # Constant Initialization
 TASK = Task.QA
@@ -23,6 +23,7 @@ logging.set_verbosity_error()
 
 DF_PATH, RESPONSE_PATH = get_task_df_path(task=TASK, llm_name=LLM_NAME)
 df = pd.read_csv(DF_PATH)
+# df = read_csv_with_bad_lines(DF_PATH)
 df = df.replace({np.nan: None})  # NaN is the default value when reading from CSV, replace it with None
 output_col_name = f'response_{LLM_NAME}'
 response_df = gen_response_file(response_df_path=RESPONSE_PATH, task_df=df, col_name=output_col_name)

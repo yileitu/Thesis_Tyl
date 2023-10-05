@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+from io import StringIO
 from typing import Dict, List, Tuple
 
 import pandas as pd
@@ -418,3 +419,31 @@ def save_df_to_csv(df: pd.DataFrame, path: str, **kwargs) -> None:
 
 	# Save DataFrame to CSV file
 	df.to_csv(path, **kwargs)
+
+
+def read_csv_with_bad_lines(filepath):
+	# Step 1: 尝试读取整个CSV并记录错误行号
+	bad_lines = []
+	with open(filepath, 'r') as f:
+		for i, line in enumerate(f):
+			try:
+				pd.read_csv(StringIO(line))
+			except pd.errors.ParserError:
+				bad_lines.append(i)
+
+	# Step 2: 读取CSV，跳过错误行
+	df_good = pd.read_csv(filepath, skiprows=bad_lines)
+
+	# Step 3: 为错误行创建一个空的DataFrame
+	num_cols = len(df_good.columns)
+	empty_data = {col: [None] * len(bad_lines) for col in df_good.columns}
+	df_bad = pd.DataFrame(empty_data)
+
+	# 合并正确和错误的DataFrames
+	dfs = [df_good]
+	for idx in bad_lines:
+		dfs.insert(idx, df_bad.iloc[[0]])
+		df_bad = df_bad.iloc[1:]
+	df_combined = pd.concat(dfs, ignore_index=True)
+
+	return df_combined

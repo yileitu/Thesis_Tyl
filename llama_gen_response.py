@@ -27,6 +27,7 @@ logging.set_verbosity_error()
 # Load the dataset
 DF_PATH, RESPONSE_PATH = get_task_df_path(task=TASK, llm_name=LLM_NAME)
 df = pd.read_csv(DF_PATH)
+# df = read_csv_with_bad_lines(DF_PATH)
 df = df.replace({np.nan: None})  # NaN is the default value when reading from CSV, replace it with None
 output_col_name = f'response_{LLM_NAME}'
 response_df = gen_response_file(response_df_path=RESPONSE_PATH, task_df=df, col_name=output_col_name)
@@ -90,7 +91,7 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 
 	# Generate response
 	if LLM_PARAM == 70:
-		input_ids = tokenizer(input_text, return_tensors='pt').input_ids.to(device)
+		input_ids = tokenizer(input_text, return_tensors='pt', truncation=True).input_ids.to(device)
 		output_ids = model.generate(
 			inputs=input_ids,
 			max_new_tokens=MAX_LEN_QA,
