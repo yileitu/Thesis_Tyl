@@ -14,7 +14,7 @@ from util.util_func import find_first_unprocessed, gen_clean_output, gen_input_w
 
 # Constant Initialization
 TASK = Task.QA
-LLM_PARAM: int = 7  # Choose from [7, 13, 70]
+LLM_PARAM: int = 70  # Choose from [7, 13, 70]
 LLM_NAME: str = f"Llama-2-{LLM_PARAM}b-chat"
 # LLM_NAME: str = f"Llama-2-{LLM_PARAM}b"
 NUM_GPU: int = 1
@@ -58,6 +58,7 @@ if LLM_PARAM == 70:
 		torch_dtype=torch.float16,  # Do not support bfloat16
 		device_map="auto",
 		)
+	# model = exllama_set_max_input_length(model, 4096)
 elif LLM_PARAM == 13 or LLM_PARAM == 7:
 	model = LlamaForCausalLM.from_pretrained(
 		LLM_HF_PATH,
@@ -92,13 +93,18 @@ for idx, row in tqdm(df.iloc[start_index:].iterrows()):
 	# Generate response
 	if LLM_PARAM == 70:
 		input_ids = tokenizer(input_text, return_tensors='pt', truncation=True).input_ids.to(device)
-		output_ids = model.generate(
-			inputs=input_ids,
-			max_new_tokens=MAX_LEN_QA,
-			temperature=TEMPERATURE,
-			do_sample=True,
-			top_p=TOP_P
-			)
+		try:
+			output_ids = model.generate(
+				inputs=input_ids,
+				max_new_tokens=MAX_LEN_QA,
+				temperature=TEMPERATURE,
+				do_sample=True,
+				top_p=TOP_P
+				)
+		except RuntimeError as e:
+			print(f"... RuntimeError: {e}")
+			print(f"... Skipping index {idx}")
+			continue
 	elif LLM_PARAM == 13 or LLM_PARAM == 7:
 		input_ids = tokenizer.encode(input_text, return_tensors='pt').to(device)
 		with torch.no_grad():
