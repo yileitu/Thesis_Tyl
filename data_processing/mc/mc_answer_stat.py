@@ -3,7 +3,7 @@ from typing import List
 
 import pandas as pd
 
-from data_processing.constants_for_clean import LLM_NAMES, OPTION_E_DATASETS
+from data_processing.mc_tf_common.constants_for_clean import LLM_NAMES, OPTION_E_DATASETS
 from util.struct import Task
 from util.util_func import save_df_to_csv
 

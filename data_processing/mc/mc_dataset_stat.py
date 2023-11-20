@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
-from data_processing.constants_for_clean import LLM_NAMES, OPTION_E_DATASETS
+from data_processing.mc_tf_common.constants_for_clean import OPTION_E_DATASETS
 
 TASK_NAME = 'mc'
 FILTERED: bool = True
