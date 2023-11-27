@@ -5,6 +5,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 from util.util_func import read_txt, save_df_to_csv
+from util.constants import LABEL_TOK
 
 # Constants
 SEED = 42
@@ -13,7 +14,7 @@ DEV_RATIO = TEST_RATIO / (1 - TEST_RATIO)  # 0.25 x 0.8 = 0.2
 
 # Define file paths
 save_dir = '../data/templated/mc'
-df_labeled_path = '../data/clean/mc_labeled.csv'
+df_labeled_path = '../data/labeled/mc_labeled.csv'
 # Define file paths for each template
 template_with_passage_and_option_E_path = 'prompt_template/mc_template_with_passage_and_option_e.txt'
 template_with_passage_without_option_E_path = 'prompt_template/mc_template_with_passage_without_option_e.txt'
@@ -63,7 +64,7 @@ def fill_template(row: pd.DataFrame) -> str:
 
 def preprocess_data(df):
 	# Combine the 'filled_template' and 'label' into a single string
-	df['input_target'] = df['filled_template'] + " <label> " + df['label']
+	df['input_target'] = df['filled_template'] + f" {LABEL_TOK} " + df['label']
 	return df['input_target'].tolist()
 
 

@@ -193,11 +193,11 @@ def gen_input_with_split(text: str, task: Task, llm_name: str = None) -> str:
 
 def gen_clean_output(output_text: str, task: Task, llm_name: str = None) -> str:
 	"""
-	Generate a clean output from the raw output
+	Generate a labeled output from the raw output
 	:param output_text: raw output text
 	:param task: task type
 	:param llm_name: LLM name
-	:return: clean output text
+	:return: labeled output text
 	"""
 	import re
 	from util.constants import RESPONSE_SPLIT_FOR_EXAM_LLAMA

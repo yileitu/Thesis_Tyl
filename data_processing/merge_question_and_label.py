@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 
-question_path = '/Users/tuyilei/Desktop/Thesis/Thesis_Tyl/data/output/mc/mc.csv'
-label_path = '/Users/tuyilei/Desktop/Thesis/Thesis_Tyl/data/processed/mc/unfiltered/labeled/mc_labeled_answers.csv'
-save_path = '/Users/tuyilei/Desktop/Thesis/Thesis_Tyl/data/clean/mc_labeled.csv'
+question_path = '../data/output/mc/mc.csv'
+label_path = '../data/processed/mc/unfiltered/labeled/mc_labeled_answers.csv'
+save_path = '../data/labeled/mc_labeled.csv'
 
 df_question = pd.read_csv(question_path)
 df_labeled = pd.read_csv(label_path)
