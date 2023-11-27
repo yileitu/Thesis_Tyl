@@ -472,3 +472,21 @@ def read_txt(file_path: str) -> str:
 	"""
 	with open(file_path, encoding='utf-8') as file:
 		return file.read()
+
+
+def connect_word_list_to_str_with_or(words: List[str]) -> str:
+	"""
+	Convert a word list into strings and connect the last two words with 'or'
+
+	:param words: List of words
+	:return: String with 'or' between last two words
+	"""
+	first_part_corrected = "', '".join(words[:-2])
+
+	# Formatting the last two words
+	last_part_corrected = f"'{words[-2]}' or '{words[-1]}'"
+
+	# Combining the parts
+	result = f"'{first_part_corrected}', {last_part_corrected}"
+
+	return result

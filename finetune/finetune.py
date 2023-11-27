@@ -2,54 +2,71 @@
 import os
 
 import pandas as pd
-from transformers import DataCollatorForLanguageModeling, GPT2LMHeadModel, GPT2Tokenizer, TextDataset, Trainer, \
-	TrainingArguments
+import torch
+from datasets import Dataset
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
 from util.constants import LABEL_TOK
-
 
 # Load the GPT-2 tokenizer and model.
 tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
 model = GPT2LMHeadModel.from_pretrained('gpt2')
 
-# Dataset
-data_dir = '../data/templated/mc'
-train_dataset = TextDataset(
-    tokenizer=tokenizer,
-    file_path=os.path.join(data_dir, 'train_data.csv'),
-    block_size=128  # This can be adjusted, often set to 512 or 1024 for larger models
-)
-
-
-
-# Special tokens to add (if any)
+# Add the new tokens to the vocabulary.
 special_tokens_dict = {'additional_special_tokens': [LABEL_TOK]}
 tokenizer.add_special_tokens(special_tokens_dict)
+tokenizer.pad_token = tokenizer.eos_token
 model.resize_token_embeddings(len(tokenizer))
 
-# Prepare datasets for training
-train_dataset = TextDataset(tokenizer=tokenizer, file_path='train_texts.txt', block_size=128)
-data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
+# Load labeled data
+data_dir = '../data/templated/mc'
+train_df = pd.read_csv(os.path.join(data_dir, 'train_data.csv'))
 
-# Training arguments
-training_args = TrainingArguments(
-	output_dir='./results',
-	num_train_epochs=3,
-	per_device_train_batch_size=2,
-	save_steps=10_000,
-	save_total_limit=2,
-	)
 
-# Initialize Trainer
-trainer = Trainer(
-	model=model,
-	args=training_args,
-	data_collator=data_collator,
-	train_dataset=train_dataset,
-	)
+# dev_df = pd.read_csv('dev_data.csv')
+# test_df = pd.read_csv('test_data.csv')
 
-# Train the model
-trainer.train()
 
-# Save the model
-model.save_pretrained('./finetuned_model')
+# Function to concatenate input text and label
+def prepare_data(row):
+	return f"{row['filled_template']} {LABEL_TOK} {row['label']}"
+
+
+def tokenize_texts(texts):
+	return tokenizer(texts, padding=True, truncation=True, max_length=1024, return_tensors="pt")
+
+
+class MyDataset(Dataset):
+	def __init__(self, encodings):
+		self.encodings = encodings
+
+	def __getitem__(self, idx):
+		return {key: torch.tensor(val[idx]) for key, val in self.encodings.items()}
+
+	def __len__(self):
+		return len(self.encodings.input_ids)
+
+
+# Prepare the datasets
+train_texts = train_df.apply(prepare_data, axis=1).tolist()
+# dev_texts = dev_df.apply(prepare_data, axis=1).tolist()
+# test_texts = test_df.apply(prepare_data, axis=1).tolist()
+
+train_encodings = tokenize_texts(train_texts)
+# dev_encodings = tokenize_texts(dev_texts)
+# test_encodings = tokenize_texts(test_texts)
+
+train_dataset = MyDataset(train_encodings)
+# dev_dataset = MyDataset(dev_encodings)
+# test_dataset = MyDataset(test_encodings)
+
+sample_index = 0  # You can choose any valid index
+
+# Retrieve the sample
+sample = train_dataset[sample_index]
+
+# Decode the sample to text
+input_ids = sample['input_ids'].numpy()  # Convert to numpy array if it's a tensor
+decoded_text = tokenizer.decode(input_ids)
+
+print("Decoded text from the dataset:", decoded_text)
