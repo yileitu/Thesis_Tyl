@@ -47,7 +47,7 @@ def fill_template(row: pd.DataFrame) -> str:
 
 	return template.format(
 		passage=row.get('passage', ''),
-		question=row['question'],
+		question=row.get('passage', ''),
 		option_A=row.get('option_A', ''),
 		option_B=row.get('option_B', ''),
 		option_C=row.get('option_C', ''),

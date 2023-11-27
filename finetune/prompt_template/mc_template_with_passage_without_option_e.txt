@@ -1,0 +1,10 @@
+Passage: {passage}
+(Consider the following question based on the above passage.)
+Question: {question}
+Options:
+A) {option_A}
+B) {option_B}
+C) {option_C}
+D) {option_D}
+
+Based on the complexity of all the information provided (passage, question and options A to D), categorize the difficulty level of this question as one of the following: 'Simple', 'Middle', 'Difficult', 'Extremely Difficult', or 'Unsolvable'. Output the most appropriate category.
