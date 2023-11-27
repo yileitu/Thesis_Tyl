@@ -6,6 +6,11 @@ from sklearn.model_selection import train_test_split
 
 from util.util_func import read_txt, save_df_to_csv
 
+# Constants
+SEED = 42
+TEST_RATIO = 0.2
+DEV_RATIO = TEST_RATIO / (1 - TEST_RATIO)  # 0.25 x 0.8 = 0.2
+
 # Define file paths
 save_dir = '../data/templated/mc'
 df_labeled_path = '../data/clean/mc_labeled.csv'
@@ -47,7 +52,7 @@ def fill_template(row: pd.DataFrame) -> str:
 
 	return template.format(
 		passage=row.get('passage', ''),
-		question=row.get('passage', ''),
+		question=row.get('question', ''),
 		option_A=row.get('option_A', ''),
 		option_B=row.get('option_B', ''),
 		option_C=row.get('option_C', ''),
@@ -56,16 +61,34 @@ def fill_template(row: pd.DataFrame) -> str:
 		)
 
 
+def preprocess_data(df):
+	# Combine the 'filled_template' and 'label' into a single string
+	df['input_target'] = df['filled_template'] + " <label> " + df['label']
+	return df['input_target'].tolist()
+
+
 df['filled_template'] = df.apply(fill_template, axis=1)
 fine_tune_df = df[['id', 'filled_template', 'label']]
 
 # Split the data into train+dev and test sets
-train_dev_df, test_df = train_test_split(fine_tune_df, test_size=0.2, random_state=42)
+train_dev_df, test_df = train_test_split(fine_tune_df, test_size=TEST_RATIO, random_state=SEED)
 
 # Split the train+dev set into train and dev sets
-train_df, dev_df = train_test_split(train_dev_df, test_size=0.25, random_state=42)  # 0.25 x 0.8 = 0.2
+train_df, dev_df = train_test_split(train_dev_df, test_size=DEV_RATIO, random_state=SEED)  # 0.25 x 0.8 = 0.2
 
 # Save these splits to new CSV files
 save_df_to_csv(df=train_df, path=os.path.join(save_dir, 'train_data.csv'), index=False)
 save_df_to_csv(df=dev_df, path=os.path.join(save_dir, 'dev_data.csv'), index=False)
 save_df_to_csv(df=test_df, path=os.path.join(save_dir, 'test_data.csv'), index=False)
+
+train_texts = preprocess_data(train_df)
+dev_texts = preprocess_data(dev_df)
+test_texts = preprocess_data(test_df)
+
+# Save texts to files
+with open(os.path.join(save_dir, 'train_texts.txt'), 'w') as f:
+	f.write("<|endoftext|>\n".join(train_texts))
+with open(os.path.join(save_dir, 'dev_texts.txt'), 'w') as f:
+	f.write("<|endoftext|>\n".join(dev_texts))
+with open(os.path.join(save_dir, 'test_texts.txt'), 'w') as f:
+	f.write("<|endoftext|>\n".join(test_texts))
