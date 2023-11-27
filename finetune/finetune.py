@@ -8,10 +8,7 @@ sys.path.insert(0, parent_dir)  # 将父目录添加到sys.path
 
 from dataclasses import asdict
 
-import pandas as pd
-import torch
 import wandb
-from datasets import Dataset
 from transformers import DataCollatorForLanguageModeling, GPT2LMHeadModel, GPT2Tokenizer, HfArgumentParser, \
 	TextDataset, Trainer, TrainingArguments
 
