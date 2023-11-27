@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
+import logging
 import os
+import sys
 from io import StringIO
-from typing import Dict, List, Tuple
+from logging import Logger
+from typing import Any, Dict, List, Tuple
 
+import datasets
 import pandas as pd
+import transformers
 from pandas import DataFrame
-from transformers import GenerationConfig
+from transformers import GenerationConfig, TrainingArguments
 
 from util.constants import NULL_VALUES, PADDING_TOKEN, RESPONSE_SPLIT_FOR_EXAM, RESPONSE_SPLIT_FOR_QA, SEED
 from util.struct import MCOptions, Task
@@ -23,8 +28,6 @@ def set_seed(seed: int = SEED) -> None:
 
 	torch.manual_seed(seed)
 	torch.cuda.manual_seed_all(seed)
-	# torch.backends.cudnn.deterministic = True
-	# torch.backends.cudnn.benchmark = False
 	np.random.seed(seed)
 	random.seed(seed)
 
@@ -490,3 +493,56 @@ def connect_word_list_to_str_with_or(words: List[str]) -> str:
 	result = f"'{first_part_corrected}', {last_part_corrected}"
 
 	return result
+
+
+def transform_dict(config_dict: Dict, expand: bool = True):
+	"""
+	General function to transform any dictionary into wandb config acceptable format
+	(This is mostly due to datatypes that are not able to fit into YAML format which makes wandb angry)
+	The expand argument is used to expand iterables into dictionaries so that these configs can be used when compare across runs
+	"""
+	ret: Dict[str, Any] = {}
+	for k, v in config_dict.items():
+		if v is None or isinstance(v, (int, float, str)):
+			ret[k] = v
+		elif isinstance(v, (list, tuple, set)):
+			# Need to check if item in iterable is YAML-friendly
+			t = transform_dict(dict(enumerate(v)), expand)
+			# Transform back to iterable if expand is False
+			ret[k] = t if expand else [t[i] for i in range(len(v))]
+		elif isinstance(v, dict):
+			ret[k] = transform_dict(v, expand)
+		else:
+			# Transform to YAML-friendly (str) format
+			# Need to handle both Classes, Callables, Object Instances
+			# Custom Classes might not have great __repr__ so __name__ might be better in these cases
+			vname = v.__name__ if hasattr(v, '__name__') else v.__class__.__name__
+			ret[k] = f"{v.__module__}:{vname}"
+	return ret
+
+
+def setup_logger(training_args: TrainingArguments) -> Logger:
+	logger: Logger = logging.getLogger(__name__)
+	logging.basicConfig(
+		format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+		datefmt="%m/%d/%Y %H:%M:%S",
+		handlers=[logging.StreamHandler(sys.stdout)],
+		)
+	log_level = training_args.get_process_log_level()
+	logger.setLevel(log_level)
+	datasets.utils.logging.set_verbosity(log_level)
+	transformers.utils.logging.set_verbosity(log_level)
+	transformers.utils.logging.enable_default_handler()
+	transformers.utils.logging.enable_explicit_format()
+
+	# Log on each process the small summary:
+	logger.warning(
+		f"Process rank: {training_args.local_rank}\n device: {training_args.device}\n n_gpu: {training_args.n_gpu} \n"
+		f"distributed training: {bool(training_args.local_rank != -1)}\n 16-bits training: {training_args.fp16}"
+		)
+	logger.info(f"Training/evaluation parameters {training_args}")
+
+	return logger
+
+
+

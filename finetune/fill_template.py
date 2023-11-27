@@ -27,7 +27,7 @@ template_with_passage_without_option_E = read_txt(template_with_passage_without_
 template_without_passage_with_option_E = read_txt(template_without_passage_with_option_E_path)
 template_without_passage_without_option_E = read_txt(template_without_passage_without_option_E_path)
 
-df = pd.read_csv(df_labeled_path)
+df_labeled = pd.read_csv(df_labeled_path)
 difficulty_labels_text = connect_word_list_to_str_with_or(DIFFICULTY_LABELS)
 
 def fill_template(row: pd.DataFrame) -> str:
@@ -69,8 +69,8 @@ def preprocess_data(df):
 	return df['input_target'].tolist()
 
 
-df['filled_template'] = df.apply(fill_template, axis=1)
-fine_tune_df = df[['id', 'filled_template', 'label']]
+df_labeled['filled_template'] = df_labeled.apply(fill_template, axis=1)
+fine_tune_df = df_labeled[['id', 'filled_template', 'label']]
 
 # Split the data into train+dev and test sets
 train_dev_df, test_df = train_test_split(fine_tune_df, test_size=TEST_RATIO, random_state=SEED)
@@ -83,14 +83,14 @@ save_df_to_csv(df=train_df, path=os.path.join(save_dir, 'train_data.csv'), index
 save_df_to_csv(df=dev_df, path=os.path.join(save_dir, 'dev_data.csv'), index=False)
 save_df_to_csv(df=test_df, path=os.path.join(save_dir, 'test_data.csv'), index=False)
 
-# train_texts = preprocess_data(train_df)
-# dev_texts = preprocess_data(dev_df)
-# test_texts = preprocess_data(test_df)
-#
-# # Save texts to files
-# with open(os.path.join(save_dir, 'train_texts.txt'), 'w') as f:
-# 	f.write("<|endoftext|>\n".join(train_texts))
-# with open(os.path.join(save_dir, 'dev_texts.txt'), 'w') as f:
-# 	f.write("<|endoftext|>\n".join(dev_texts))
-# with open(os.path.join(save_dir, 'test_texts.txt'), 'w') as f:
-# 	f.write("<|endoftext|>\n".join(test_texts))
+train_texts = preprocess_data(train_df)
+dev_texts = preprocess_data(dev_df)
+test_texts = preprocess_data(test_df)
+
+# Save texts to files
+with open(os.path.join(save_dir, 'train_texts.txt'), 'w') as f:
+	f.write("<|endoftext|>\n".join(train_texts))
+with open(os.path.join(save_dir, 'dev_texts.txt'), 'w') as f:
+	f.write("<|endoftext|>\n".join(dev_texts))
+with open(os.path.join(save_dir, 'test_texts.txt'), 'w') as f:
+	f.write("<|endoftext|>\n".join(test_texts))
