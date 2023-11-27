@@ -87,3 +87,5 @@ DO_SAMPLE: Final[bool] = False
 # Others
 NULL_VALUES = ['', None, np.nan]
 PADDING_TOKEN = "<pad>"
+
+DIFFICULTY_LABELS = ['Simple', 'Middle', 'Difficult', 'Extremely Difficult', 'Unsolvable']

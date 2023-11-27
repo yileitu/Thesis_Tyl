@@ -447,3 +447,28 @@ def read_csv_with_bad_lines(filepath):
 	df_combined = pd.concat(dfs, ignore_index=True)
 
 	return df_combined
+
+
+def truncate_after_first_all_nan(df: pd.DataFrame) -> pd.DataFrame:
+	"""
+	Truncate a DataFrame after the first row where all elements are NaN.
+
+	:param df: The DataFrame to be truncated.
+	:return: The truncated DataFrame.
+	"""
+	first_all_nan_index = df.dropna().last_valid_index()
+	if first_all_nan_index is not None:
+		return df.loc[:first_all_nan_index]
+	else:
+		return df
+
+
+def read_txt(file_path: str) -> str:
+	"""
+	Read a text file and return its content as a string
+
+	:param file_path: Path to the text file
+	:return: Content of the text file as a string
+	"""
+	with open(file_path, encoding='utf-8') as file:
+		return file.read()
