@@ -2,9 +2,9 @@
 import os
 import sys
 
-script_dir = os.path.dirname(__file__)  # 获取当前脚本文件的目录
-parent_dir = os.path.dirname(script_dir)  # 获取父目录
-sys.path.insert(0, parent_dir)  # 将父目录添加到sys.path
+# script_dir = os.path.dirname(__file__)  # 获取当前脚本文件的目录
+# parent_dir = os.path.dirname(script_dir)  # 获取父目录
+# sys.path.insert(0, parent_dir)  # 将父目录添加到sys.path
 
 from dataclasses import asdict
 
@@ -49,6 +49,7 @@ device = set_gpu_env(num_gpus=my_args.n_gpu)
 # Load the GPT-2 tokenizer and model.
 tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
 model = GPT2LMHeadModel.from_pretrained('gpt2')
+model.to(device)
 
 # Add the new tokens to the vocabulary.
 special_tokens_dict = {'additional_special_tokens': [LABEL_TOK]}
@@ -62,6 +63,31 @@ train_dataset = TextDataset(
 	file_path=os.path.join(my_args.data_dir, 'train_data.csv'),
 	block_size=my_args.max_length
 	)
+
+data_collator = DataCollatorForLanguageModeling(
+	tokenizer=tokenizer,
+	mlm=False  # Set to False for GPT-2
+	)
+
+trainer = Trainer(
+	model=model,
+	args=training_args,
+	data_collator=data_collator,
+	train_dataset=train_dataset,
+	# eval_dataset=dev_dataset
+	)
+
+train_result = trainer.train()
+trainer.save_model(output_dir=training_args.output_dir)
+model.save_pretrained(training_args.output_dir)
+tokenizer.save_pretrained(training_args.output_dir)
+metrics = train_result.metrics
+logger.info(f"*** Train Metrics *** \n{metrics}")
+
+# logger.info("*** Test ***")
+# metrics = trainer.evaluate(eval_dataset=test_dataset)
+# logger.info(f"*** Test Metrics *** \n{metrics}")
+
 
 # # Load labeled data
 # train_df = pd.read_csv(os.path.join(my_args.data_dir, 'train_data.csv'))
@@ -104,27 +130,3 @@ train_dataset = TextDataset(
 # # test_dataset = MyDataset(test_encodings)
 
 # Fine-tune the model
-
-data_collator = DataCollatorForLanguageModeling(
-	tokenizer=tokenizer,
-	mlm=False  # Set to False for GPT-2
-	)
-
-trainer = Trainer(
-	model=model,
-	args=training_args,
-	data_collator=data_collator,
-	train_dataset=train_dataset,
-	# eval_dataset=dev_dataset
-	)
-
-train_result = trainer.train()
-trainer.save_model(output_dir=training_args.output_dir)
-model.save_pretrained(training_args.output_dir)
-tokenizer.save_pretrained(training_args.output_dir)
-metrics = train_result.metrics
-logger.info(f"*** Train Metrics *** \n{metrics}")
-
-# logger.info("*** Test ***")
-# metrics = trainer.evaluate(eval_dataset=test_dataset)
-# logger.info(f"*** Test Metrics *** \n{metrics}")
