@@ -11,7 +11,7 @@ TASK: Task = Task.QA
 TASK_NAME: str = 'qa'
 TASK_DATA_PATH: str = f'../../data/output/{TASK_NAME}/{TASK_NAME}.csv'
 
-include_chatgpt: bool = True
+include_chatgpt: bool = False
 if include_chatgpt:
 	llm_names: List[str] = ['pythia-2.8b', 'Llama-2-7b-chat', 'Llama-2-13b-chat', 'Llama-2-70b-chat',
 	                        'text-davinci-002-render-sha']

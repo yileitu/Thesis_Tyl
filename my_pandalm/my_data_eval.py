@@ -8,7 +8,7 @@ from typing_extensions import TypeAlias
 from pandalm import EvaluationPipeline
 from util.util_func import set_gpu_env, set_seed, get_llm_names_and_hf_paths
 
-set_gpu_env(num_gpus=1)
+set_gpu_env()
 set_seed()
 PandaEval: TypeAlias = Dict[Tuple[str, str], List[int]]
 
