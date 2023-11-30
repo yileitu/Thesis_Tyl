@@ -24,7 +24,7 @@ class MyArguments:
 		default=1,
 		metadata={"help": "Number of GPUs to use."},
 		)
-	model_name: str = field(
+	model_name: Optional[str] = field(
 		default='gpt2',
 		metadata={"help": "Model name. One of {gpt2, pythia}."},
 		)

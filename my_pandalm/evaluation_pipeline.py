@@ -6,8 +6,8 @@ from typing import Optional, List
 from tqdm import tqdm
 import gc
 
-from .candidate_model_inference import CandidateBatchInferenceProvider
-from .pandalm_inference import PandaLMBatchInferenceProvider
+from candidate_model_inference import CandidateBatchInferenceProvider
+from pandalm_inference import PandaLMBatchInferenceProvider
 
 
 class EvaluationPipeline:
@@ -116,17 +116,25 @@ class EvaluationPipeline:
                 generated = pandalm.inference().copy()
 
                 self.pandalm_results[(candidate1, candidate2)] = generated
+                self.pandalm_results_json = json.dumps(self.pandalm_results, ensure_ascii=False)
+                if self.output_data_path:
+                    with open(self.output_data_path, 'w', encoding='utf-8') as f:
+                        f.write(self.pandalm_results_json)
+
                 parsed = []
                 for item in generated:
                     parsed.append(pandalm.parse_pandalm_response(item))
                 self.pandalm_results_parsed[(candidate1, candidate2)] = parsed
+
+
         del pandalm
         gc.collect()
         torch.cuda.empty_cache()
         if self.output_data_path:
             try:
+                self.pandalm_results_json = json.dumps(self.pandalm_results, ensure_ascii=False)
                 with open(self.output_data_path) as f:
-                    json.dump(self.pandalm_results, f)
+                    json.dump(self.pandalm_results_json, f)
             except:
                 logging.error(f'Failed to output at: {self.output_data_path}')
         return self.pandalm_results_parsed
