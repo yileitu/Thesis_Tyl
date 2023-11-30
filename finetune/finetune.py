@@ -63,6 +63,11 @@ train_dataset = TextDataset(
 	file_path=os.path.join(my_args.data_dir, 'train_data.csv'),
 	block_size=my_args.max_length
 	)
+dev_dataset = TextDataset(
+	tokenizer=tokenizer,
+	file_path=os.path.join(my_args.data_dir, 'dev_data.csv'),
+	block_size=my_args.max_length
+	)
 
 data_collator = DataCollatorForLanguageModeling(
 	tokenizer=tokenizer,
@@ -74,7 +79,7 @@ trainer = Trainer(
 	args=training_args,
 	data_collator=data_collator,
 	train_dataset=train_dataset,
-	# eval_dataset=dev_dataset
+	eval_dataset=dev_dataset
 	)
 
 train_result = trainer.train()
