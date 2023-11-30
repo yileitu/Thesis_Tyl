@@ -29,7 +29,7 @@ else:
 	llm_names: List[str] = ['pythia-2.8b', 'Llama-2-7b-chat', 'Llama-2-13b-chat', 'Llama-2-70b-chat']
 llm_response_paths: List[str] = [os.path.join(qa_data_dir, f"pandalm_{llm}.json") for llm in llm_names]
 qa_input_path: str = os.path.join(qa_data_dir, "pandalm_qa_input.json")
-pandalm_eval_output_path: str = os.path.join(qa_data_dir, "pandalm_eval_output.json")
+pandalm_eval_output_path: str = os.path.join(qa_data_dir, "pandalm_eval_output.pickle")
 
 pipeline = EvaluationPipeline(
 	candidate_paths=llm_response_paths,
@@ -38,6 +38,7 @@ pipeline = EvaluationPipeline(
 	output_data_path=pandalm_eval_output_path,
 	)
 eval_results: PandaEvalResult = pipeline.evaluate()
+print(eval_results)
 
 # # Initialize a new empty dictionary to store the transformed data
 # new_eval_results: PandaEvalResult = {}
