@@ -2,6 +2,8 @@
 import os
 import sys
 
+import torch
+
 script_dir = os.path.dirname(__file__)  # 获取当前脚本文件的目录
 parent_dir = os.path.dirname(script_dir)  # 获取父目录
 sys.path.insert(0, parent_dir)  # 将父目录添加到sys.path
@@ -9,8 +11,8 @@ sys.path.insert(0, parent_dir)  # 将父目录添加到sys.path
 from dataclasses import asdict
 
 import wandb
-from transformers import DataCollatorForLanguageModeling, GPT2LMHeadModel, GPT2Tokenizer, HfArgumentParser, \
-	TextDataset, Trainer, TrainingArguments
+from transformers import AutoTokenizer, DataCollatorForLanguageModeling, GPT2LMHeadModel, GPT2Tokenizer, \
+	GPTNeoXForCausalLM, HfArgumentParser, TextDataset, Trainer, TrainingArguments
 
 from arguments import MyArguments
 from util.constants import LABEL_TOK
@@ -23,7 +25,7 @@ my_args: MyArguments
 training_args: TrainingArguments
 
 # Setup wandb
-wandb_proj_name = f"LMRouter-GPT2-{my_args.task.upper()}"
+wandb_proj_name = f"LMRouter-{my_args.model_name.upper()}-{my_args.task.upper()}"
 serial = f"Epoch{int(training_args.num_train_epochs)}-LR{training_args.learning_rate}-Seed{training_args.seed}"
 os.environ["WANDB_PROJECT"] = wandb_proj_name
 wandb.init(
@@ -46,9 +48,16 @@ set_seed(training_args.seed)
 logger = setup_logger(training_args)
 device = set_gpu_env(num_gpus=my_args.n_gpu)
 
-# Load the GPT-2 tokenizer and model.
-tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-model = GPT2LMHeadModel.from_pretrained('gpt2')
+# Load tokenizer and model
+if my_args.model_name == 'gpt2':
+	tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+	model = GPT2LMHeadModel.from_pretrained('gpt2')
+elif my_args.model_name == 'pythia':
+	pythia_hf_path = "EleutherAI/pythia-2.8b-deduped"
+	tokenizer = AutoTokenizer.from_pretrained(pythia_hf_path)
+	model = GPTNeoXForCausalLM.from_pretrained(pythia_hf_path, torch_dtype=torch.bfloat16, trust_remote_code=True)
+else:
+	raise ValueError(f"Unsupported model name: {my_args.model_name}")
 model.to(device)
 
 # Add the new tokens to the vocabulary.
@@ -71,7 +80,7 @@ dev_dataset = TextDataset(
 
 data_collator = DataCollatorForLanguageModeling(
 	tokenizer=tokenizer,
-	mlm=False  # Set to False for GPT-2
+	mlm=False,
 	)
 
 trainer = Trainer(
