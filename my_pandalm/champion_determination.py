@@ -25,9 +25,13 @@ WIN_SCORE = 3
 # Read pickled results
 import pickle
 
-with open('/Users/tuyilei/Desktop/Thesis/Thesis_Tyl/data/processed/qa/with_chatgpt/toy/pandalm_eval_output.pickle', 'rb') as f:
+with open('/Users/tuyilei/Desktop/Thesis/Thesis_Tyl/data/processed/qa/with_chatgpt/toy/pandalm_eval_results.pickle', 'rb') as f:
 	eval_results = pickle.load(f)
+print(eval_results)
 
+
+with open('/Users/tuyilei/Desktop/Thesis/Thesis_Tyl/data/processed/qa/with_chatgpt/toy/pandalm_eval_results_parsed.pickle', 'rb') as f:
+	eval_results = pickle.load(f)
 print(eval_results)
 
 

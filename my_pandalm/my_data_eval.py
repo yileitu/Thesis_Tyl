@@ -19,11 +19,10 @@ PandaEvalResult: TypeAlias = Dict[Tuple[str, str], List[int]]
 set_seed()
 
 # Paths
-pandalm_hf_path = "WeOpenML/PandaLM-Alpaca-7B-v1"
+# pandalm_hf_path = "WeOpenML/PandaLM-Alpaca-7B-v1"
 if include_chatgpt:
-	qa_data_dir: str = '../data/processed/qa/with_chatgpt/toy'
-	llm_names: List[str] = ['pythia-2.8b', 'Llama-2-7b-chat', 'Llama-2-13b-chat', 'Llama-2-70b-chat',
-	                        'text-davinci-002-render-sha']
+	qa_data_dir: str = '../data/processed/qa/with_chatgpt/Sample1000'
+	llm_names: List[str] = ['pythia-2.8b', 'Llama-2-7b-chat', 'Llama-2-13b-chat', 'text-davinci-002-render-sha']
 else:
 	qa_data_dir: str = '../data/processed/qa/without_chatgpt'
 	llm_names: List[str] = ['pythia-2.8b', 'Llama-2-7b-chat', 'Llama-2-13b-chat', 'Llama-2-70b-chat']
@@ -33,12 +32,11 @@ pandalm_eval_output_path: str = os.path.join(qa_data_dir, "pandalm_eval_output.p
 
 pipeline = EvaluationPipeline(
 	candidate_paths=llm_response_paths,
-	pandalm_path=pandalm_hf_path,
+	# pandalm_path=pandalm_hf_path,
 	input_data_path=qa_input_path,
-	output_data_path=pandalm_eval_output_path,
+	output_data_path=qa_data_dir,
 	)
 eval_results: PandaEvalResult = pipeline.evaluate()
-print(eval_results)
 
 # # Initialize a new empty dictionary to store the transformed data
 # new_eval_results: PandaEvalResult = {}

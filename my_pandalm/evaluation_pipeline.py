@@ -1,6 +1,7 @@
 import gc
 import json
 import logging
+import os
 import pickle
 import random
 from typing import List, Optional
@@ -122,9 +123,11 @@ class EvaluationPipeline:
 				for item in generated:
 					parsed.append(pandalm.parse_pandalm_response(item))
 				self.pandalm_results_parsed[(candidate1, candidate2)] = parsed
-				with open(self.output_data_path, 'wb') as file:
-					pickle.dump(self.pandalm_results, file)
 
+				with open(os.path.join(self.output_data_path, "pandalm_eval_results.pickle"), 'wb') as file:
+					pickle.dump(self.pandalm_results, file)
+				with open(os.path.join(self.output_data_path, "pandalm_eval_results_parsed.pickle"), 'wb') as file:
+					pickle.dump(self.pandalm_results_parsed, file)
 
 		del pandalm
 		gc.collect()
@@ -133,8 +136,10 @@ class EvaluationPipeline:
 			try:
 				# with open(self.output_data_path) as f:
 				# 	json.dump(self.pandalm_results, f)
-				with open(self.output_data_path, 'wb') as file:
+				with open(os.path.join(self.output_data_path, "pandalm_eval_results.pickle"), 'wb') as file:
 					pickle.dump(self.pandalm_results, file)
+				with open(os.path.join(self.output_data_path, "pandalm_eval_results_parsed.pickle"), 'wb') as file:
+					pickle.dump(self.pandalm_results_parsed, file)
 			except:
 				logging.error(f'Failed to output at: {self.output_data_path}')
 		return self.pandalm_results_parsed
