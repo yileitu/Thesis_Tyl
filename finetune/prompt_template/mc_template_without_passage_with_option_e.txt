@@ -5,5 +5,4 @@ B) {option_B}
 C) {option_C}
 D) {option_D}
 E) {option_E}
-
 Based on the complexity of all the information provided (question and options A to E), categorize the difficulty level of this question as one of the following: {difficulty_labels}. Output the most appropriate category.

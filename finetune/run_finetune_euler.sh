@@ -16,11 +16,11 @@ python3 finetune.py \
   --n_gpu 1 \
   --fp16 \
   --task mc \
-  --model_name pythia \
+  --model_name gpt2 \
   --data_dir ../data/templated/ \
   --output_dir results/ \
   --per_device_train_batch_size 8 \
   --per_device_eval_batch_size 8 \
-  --num_train_epochs 3 \
+  --num_train_epochs 16 \
   --save_strategy epoch \
   --evaluation_strategy epoch
