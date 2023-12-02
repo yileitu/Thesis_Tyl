@@ -89,8 +89,8 @@ test_texts = preprocess_data(test_df)
 
 # Save texts to files
 with open(os.path.join(save_dir, 'train_texts.txt'), 'w') as f:
-	f.write("<|endoftext|>\n".join(train_texts))
+	f.write("<|endoftext|>\n\n\n".join(train_texts))
 # with open(os.path.join(save_dir, 'dev_texts.txt'), 'w') as f:
 # 	f.write("<|endoftext|>\n".join(dev_texts))
 with open(os.path.join(save_dir, 'test_texts.txt'), 'w') as f:
-	f.write("<|endoftext|>\n".join(test_texts))
+	f.write("<|endoftext|>\n\n\n".join(test_texts))
