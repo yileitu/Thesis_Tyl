@@ -53,10 +53,17 @@ device = set_gpu_env(num_gpus=my_args.n_gpu)
 if my_args.model_name == 'gpt2':
 	tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
 	model = GPT2LMHeadModel.from_pretrained('gpt2')
+	logger.info(f"Loaded GPT2 model.")
 elif my_args.model_name == 'pythia':
 	pythia_hf_path = "EleutherAI/pythia-2.8b-deduped"
 	tokenizer = AutoTokenizer.from_pretrained(pythia_hf_path)
 	model = GPTNeoXForCausalLM.from_pretrained(pythia_hf_path, torch_dtype=torch.bfloat16, trust_remote_code=True)
+elif my_args.model_name == 'finetuned':
+	if my_args.model_path is None:
+		raise ValueError(f"Model checkpoint path must be specified for finetuned model.")
+	tokenizer = GPT2Tokenizer.from_pretrained(my_args.model_path)
+	model = GPT2LMHeadModel.from_pretrained('gpt2')
+	logger.info(f"Loaded finetuned model from {my_args.model_path}")
 else:
 	raise ValueError(f"Unsupported model name: {my_args.model_name}")
 model.to(device)
@@ -97,7 +104,7 @@ current_timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
 timestamped_dir = os.path.join(training_args.output_dir, current_timestamp)
 trainer.save_model(output_dir=timestamped_dir)
 # model.save_pretrained(training_args.output_dir)
-# tokenizer.save_pretrained(training_args.output_dir)
+tokenizer.save_pretrained(save_directory=training_args.output_dir)
 metrics = train_result.metrics
 logger.info(f"*** Train Metrics *** \n{metrics}")
 

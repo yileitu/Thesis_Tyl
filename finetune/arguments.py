@@ -26,5 +26,9 @@ class MyArguments:
 		)
 	model_name: Optional[str] = field(
 		default='gpt2',
-		metadata={"help": "Model name. One of {gpt2, pythia}."},
+		metadata={"help": "Model name. One of {gpt2, pythia, finetuned}."},
+		)
+	model_path: Optional[str] = field(
+		default=None,
+		metadata={"help": "Path to finetuned model checkpoint."},
 		)
