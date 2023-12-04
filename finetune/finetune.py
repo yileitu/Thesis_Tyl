@@ -61,8 +61,8 @@ elif my_args.model_name == 'pythia':
 elif my_args.model_name == 'finetuned':
 	if my_args.model_path is None:
 		raise ValueError(f"Model checkpoint path must be specified for finetuned model.")
-	tokenizer = GPT2Tokenizer.from_pretrained(my_args.model_path)
-	model = GPT2LMHeadModel.from_pretrained('gpt2')
+	tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+	model = GPT2LMHeadModel.from_pretrained(my_args.model_path)
 	logger.info(f"Loaded finetuned model from {my_args.model_path}")
 else:
 	raise ValueError(f"Unsupported model name: {my_args.model_name}")
@@ -80,9 +80,9 @@ train_dataset = TextDataset(
 	file_path=os.path.join(my_args.data_dir, 'train_data.csv'),
 	block_size=my_args.max_length
 	)
-dev_dataset = TextDataset(
+test_dataset = TextDataset(
 	tokenizer=tokenizer,
-	file_path=os.path.join(my_args.data_dir, 'dev_data.csv'),
+	file_path=os.path.join(my_args.data_dir, 'test_data.csv'),
 	block_size=my_args.max_length
 	)
 
@@ -96,7 +96,7 @@ trainer = Trainer(
 	args=training_args,
 	data_collator=data_collator,
 	train_dataset=train_dataset,
-	eval_dataset=dev_dataset
+	eval_dataset=test_dataset
 	)
 
 train_result = trainer.train()

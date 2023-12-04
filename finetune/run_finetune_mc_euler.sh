@@ -21,6 +21,6 @@ python3 finetune.py \
   --output_dir results/ \
   --per_device_train_batch_size 8 \
   --per_device_eval_batch_size 8 \
-  --num_train_epochs 16 \
+  --num_train_epochs 128 \
   --save_strategy epoch \
   --evaluation_strategy epoch
