@@ -17,11 +17,11 @@ python3 finetune.py \
   --fp16 \
   --task tf \
   --model_name finetuned \
-  --model_path results/mc/20231202120623 \
+  --model_path results/mc/20231204192408 \
   --data_dir ../data/templated/ \
   --output_dir results/ \
   --per_device_train_batch_size 8 \
   --per_device_eval_batch_size 8 \
-  --num_train_epochs 16 \
+  --num_train_epochs 128 \
   --save_strategy epoch \
   --evaluation_strategy epoch

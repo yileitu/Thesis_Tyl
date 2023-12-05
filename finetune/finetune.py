@@ -104,7 +104,7 @@ current_timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
 timestamped_dir = os.path.join(training_args.output_dir, current_timestamp)
 trainer.save_model(output_dir=timestamped_dir)
 # model.save_pretrained(training_args.output_dir)
-tokenizer.save_pretrained(save_directory=training_args.output_dir)
+tokenizer.save_pretrained(save_directory=timestamped_dir)
 metrics = train_result.metrics
 logger.info(f"*** Train Metrics *** \n{metrics}")
 
