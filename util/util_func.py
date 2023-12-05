@@ -545,4 +545,17 @@ def setup_logger(training_args: TrainingArguments) -> Logger:
 	return logger
 
 
+def truncate_str(string: str, max_words=400) -> str:
+	"""
+	Truncate a string to a given number of words
 
+	:param string:
+	:param max_words:
+	:return:
+	"""
+	words = string.split()
+	if len(words) > max_words:
+		truncated = ' '.join(words[:max_words])
+	else:
+		truncated = string
+	return truncated
