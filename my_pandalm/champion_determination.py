@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+import os.path
 import pickle
-import random
 from collections import defaultdict
 from enum import IntEnum
 from typing import Dict, List, Tuple, TypeAlias
 
+import pandas as pd
+
+from util.constants import DIFFICULTY_LABELS
 from util.util_func import set_seed
 
 set_seed()
@@ -45,7 +48,8 @@ def process_eval_results(element):
 
 
 # Read pickled results
-with open('../data/processed/qa/with_chatgpt/Sample1000/pandalm_eval_results_parsed.pickle', 'rb') as f:
+parent_dir = "../data/processed/qa/with_chatgpt/Sample1000"
+with open(os.path.join(parent_dir, 'pandalm_eval_results_parsed.pickle'), 'rb') as f:
 	eval_results: PandaEvalResult = pickle.load(f)
 processed_eval_results = {}
 for key, value in eval_results.items():
@@ -74,10 +78,13 @@ def calculate_scores_per_round(results):
 				scores[pair[0]] += DRAW_SCORE
 				scores[pair[1]] += DRAW_SCORE
 
-		# print(scores)
+		# Pick the winner of the round
 		max_score = max(scores.values())  # highest score
-		# find the models with the highest score, if there are multiple, choose one randomly
-		round_winner = random.choice([model for model, score in scores.items() if score == max_score])
+		# find the models with the highest score, if there are multiple, choose the least powerful one
+		candidates = [model for model, score in scores.items() if score == max_score]
+		if len(candidates) > 1:
+			print(f"Multiple models with the highest score: {candidates}")
+		round_winner = candidates[0]
 		round_winners.append(round_winner)
 
 	return round_winners
@@ -91,4 +98,30 @@ def calculate_scores_per_round(results):
 
 winners = calculate_scores_per_round(processed_eval_results)
 
-print(winners)
+# Save winners to sampled data
+df_qa_sampled = pd.read_csv(os.path.join(parent_dir, 'qa_combined_nonempty.csv'))
+df_qa_sampled['winner'] = winners
+
+
+# Label difficulty level
+def determine_difficulty_label(row) -> str:
+	"""
+	Determine the "difficulty" label for each question-answer pair.
+
+	:param row: data point
+	:return: Difficulty label
+	"""
+	if row['winner'] == 'text-davinci-002-render-sha':
+		return DIFFICULTY_LABELS[3]
+	elif row['winner'] == 'Llama-2-13b-chat':
+		return DIFFICULTY_LABELS[2]
+	elif row['winner'] == 'Llama-2-7b-chat':
+		return DIFFICULTY_LABELS[1]
+	elif row['winner'] == 'pythia-2.8b':
+		return DIFFICULTY_LABELS[0]
+	else:
+		return DIFFICULTY_LABELS[4]
+
+
+df_qa_sampled['label'] = df_qa_sampled.apply(determine_difficulty_label, axis=1)
+df_qa_sampled.to_csv(os.path.join(parent_dir, 'qa_combined_nonempty.csv'), index=False)
