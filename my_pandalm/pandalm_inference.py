@@ -74,7 +74,7 @@ class PandaLMBatchInferenceProvider(object):
 		if input:
 			input_sequence = f"Below are two responses for a given task. The task is defined by the Instruction with an Input that provides further context. Evaluate the responses and generate a reference answer for the task.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n{rsp}\n\n### Evaluation:\n"
 		else:
-			instruction = truncate_str(instruction, max_words=400)
+			instruction = truncate_str(instruction, max_words=300)
 			input_sequence = f"Below are two responses for a given task. The task is defined by the Instruction. Evaluate the responses and generate a reference answer for the task.\n\n### Instruction:\n{instruction}\n\n{rsp}\n\n### Evaluation:\n"
 		if result:
 			output_sequence = (

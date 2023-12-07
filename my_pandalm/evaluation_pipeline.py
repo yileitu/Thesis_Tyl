@@ -129,6 +129,9 @@ class EvaluationPipeline:
 				with open(os.path.join(self.output_data_path, "pandalm_eval_results_parsed.pickle"), 'wb') as file:
 					pickle.dump(self.pandalm_results_parsed, file)
 
+				gc.collect()
+				torch.cuda.empty_cache()
+
 		del pandalm
 		gc.collect()
 		torch.cuda.empty_cache()
