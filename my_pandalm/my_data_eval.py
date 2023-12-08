@@ -5,7 +5,7 @@ from typing import Dict, List, Tuple
 
 script_dir = os.path.dirname(__file__)  # 获取当前脚本文件的目录
 parent_dir = os.path.dirname(script_dir)  # 获取父目录
-sys.path.insert(0, parent_dir)  # 将父目录添加到sys.pathu
+sys.path.insert(0, parent_dir)  # 将父目录添加到sys.path
 
 from typing_extensions import TypeAlias
 
