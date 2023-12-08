@@ -3,7 +3,7 @@ import os
 
 import pandas as pd
 
-from examples.example import ref_score
+from moverscore_expand import ref_score
 
 #
 # script_dir = os.path.dirname(__file__)  # 获取当前脚本文件的目录
@@ -34,6 +34,6 @@ df_scores = df.apply(
 
 # Assign the scores back to the main dataframe
 for i, response_column in enumerate(response_columns):
-	df[f'{response_column}_score'] = df_scores[i]
+	df[f'{response_column}_moverscore'] = df_scores[i]
 
 df.to_csv(os.path.join(file_dir, 'qa_combined_nonempty_moverscore.csv'), index=False)
