@@ -75,16 +75,21 @@ tokenizer.pad_token = tokenizer.eos_token
 model.resize_token_embeddings(len(tokenizer))
 
 # Load labeled data
+train_path = os.path.join(my_args.data_dir, 'train_data.csv')
 train_dataset = TextDataset(
 	tokenizer=tokenizer,
-	file_path=os.path.join(my_args.data_dir, 'train_data.csv'),
+	file_path=train_path,
 	block_size=my_args.max_length
 	)
+logger.info(f"Read {train_path}")
+
+test_path = os.path.join(my_args.data_dir, 'test_data.csv')
 test_dataset = TextDataset(
 	tokenizer=tokenizer,
-	file_path=os.path.join(my_args.data_dir, 'test_data.csv'),
+	file_path=test_path,
 	block_size=my_args.max_length
 	)
+logger.info(f"Read {test_path}")
 
 data_collator = DataCollatorForLanguageModeling(
 	tokenizer=tokenizer,

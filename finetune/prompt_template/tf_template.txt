@@ -1,0 +1,4 @@
+Passage: {passage}
+(Consider the following question based on the above passage.)
+Question: {question}
+Based on the complexity of all the information provided (passage and question), categorize the difficulty level of this question as one of the following: {difficulty_labels}. Output the most appropriate category.

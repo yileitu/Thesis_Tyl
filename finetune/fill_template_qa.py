@@ -13,14 +13,14 @@ TEST_RATIO = 0.2
 
 # Define file paths
 save_dir = '../data/templated/qa'
-df_labeled_path = "../data/processed/qa/with_chatgpt/Sample1000/qa_combined_nonempty.csv"
+df_labeled_path = '../data/processed/qa/without_chatgpt/sample/labeled/qa_labeled.csv'
 
 # Template
 template_path = 'prompt_template/qa_template.txt'
 template = read_txt(template_path)
 
 df_labeled = pd.read_csv(df_labeled_path)
-difficulty_labels_text = connect_word_list_to_str_with_or(DIFFICULTY_LABELS)
+difficulty_labels_text = connect_word_list_to_str_with_or(DIFFICULTY_LABELS[:-1])
 
 
 def fill_template(row: pd.DataFrame) -> str:
@@ -31,8 +31,7 @@ def fill_template(row: pd.DataFrame) -> str:
 	:return: filled template text
 	"""
 	return template.format(
-		passage=row.get('passage', ''),
-		question=row.get('question', ''),
+		input=row.get('input', ''),
 		difficulty_labels=difficulty_labels_text
 		)
 

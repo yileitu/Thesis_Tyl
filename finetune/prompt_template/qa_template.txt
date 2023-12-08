@@ -1,2 +1,2 @@
-Question: {question}
+Question: {input}
 Based on the complexity of the above question, categorize the difficulty level of this question as one of the following: {difficulty_labels}. Output the most appropriate category.
