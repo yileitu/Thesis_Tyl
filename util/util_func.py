@@ -87,9 +87,9 @@ def set_gpu_env(num_gpus: int = 1):
 	idle_gpus = get_idle_gpus(num_gpus)
 	os.environ["CUDA_VISIBLE_DEVICES"] = ','.join(map(str, idle_gpus))
 	print(f"... Available GPUs {idle_gpus}")
-	# list available GPUs
-	gpu_list = [torch.cuda.get_device_name(i) for i in range(torch.cuda.device_count())]
-	print(f"... {len(gpu_list)} visible 'logical' GPUs: {gpu_list}")
+	# # list available GPUs
+	# gpu_list = [torch.cuda.get_device_name(i) for i in range(torch.cuda.device_count())]
+	# print(f"... {len(gpu_list)} visible 'logical' GPUs: {gpu_list}")
 	# Set up GPUs for multi-GPU training
 	device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 	print(f"... using {device}")

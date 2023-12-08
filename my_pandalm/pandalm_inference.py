@@ -34,8 +34,12 @@ class PandaLMBatchInferenceProvider(object):
 			model_path,
 			load_in_8bit=False,
 			torch_dtype=torch.bfloat16,
-			device_map="auto",
+			# device_map="auto",
 			)
+
+		# model = torch.nn.DataParallel(model)
+		model.to('cuda')
+
 		if tokenizer.pad_token is None:
 			self.smart_tokenizer_and_embedding_resize(
 				special_tokens_dict=dict(pad_token="[PAD]"),

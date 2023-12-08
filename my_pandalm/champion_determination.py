@@ -97,6 +97,7 @@ def calculate_scores_per_round(results):
 # 	}
 
 winners = calculate_scores_per_round(processed_eval_results)
+print(winners)
 
 # Save winners to sampled data
 df_qa_sampled = pd.read_csv(os.path.join(parent_dir, 'qa_combined_nonempty.csv'))

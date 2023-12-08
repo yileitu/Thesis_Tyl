@@ -17,6 +17,7 @@ include_chatgpt: bool = True
 PandaEvalResult: TypeAlias = Dict[Tuple[str, str], List[int]]
 # device = set_gpu_env(num_gpus=1)
 set_seed()
+set_gpu_env(num_gpus=2)
 
 # Paths
 # pandalm_hf_path = "WeOpenML/PandaLM-Alpaca-7B-v1"
