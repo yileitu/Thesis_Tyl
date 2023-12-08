@@ -2,5 +2,5 @@
 import pandas as pd
 
 df = pd.read_csv("qa_combined_nonempty.csv")
-df_sampled = df.sample(n=10000, random_state=21946520)
+df_sampled = df.sample(n=30000, random_state=21946520)
 df_sampled.to_csv("qa_combined_nonempty.csv", index=False)

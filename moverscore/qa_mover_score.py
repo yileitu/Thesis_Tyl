@@ -2,6 +2,7 @@
 import os
 
 import pandas as pd
+from tqdm.auto import tqdm
 
 from moverscore_expand import ref_score
 
@@ -24,9 +25,11 @@ df = pd.read_csv(os.path.join(file_dir, 'qa_combined_nonempty.csv'))
 # 		score = ref_score(sys, refs)
 # 		scores.append(score[0])  # Assuming each ref_score returns a list with a single score
 # 	df[f'{response_column}_score'] = scores
+
+tqdm.pandas(desc="Calculating Moverscores")
 response_columns = ['response_pythia-2.8b', 'response_Llama-2-7b-chat', 'response_Llama-2-13b-chat',
                     'response_Llama-2-70b-chat']
-df_scores = df.apply(
+df_scores = df.progress_apply(
 	lambda row: ref_score(row['response_ground_truth'], [row[response_col] for response_col in response_columns]),
 	axis=1,
 	result_type='expand'
