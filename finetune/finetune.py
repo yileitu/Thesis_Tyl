@@ -81,7 +81,8 @@ train_dataset = TextDataset(
 	file_path=train_path,
 	block_size=my_args.max_length
 	)
-logger.info(f"Read {train_path}")
+logger.info(f"Read training dataset: {train_path}")
+logger.info(f"Num of training datapoints: {len(train_dataset)}")
 
 test_path = os.path.join(my_args.data_dir, 'test_data.csv')
 test_dataset = TextDataset(
@@ -89,7 +90,8 @@ test_dataset = TextDataset(
 	file_path=test_path,
 	block_size=my_args.max_length
 	)
-logger.info(f"Read {test_path}")
+logger.info(f"Read test dataset: {test_path}")
+logger.info(f"Num of test datapoints: {len(test_dataset)}")
 
 data_collator = DataCollatorForLanguageModeling(
 	tokenizer=tokenizer,
