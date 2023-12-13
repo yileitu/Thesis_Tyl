@@ -4,7 +4,7 @@ import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from util.util_func import read_txt, save_df_to_csv, connect_word_list_to_str_with_or
+from util.util_func import read_txt, save_df_to_csv, connect_word_list_to_str_with_or, map_labels
 from util.constants import LABEL_TOK, DIFFICULTY_LABELS
 
 # Constants
@@ -70,6 +70,7 @@ def preprocess_data(df):
 
 
 df_labeled['filled_template'] = df_labeled.apply(fill_template, axis=1)
+df_labeled = map_labels(df_labeled)
 fine_tune_df = df_labeled[['id', 'filled_template', 'label']]
 
 # Split the data into train+dev and test sets
@@ -89,8 +90,8 @@ test_texts = preprocess_data(test_df)
 
 # Save texts to files
 with open(os.path.join(save_dir, 'train_texts.txt'), 'w') as f:
-	f.write("<|endoftext|>\n\n\n".join(train_texts))
+	f.write(" <|endoftext|>\n\n\n".join(train_texts))
 # with open(os.path.join(save_dir, 'dev_texts.txt'), 'w') as f:
 # 	f.write("<|endoftext|>\n".join(dev_texts))
 with open(os.path.join(save_dir, 'test_texts.txt'), 'w') as f:
-	f.write("<|endoftext|>\n\n\n".join(test_texts))
+	f.write(" <|endoftext|>\n\n\n".join(test_texts))

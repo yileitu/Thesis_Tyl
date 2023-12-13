@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 from util.constants import DIFFICULTY_LABELS, LABEL_TOK
-from util.util_func import connect_word_list_to_str_with_or, read_txt, save_df_to_csv
+from util.util_func import connect_word_list_to_str_with_or, map_labels, read_txt, save_df_to_csv
 
 # Constants
 SEED = 42
@@ -39,11 +39,12 @@ def fill_template(row: pd.DataFrame) -> str:
 
 def preprocess_data(df):
 	# Combine the 'filled_template' and 'label' into a single string
-	df['input_target'] = df['filled_template'] + f" {LABEL_TOK} " + df['label'] + " "
+	df['input_target'] = df['filled_template'] + f" {LABEL_TOK} " + df['label']
 	return df['input_target'].tolist()
 
 
 df_labeled['filled_template'] = df_labeled.apply(fill_template, axis=1)
+df_labeled = map_labels(df_labeled)
 fine_tune_df = df_labeled[['id', 'filled_template', 'label']]
 
 # Split the data into train+dev and test sets
@@ -58,6 +59,6 @@ test_texts = preprocess_data(test_df)
 
 # Save texts to files
 with open(os.path.join(save_dir, 'train_texts.txt'), 'w') as f:
-	f.write("<|endoftext|>\n\n\n".join(train_texts))
+	f.write(" <|endoftext|>\n\n\n".join(train_texts))
 with open(os.path.join(save_dir, 'test_texts.txt'), 'w') as f:
-	f.write("<|endoftext|>\n\n\n".join(test_texts))
+	f.write(" <|endoftext|>\n\n\n".join(test_texts))

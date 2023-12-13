@@ -12,7 +12,8 @@ import transformers
 from pandas import DataFrame
 from transformers import GenerationConfig, TrainingArguments
 
-from util.constants import NULL_VALUES, PADDING_TOKEN, RESPONSE_SPLIT_FOR_EXAM, RESPONSE_SPLIT_FOR_QA, SEED
+from util.constants import DIFFICULTY_LABELS, NULL_VALUES, PADDING_TOKEN, RESPONSE_SPLIT_FOR_EXAM, \
+	RESPONSE_SPLIT_FOR_QA, SEED
 from util.struct import MCOptions, Task
 
 
@@ -559,3 +560,15 @@ def truncate_str(string: str, max_words=400) -> str:
 	else:
 		truncated = string
 	return truncated
+
+
+def map_labels(df):
+	label_map = {
+		'Simple'    : DIFFICULTY_LABELS[0],
+		'Middle'    : DIFFICULTY_LABELS[1],
+		'Difficult' : DIFFICULTY_LABELS[2],
+		'Arduous'   : DIFFICULTY_LABELS[3],
+		'Unsolvable': DIFFICULTY_LABELS[4]
+		}
+	df['label'] = df['label'].map(label_map)
+	return df

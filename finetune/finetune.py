@@ -16,7 +16,7 @@ from transformers import AutoTokenizer, DataCollatorForLanguageModeling, GPT2LMH
 	GPTNeoXForCausalLM, HfArgumentParser, TextDataset, Trainer, TrainingArguments
 
 from arguments import MyArguments
-from util.constants import LABEL_TOK
+from util.constants import LABEL_TOK, DIFFICULTY_LABELS
 from util.util_func import set_gpu_env, set_seed, setup_logger, transform_dict
 
 # Parse arguments
@@ -69,10 +69,12 @@ else:
 model.to(device)
 
 # Add the new tokens to the vocabulary.
-special_tokens_dict = {'additional_special_tokens': [LABEL_TOK]}
+special_tokens_dict = {'additional_special_tokens': DIFFICULTY_LABELS + [LABEL_TOK]}
 tokenizer.add_special_tokens(special_tokens_dict)
 tokenizer.pad_token = tokenizer.eos_token
 model.resize_token_embeddings(len(tokenizer))
+logger.info(f"Added new tokens to the vocabulary: {special_tokens_dict}")
+logger.info(f"Vocabulary size: {len(tokenizer)}")
 
 # Load labeled data
 train_path = os.path.join(my_args.data_dir, 'train_data.csv')
