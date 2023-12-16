@@ -24,7 +24,7 @@ set_seed()
 tokenizer = GPT2Tokenizer.from_pretrained(MODEL_DIR)
 config = GPT2Config.from_pretrained(MODEL_DIR)
 model = GPT2LMHeadModel.from_pretrained(MODEL_DIR, config=config)
-#
+
 # tokenizer.pad_token = tokenizer.eos_token
 # special_tokens_dict = {'additional_special_tokens': DIFFICULTY_LABELS + [LABEL_TOK]}
 # tokenizer.add_special_tokens(special_tokens_dict)
