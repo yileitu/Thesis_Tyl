@@ -12,7 +12,7 @@ import pandas as pd
 from tqdm import tqdm
 from transformers import GPT2Config, GPT2LMHeadModel, GPT2Tokenizer, LogitsProcessor, LogitsProcessorList
 
-from util.constants import DIFFICULTY_LABELS, LABEL_TOK
+from util.constants import DIFFICULTY_LABELS, LABEL_TOK, TOP_P, TEMPERATURE
 from util.util_func import set_seed
 
 MODEL_DIR: str = "results/qa/20231215034707"
@@ -73,8 +73,9 @@ def predict_difficulty_label(input_text):
 			input_ids,
 			attention_mask=attention_mask,
 			max_new_tokens=1,
-			temperature=1.0,
-			do_sample=False,
+			temperature=2.0,
+			do_sample=True,
+			top_p=TOP_P,
 			logits_processor=logits_processor_list,
 			pad_token_id=tokenizer.eos_token_id,
 			)
