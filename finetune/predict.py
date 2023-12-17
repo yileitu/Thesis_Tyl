@@ -17,7 +17,7 @@ from util.util_func import set_seed
 
 MODEL_DIR: str = "results/qa/20231215034707"
 # MODEL_DIR: str = "results/qa/20231214233104"
-DATA_PATH: str = "../data/templated/mc/test_data.csv"
+DATA_PATH: str = "../data/templated/tf/test_data.csv"
 
 # Read finetuned model
 set_seed()

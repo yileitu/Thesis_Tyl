@@ -14,7 +14,7 @@ from util.util_func import find_first_unprocessed, gen_clean_output, gen_input_w
 
 # Constant Initialization
 TASK = Task.QA
-LLM_PARAM: int = 70  # Choose from [7, 13, 70]
+LLM_PARAM: int = 13  # Choose from [7, 13, 70]
 LLM_NAME: str = f"Llama-2-{LLM_PARAM}b-chat"
 # LLM_NAME: str = f"Llama-2-{LLM_PARAM}b"
 NUM_GPU: int = 1
@@ -61,7 +61,7 @@ if LLM_PARAM == 70:
 	# model = exllama_set_max_input_length(model, 4096)
 elif LLM_PARAM == 13 or LLM_PARAM == 7:
 	model = LlamaForCausalLM.from_pretrained(
-		LLM_HF_PATH,
+		pretrained_model_name_or_path=LLM_HF_PATH,
 		torch_dtype=torch.bfloat16,
 		)
 else:
