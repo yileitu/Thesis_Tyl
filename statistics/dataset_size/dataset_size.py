@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 
-df_processed = pd.read_csv('/Users/tuyilei/Desktop/Thesis/Thesis_Tyl/data/templated/mc/test_data.csv')
+df_processed = pd.read_csv('/data/templated/mc/test_data.csv')
 df_original = pd.read_csv(
-	'/Users/tuyilei/Desktop/Thesis/Thesis_Tyl/data/processed/mc/unfiltered/labeled/mc_labeled_answers.csv'
+	'/data/processed/mc/unfiltered/labeled/mc_labeled_answers.csv'
 	)
 
 merged_data = pd.merge(df_processed, df_original[['id', 'data_source']], on='id', how='inner')
