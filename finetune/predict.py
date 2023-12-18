@@ -12,12 +12,14 @@ import pandas as pd
 from tqdm import tqdm
 from transformers import GPT2Config, GPT2LMHeadModel, GPT2Tokenizer, LogitsProcessor, LogitsProcessorList
 
-from util.constants import DIFFICULTY_LABELS, LABEL_TOK, TOP_P, TEMPERATURE
+from util.constants import DIFFICULTY_LABELS, LABEL_TOK, TOP_P
 from util.util_func import set_seed
+
+TASK_NAME: str = "qa"
 
 MODEL_DIR: str = "results/qa/20231215034707"
 # MODEL_DIR: str = "results/qa/20231214233104"
-DATA_PATH: str = "../data/templated/tf/test_data.csv"
+DATA_PATH: str = f"../data/templated/{TASK_NAME}/test_data.csv"
 
 # Read finetuned model
 set_seed()
@@ -52,7 +54,10 @@ class MyLogitsProcessor(LogitsProcessor):
 		return scores
 
 
-logits_processor = MyLogitsProcessor(tokenizer, DIFFICULTY_LABELS)
+if TASK_NAME == "qa":
+	logits_processor = MyLogitsProcessor(tokenizer, DIFFICULTY_LABELS[:-1])  # Discard the last label UNSOLVABLE
+else:
+	logits_processor = MyLogitsProcessor(tokenizer, DIFFICULTY_LABELS)
 logits_processor_list = LogitsProcessorList([logits_processor])
 
 
