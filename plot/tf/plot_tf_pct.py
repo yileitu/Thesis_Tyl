@@ -30,9 +30,9 @@ stat_df = pd.concat([gt, stat_df], ignore_index=True)
 
 columns = ["prop_True", "prop_False"]
 stat_df[columns] *= 100
-legend_names = ["True", "False"]
+legend_names = ["Yes", "No"]
 
-plt.figure(figsize=(12, 10))
+plt.figure(figsize=(6, 5))
 colors = sns.color_palette("pastel", len(columns))
 sns.set(style="darkgrid")
 
@@ -42,19 +42,20 @@ for idx, column in enumerate(columns):
 	for bar_idx, (name, value) in enumerate(zip(stat_df['llm_name'], stat_df[column])):
 		plt.text(
 			bar_idx, bottom_values[bar_idx] + value / 2, f"{value:.2f}", ha='center', va='center',
-			color='black'
+			color='black', fontsize=8
 			)
 		bottom_values[bar_idx] += value
 
-plt.legend(title="T/F", loc="upper left", bbox_to_anchor=(1, 1))
+plt.xticks(rotation=15)
+plt.legend(title="Y/N", loc="upper left", bbox_to_anchor=(1, 1))
 plt.ylim(0, 100)
 if FILTERED:
 	title = "True/False (TF) Response Percentages Among LLMs (Filtered)"
 else:
-	title = "True/False (TF) Response Percentages Among LLMs (Unfiltered)"
+	title = "Yes/No (YN) Response Percentages Among LLMs"
 plt.title(title)
 plt.xlabel("LLMs of Different Scales")
-plt.ylabel("T/F Percentages (%)")
+plt.ylabel("Y/N Percentages (%)")
 plt.tight_layout()
 if FILTERED:
 	save_fig_path = f'filtered/{TASK_NAME}_filtered_tf_pct.svg'

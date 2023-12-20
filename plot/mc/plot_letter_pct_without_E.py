@@ -35,7 +35,7 @@ columns = ["prop_A_without_E", "prop_B_without_E", "prop_C_without_E", "prop_D_w
 stat_df[columns] *= 100
 legend_names = ["A", "B", "C", "D"]  # 新的图例名称
 
-plt.figure(figsize=(12, 10))
+plt.figure(figsize=(6, 5))
 colors = sns.color_palette("pastel", len(columns))
 sns.set(style="darkgrid")
 
@@ -46,7 +46,7 @@ for idx, column in enumerate(columns):
 		if value > 0:  # 只为非零部分添加标签
 			plt.text(
 				bar_idx, bottom_values[bar_idx] + value / 2, f"{value:.2f}", ha='center', va='center',
-				color='black'
+				color='black', fontsize=8
 				)  # 由于pastel颜色较浅，所以我建议使用黑色标签
 		bottom_values[bar_idx] += value
 
@@ -55,7 +55,9 @@ plt.ylim(0, 100)
 if FILTERED:
 	title = "Multiple Choices (MC) with Options ABCD Response Percentages Among LLMs (Filtered)"
 else:
-	title = "Multiple Choices (MC) with Options ABCD Response Percentages Among LLMs (Unfiltered)"
+	title = "Multiple Choices (MC) with Options ABCD Response Percentages Among LLMs"
+
+plt.xticks(rotation=15)
 plt.title(title)
 plt.xlabel("LLMs of Different Scales")
 plt.ylabel("Option Percentages (%)")

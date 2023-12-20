@@ -4,7 +4,7 @@ import pandas as pd
 import seaborn as sns
 
 TASK_NAME = 'tf'
-FILTERED: bool = True
+FILTERED: bool = False
 
 if FILTERED:
 	stat_path = f'../../data/processed/{TASK_NAME}/filtered/{TASK_NAME}_filtered_stats.csv'
@@ -22,7 +22,7 @@ num_llms = combined_df.shape[0]
 sns.set(style="darkgrid")
 
 # Initialize the matplotlib figure
-plt.figure(figsize=(15, 8))
+plt.figure(figsize=(12, 6))
 
 if FILTERED:
 	value_vars = ['accuracy_excl_nan']
@@ -61,10 +61,10 @@ else:
 	max_bool_excl_nan = majority_df['majority_bool_excl_nan'].iloc[0]
 	for idx, p in enumerate(ax.patches):
 		if idx == 0:
-			annot_text = f'Maj: {max_bool_incl_nan}\n{p.get_height():.2f}'
+			annot_text = f'Maj: Yes\n{p.get_height():.2f}'
 			annot_pos = (p.get_x() + p.get_width() / 2., p.get_height() + ANNOT_HEIGHT_OFFSET)
 		elif idx == 1 * num_llms:
-			annot_text = f'Maj: {max_bool_excl_nan}\n{p.get_height():.2f}'
+			annot_text = f'Maj: Yes\n{p.get_height():.2f}'
 			annot_pos = (p.get_x() + p.get_width() / 2., p.get_height() + ANNOT_HEIGHT_OFFSET)
 		else:
 			annot_text = f'{p.get_height():.2f}'
@@ -81,7 +81,7 @@ else:
 if FILTERED:
 	title = "True/False (TF) Accuracy Comparison Among LLMs (Filtered)"
 else:
-	title = "True/False (TF) Accuracy Comparison Among LLMs (Unfiltered)"
+	title = "Yes/No (YN) Accuracy Comparison Among LLMs"
 ax.set(
 	xlabel='LLMs of Different Scales',
 	ylabel='Accuracy (%)',

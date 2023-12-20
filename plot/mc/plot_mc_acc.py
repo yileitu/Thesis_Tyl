@@ -4,7 +4,7 @@ import pandas as pd
 import seaborn as sns
 
 TASK_NAME = 'mc'
-FILTERED: bool = True
+FILTERED: bool = False
 
 if FILTERED:
 	stat_path = f'../../data/processed/{TASK_NAME}/filtered/{TASK_NAME}_filtered_stats.csv'
@@ -22,7 +22,7 @@ num_llms = combined_df.shape[0]
 sns.set(style="darkgrid")
 
 # Initialize the matplotlib figure
-plt.figure(figsize=(15, 8))
+plt.figure(figsize=(12, 6))
 
 # Create a colorful bar plot
 ax = sns.barplot(
@@ -67,7 +67,7 @@ for idx, p in enumerate(ax.patches):
 if FILTERED:
 	title = "Multiple Choices (MC) Accuracy Comparison Among LLMs (Filtered)"
 else:
-	title = "Multiple Choices (MC) Accuracy Comparison Among LLMs (Unfiltered)"
+	title = "Multiple Choices (MC) Accuracy Comparison Among LLMs"
 ax.set(
 	xlabel='LLMs of Different Scales',
 	ylabel='Accuracy (%)',
