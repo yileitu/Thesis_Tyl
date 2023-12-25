@@ -3,7 +3,6 @@ import random
 
 import numpy as np
 import pandas as pd
-from util.util_func import set_seed
 
 # # Merge data
 # df_mc_orig = pd.read_csv(
@@ -18,16 +17,36 @@ from util.util_func import set_seed
 # 		'<|Simple|>'    : row['answer_pythia-2.8b'],
 # 		'<|Unsolvable|>': row['answer_pythia-2.8b'],
 # 		'<|Middle|>'    : row['answer_Llama-2-7b-chat'],
-# 		'<|Arduous|>'   : row['answer_Llama-2-13b-chat'],
-# 		'<|Difficult|>' : row['answer_gpt-3.5-turbo'],
+# 		'<|Difficult|>'   : row['answer_Llama-2-13b-chat'],
+# 		'<|Arduous|>' : row['answer_gpt-3.5-turbo'],
 # 		}
 # 	return label_to_answer.get(row['predicted_label'], None)
 #
 #
+# def determine_oracle_answer(row):
+# 	label_to_answer = {
+# 		'<|Simple|>'    : row['answer_pythia-2.8b'],
+# 		'<|Unsolvable|>': row['answer_pythia-2.8b'],
+# 		'<|Middle|>'    : row['answer_Llama-2-7b-chat'],
+# 		'<|Difficult|>'   : row['answer_Llama-2-13b-chat'],
+# 		'<|Arduous|>' : row['answer_gpt-3.5-turbo'],
+# 		}
+# 	return label_to_answer.get(row['label'], None)
+#
+#
 # df_merged['predicted_answer'] = df_merged.apply(determine_predicted_answer, axis=1)
+# df_merged['oracle_answer'] = df_merged.apply(determine_oracle_answer, axis=1)
 # df_merged.to_csv('/Users/tuyilei/Desktop/Thesis/Thesis_Tyl/data/predicted/temp2.0/mc_test_merged.csv', index=False)
 
 # # Read merged data
+# Oracle
+df_mc_pred = pd.read_csv('/Users/tuyilei/Desktop/Thesis/Thesis_Tyl/data/predicted/temp2.0/mc_test_merged.csv')
+df_mc_pred['is_oracle_correct'] = df_mc_pred['oracle_answer'] == df_mc_pred['answer_ground_truth']
+overall_accuracy = df_mc_pred['is_oracle_correct'].mean()
+print("*** Oracle ***")
+print("整个数据集的准确率:", overall_accuracy)
+accuracy_by_source = df_mc_pred.groupby('data_source')['is_oracle_correct'].mean()
+print("每个数据来源的准确率:\n", accuracy_by_source, "\n\n")
 
 # Routing
 df_mc_pred = pd.read_csv('/Users/tuyilei/Desktop/Thesis/Thesis_Tyl/data/predicted/temp2.0/mc_test_merged.csv')
@@ -70,7 +89,6 @@ print("整个数据集的准确率:", overall_accuracy)
 accuracy_by_source = df_mc_pred.groupby('data_source')['is_bma_correct'].mean()
 print("每个数据来源的准确率:\n", accuracy_by_source, "\n\n")
 
-
 # Majority
 most_common_answers_by_source = df_mc_pred.groupby('data_source')['answer_ground_truth'].apply(
 	lambda x: x.value_counts(normalize=True).idxmax()
@@ -85,7 +103,6 @@ print("*** Majority ***")
 print("每个数据来源的最高占比答案及占比:\n", most_common_answers_by_source, "\n", proportions_by_source)
 print("\n整个数据集的最高占比答案及占比:", most_common_answer_overall, proportion_overall, '\n\n')
 
-
 # Random
 random_seeds = [0, 1, 2, 3, 4]
 answer_columns = ['answer_pythia-2.8b', 'answer_Llama-2-7b-chat', 'answer_Llama-2-13b-chat', 'answer_gpt-3.5-turbo']
@@ -97,7 +114,7 @@ overall_accuracy = []
 
 # 对每个随机种子进行操作
 for seed in random_seeds:
-	set_seed(seed)
+	random.seed(seed)
 	# 随机选择列
 	df_mc_pred['random_answer'] = df_mc_pred.apply(lambda row: row[random.choice(answer_columns)], axis=1)
 
@@ -106,10 +123,10 @@ for seed in random_seeds:
 	overall_accuracy.append(df_mc_pred['is_correct'].mean())
 	accuracy_by_source[seed] = df_mc_pred.groupby('data_source')['is_correct'].mean()
 
-	# # 计算随机选择的列的次数和占比
-	# for col in answer_columns:
-	# 	count = (df_mc_pred['random_answer'] == df_mc_pred[col]).sum()
-	# 	random_selection_counts[col].append((count, count / len(df_mc_pred)))
+# # 计算随机选择的列的次数和占比
+# for col in answer_columns:
+# 	count = (df_mc_pred['random_answer'] == df_mc_pred[col]).sum()
+# 	random_selection_counts[col].append((count, count / len(df_mc_pred)))
 
 # 计算整体平均正确率和每个数据源的平均正确率
 mean_overall_accuracy = np.mean(overall_accuracy)

@@ -11,7 +11,7 @@ from typing import Iterable, List, Union
 
 import numpy as np
 import sacrebleu
-from moverscore_v2 import word_mover_score
+from moverscore.moverscore_v2 import word_mover_score
 
 
 def sentence_score(hypothesis: str, references: List[str], trace=0):
